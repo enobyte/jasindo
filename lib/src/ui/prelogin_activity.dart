@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/bloc-provider.dart';
-import 'package:jasindo_app/src/ui/login/login_form.dart';
+import 'package:jasindo_app/src/ui/login_form.dart';
+import 'package:jasindo_app/src/ui/registration/register_form.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class PreloginActivity extends StatelessWidget {
@@ -58,7 +59,7 @@ class PreloginActivity extends StatelessWidget {
                   color: Color.fromRGBO(226, 162, 93, 1.0),
                   splashColor: Colors.blueGrey,
                   onPressed: () {
-                    // Perform some action
+                    _openRegisterForm(context);
                   },
                 ),
                 height: 50.0,
@@ -76,6 +77,17 @@ class PreloginActivity extends StatelessWidget {
       MaterialPageRoute(builder: (context) {
         return BlocProvider(
           child: LoginForm(),
+        );
+      }),
+    );
+  }
+
+  _openRegisterForm(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return BlocProvider(
+          child: RegisterForm(),
         );
       }),
     );

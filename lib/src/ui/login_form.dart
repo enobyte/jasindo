@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/bloc-provider.dart';
+import 'package:jasindo_app/src/ui/registration/register_form.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class LoginForm extends StatefulWidget {
@@ -54,8 +56,9 @@ class LoginFormState extends State<LoginForm> {
               ),
             ),
             Container(
+              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
               alignment: FractionalOffset.centerRight,
-              child: TextWidget(txt: "Lupa Password", color: Colors.blue),
+              child: TextWidget(txt: "Lupa Kata Sandi", color: Colors.blue),
             ),
             SizedBox(
               width: double.infinity,
@@ -79,16 +82,19 @@ class LoginFormState extends State<LoginForm> {
                 ),
               ),
             ),
-
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Spacer(flex: 20),
                   TextWidget(txt: "Pengguna Baru?"),
                   Spacer(flex: 1),
-                  TextWidget(txt: "Daftar", color: Colors.blue),
+                  GestureDetector(
+                    child: TextWidget(txt: "DAFTAR", color: Colors.blue),
+                    onTap: () => {_openRegisterForm(context)},
+                  ),
                   Spacer(flex: 20),
                 ],
               ),
@@ -96,6 +102,17 @@ class LoginFormState extends State<LoginForm> {
           ],
         ),
       )),
+    );
+  }
+
+  _openRegisterForm(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return BlocProvider(
+          child: RegisterForm(),
+        );
+      }),
     );
   }
 }
