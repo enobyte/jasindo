@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/bloc-provider.dart';
+import 'package:jasindo_app/src/ui/main_menu/main_menu.dart';
 import 'package:jasindo_app/src/ui/registration/register_form.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -75,7 +76,7 @@ class LoginFormState extends State<LoginForm> {
                     color: Colors.blue,
                     splashColor: Colors.blueAccent,
                     onPressed: () {
-                      // Perform some action
+                      _openMainMenu(context);
                     },
                   ),
                   height: 50.0,
@@ -114,5 +115,9 @@ class LoginFormState extends State<LoginForm> {
         );
       }),
     );
+  }
+
+  _openMainMenu(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(context, "/main_menu", (_) => false);
   }
 }

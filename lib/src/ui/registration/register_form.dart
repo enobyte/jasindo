@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/ui/registration/step_five.dart';
+import 'package:jasindo_app/src/ui/registration/step_four.dart';
 import 'package:jasindo_app/src/ui/registration/step_one.dart';
+import 'package:jasindo_app/src/ui/registration/step_three.dart';
 import 'package:jasindo_app/src/ui/registration/step_two.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class RegisterForm extends StatefulWidget {
@@ -92,13 +96,13 @@ class RegisterFormState extends State<RegisterForm> {
         _widget = StepTwo();
         break;
       case 2:
-        _widget = Container();
+        _widget = StepThree();
         break;
       case 3:
-        _widget = Container();
+        _widget = StepFour(code: randomString());
         break;
       case 4:
-        _widget = Container();
+        _widget = StepFive();
         break;
     }
     return _widget;

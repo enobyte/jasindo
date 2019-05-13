@@ -51,7 +51,7 @@ class StepTwoState extends State<StepTwo> {
           Padding(
             padding: const EdgeInsets.only(top: 15),
             child: TextFormField(
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   labelText: titleEmail,
                   border: OutlineInputBorder(
@@ -61,7 +61,7 @@ class StepTwoState extends State<StepTwo> {
           Padding(
             padding: const EdgeInsets.only(top: 30),
             child: TextFormField(
-              keyboardType: TextInputType.number,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                   labelText: titleReEmail,
                   border: OutlineInputBorder(

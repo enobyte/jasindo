@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jasindo_app/src/ui/movie_list.dart';
+import 'package:jasindo_app/src/ui/main_menu/main_menu.dart';
 import 'package:jasindo_app/src/ui/prelogin_activity.dart';
 
 class App extends StatelessWidget {
@@ -10,8 +10,8 @@ class App extends StatelessWidget {
       home: Scaffold(
         body: PreloginActivity(),
       ),
-      routes: <String, WidgetBuilder> {
-        //'/mainposting': (BuildContext context) => new MainPosting()
+      routes: <String, WidgetBuilder>{
+        '/main_menu': (BuildContext context) => new MainMenu()
       },
     );
   }

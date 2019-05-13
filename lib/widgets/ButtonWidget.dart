@@ -34,7 +34,7 @@ class ButtonWidget extends StatelessWidget {
             txtSize: txtSize,
           ),
           elevation: 4.0,
-          color: Colors.blue,
+          color: btnColor,
           splashColor: Colors.blueAccent,
           onPressed: () {
             this.onClick();
