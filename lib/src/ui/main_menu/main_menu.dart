@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
+import 'package:jasindo_app/widgets/ZoomScaffold.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -11,13 +13,20 @@ class MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
-        leading: Icon(Icons.print),
-        actions: <Widget>[Icon(Icons.remove_red_eye), SizedBox(width: 10)],
+//      appBar: AppBar(
+//        iconTheme: IconThemeData(color: Colors.black),
+//        backgroundColor: Colors.white,
+//        leading: Icon(Icons.print),
+//        actions: <Widget>[Icon(Icons.remove_red_eye), SizedBox(width: 10)],
+//      ),
+      body: ZoomScaffold(
+        menuScreen: MenuScreen(),
+        contentScreen: Layout(
+            contentBuilder: (context) => Container(
+                  color: Colors.white,
+                  child: _scaleWidget(),
+                )),
       ),
-      body: _scaleWidget(),
     );
   }
 
