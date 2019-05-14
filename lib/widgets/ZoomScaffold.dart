@@ -74,7 +74,7 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
         break;
       case MenuState.open:
         slidePercent = 1.0;
-        scalePercent = 1.0;
+        scalePercent = 0.0;
         break;
       case MenuState.opening:
         slidePercent = slideOutCurve.transform(menuController.percentOpen);
@@ -86,8 +86,8 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
         break;
     }
 
-    final slideAmount = 275.0 * slidePercent;
-    final contentScale = 1.0 - (0.2 * scalePercent);
+    final slideAmount =(MediaQuery.of(context).size.width / 1.5) * slidePercent;
+    final contentScale = 1.0;
     final cornerRadius = 16.0 * menuController.percentOpen;
 
     return new Transform(
