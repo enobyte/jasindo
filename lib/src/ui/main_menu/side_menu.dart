@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MenuScreen extends StatelessWidget {
+class SideMenu extends StatelessWidget {
+  Function onClick;
 
   final List<MenuItem> options = [
     MenuItem(Icons.search, 'Buku Panduan'),
@@ -51,7 +52,7 @@ class MenuScreen extends StatelessWidget {
                     index,
                     ListTile(
                       onTap: () {
-                        debugPrint(index.toString());
+                        this.onClick(index);
                       },
                       leading: Icon(
                         item.icon,
@@ -73,6 +74,8 @@ class MenuScreen extends StatelessWidget {
       ),
     );
   }
+
+  SideMenu({this.onClick});
 }
 
 class MenuItem {

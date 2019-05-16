@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ZoomScaffold extends StatefulWidget {
-
   final Widget menuScreen;
   final Layout contentScreen;
 
@@ -14,8 +13,8 @@ class ZoomScaffold extends StatefulWidget {
   _ZoomScaffoldState createState() => new _ZoomScaffoldState();
 }
 
-class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMixin {
-
+class _ZoomScaffoldState extends State<ZoomScaffold>
+    with TickerProviderStateMixin {
   MenuController menuController;
   Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
@@ -25,11 +24,9 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-
     menuController = new MenuController(
       vsync: this,
-    )
-      ..addListener(() => setState(() {}));
+    )..addListener(() => setState(() {}));
   }
 
   @override
@@ -39,60 +36,59 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
   }
 
   createContentDisplay() {
-    return zoomAndSlideContent(
-        new Container(
-          child: new Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: new AppBar(
-              backgroundColor: Colors.grey[200],
-              elevation: 0.0,
-              leading: new IconButton(
-                  icon: new Icon(Icons.menu, color: Colors.black,),
-                  onPressed: () {
-                    menuController.toggle();
-                  }
+    return zoomAndSlideContent(new Container(
+      child: new Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: new AppBar(
+          backgroundColor: Colors.grey[200],
+          elevation: 0.0,
+          leading: new IconButton(
+              icon: new Icon(
+                Icons.menu,
+                color: Colors.black,
               ),
-              actions: <Widget>[
-                IconButton(
-                  onPressed: (){},
-                  icon: Icon(Icons.access_time, color: Colors.grey,),
-                )
-              ],
-            ),
-            body: widget.contentScreen.contentBuilder(context),
-          ),
-        )
-    );
+              onPressed: () {
+                menuController.toggle();
+              }),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.access_time,
+                color: Colors.grey,
+              ),
+            )
+          ],
+        ),
+        body: widget.contentScreen.contentBuilder(context),
+      ),
+    ));
   }
 
   zoomAndSlideContent(Widget content) {
-    var slidePercent, scalePercent;
+    var slidePercent;
     switch (menuController.state) {
       case MenuState.closed:
         slidePercent = 0.0;
-        scalePercent = 0.0;
         break;
       case MenuState.open:
         slidePercent = 1.0;
-        scalePercent = 0.0;
         break;
       case MenuState.opening:
         slidePercent = slideOutCurve.transform(menuController.percentOpen);
-        scalePercent = scaleDownCurve.transform(menuController.percentOpen);
         break;
       case MenuState.closing:
         slidePercent = slideInCurve.transform(menuController.percentOpen);
-        scalePercent = scaleUpCurve.transform(menuController.percentOpen);
         break;
     }
 
-    final slideAmount =(MediaQuery.of(context).size.width / 1.5) * slidePercent;
+    final slideAmount =
+        (MediaQuery.of(context).size.width / 1.5) * slidePercent;
     final contentScale = 1.0;
     final cornerRadius = 16.0 * menuController.percentOpen;
 
     return new Transform(
-      transform: new Matrix4
-          .translationValues(slideAmount, 0.0, 0.0)
+      transform: new Matrix4.translationValues(slideAmount, 0.0, 0.0)
         ..scale(contentScale, contentScale),
       alignment: Alignment.centerLeft,
       child: new Container(
@@ -108,8 +104,7 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
         ),
         child: new ClipRRect(
             borderRadius: new BorderRadius.circular(cornerRadius),
-            child: content
-        ),
+            child: content),
       ),
     );
   }
@@ -118,67 +113,16 @@ class _ZoomScaffoldState extends State<ZoomScaffold> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(child: Scaffold(body: widget.menuScreen,),),
+        Container(
+          child: Scaffold(
+            body: widget.menuScreen,
+          ),
+        ),
         createContentDisplay()
       ],
     );
   }
 }
-
-class ZoomScaffoldMenuController extends StatefulWidget {
-
-  final ZoomScaffoldBuilder builder;
-
-  ZoomScaffoldMenuController({
-    this.builder,
-  });
-
-  @override
-  ZoomScaffoldMenuControllerState createState() {
-    return new ZoomScaffoldMenuControllerState();
-  }
-}
-
-class ZoomScaffoldMenuControllerState extends State<ZoomScaffoldMenuController> {
-
-  MenuController menuController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    menuController = getMenuController(context);
-    menuController.addListener(_onMenuControllerChange);
-  }
-
-  @override
-  void dispose() {
-    menuController.removeListener(_onMenuControllerChange);
-    super.dispose();
-  }
-
-  getMenuController(BuildContext context) {
-    final scaffoldState = context.ancestorStateOfType(
-        new TypeMatcher<_ZoomScaffoldState>()
-    ) as _ZoomScaffoldState;
-    return scaffoldState.menuController;
-  }
-
-  _onMenuControllerChange() {
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.builder(context, getMenuController(context));
-  }
-
-}
-
-typedef Widget ZoomScaffoldBuilder(
-    BuildContext context,
-    MenuController menuController
-    );
 
 class Layout {
   final WidgetBuilder contentBuilder;

@@ -13,14 +13,9 @@ class MainMenuState extends State<MainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        iconTheme: IconThemeData(color: Colors.black),
-//        backgroundColor: Colors.white,
-//        leading: Icon(Icons.print),
-//        actions: <Widget>[Icon(Icons.remove_red_eye), SizedBox(width: 10)],
-//      ),
       body: ZoomScaffold(
-        menuScreen: MenuScreen(),
+        menuScreen:
+            SideMenu(onClick: (index) => {debugPrint(index.toString())}),
         contentScreen: Layout(
             contentBuilder: (context) => Container(
                   color: Colors.white,
