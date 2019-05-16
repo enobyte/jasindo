@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
 import 'package:jasindo_app/widgets/ZoomScaffold.dart';
@@ -10,17 +12,30 @@ class MainMenu extends StatefulWidget {
 }
 
 class MainMenuState extends State<MainMenu> {
+  // ignore: close_sinks
+  final changeSlide = new StreamController.broadcast();
+
+  @override
+  void dispose() {
+    changeSlide.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ZoomScaffold(
-        menuScreen:
-            SideMenu(onClick: (index) => {debugPrint(index.toString())}),
+        menuScreen: SideMenu(
+            onClick: (index) => {
+                  changeSlide.sink.add(null),
+                  debugPrint(index.toString()),
+                }),
         contentScreen: Layout(
             contentBuilder: (context) => Container(
                   color: Colors.white,
                   child: _scaleWidget(),
                 )),
+        actionTogle: changeSlide.stream,
       ),
     );
   }

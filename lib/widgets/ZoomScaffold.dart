@@ -1,13 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ZoomScaffold extends StatefulWidget {
   final Widget menuScreen;
   final Layout contentScreen;
+  final Stream actionTogle;
 
-  ZoomScaffold({
-    this.menuScreen,
-    this.contentScreen,
-  });
+  ZoomScaffold({this.menuScreen, this.contentScreen, this.actionTogle});
 
   @override
   _ZoomScaffoldState createState() => new _ZoomScaffoldState();
@@ -15,6 +15,8 @@ class ZoomScaffold extends StatefulWidget {
 
 class _ZoomScaffoldState extends State<ZoomScaffold>
     with TickerProviderStateMixin {
+  StreamSubscription _subscription;
+
   MenuController menuController;
   Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
@@ -24,15 +26,27 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
   @override
   void initState() {
     super.initState();
+    _subscription = widget.actionTogle.listen((_) => startToggle());
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
   }
 
   @override
+  void didUpdateWidget(ZoomScaffold oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if (widget.actionTogle != oldWidget.actionTogle) {
+      _subscription.cancel();
+      _subscription = widget.actionTogle.listen((_) => startToggle());
+    }
+  }
+
+  @override
   void dispose() {
-    menuController.dispose();
     super.dispose();
+    menuController.dispose();
+    _subscription.cancel();
   }
 
   createContentDisplay() {
@@ -48,7 +62,7 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
                 color: Colors.black,
               ),
               onPressed: () {
-                menuController.toggle();
+                startToggle();
               }),
           actions: <Widget>[
             IconButton(
@@ -115,12 +129,20 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
       children: [
         Container(
           child: Scaffold(
-            body: widget.menuScreen,
+            body: GestureDetector(
+              key: ValueKey('GestureZoom'),
+              child: widget.menuScreen,
+              onTap: () => {startToggle()},
+            ),
           ),
         ),
         createContentDisplay()
       ],
     );
+  }
+
+  startToggle() {
+    menuController.toggle();
   }
 }
 

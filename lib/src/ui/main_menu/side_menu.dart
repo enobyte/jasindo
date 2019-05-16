@@ -52,7 +52,7 @@ class SideMenu extends StatelessWidget {
                     index,
                     ListTile(
                       onTap: () {
-                        this.onClick(index);
+                        _onClickList(index);
                       },
                       leading: Icon(
                         item.icon,
@@ -73,6 +73,10 @@ class SideMenu extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future _onClickList(int index) async {
+    await this.onClick(index);
   }
 
   SideMenu({this.onClick});
