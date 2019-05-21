@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
-import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class StepFour extends StatefulWidget {
   final String code;
+  Function onClickRegister;
 
   @override
   State<StatefulWidget> createState() {
     return StepFourState();
   }
 
-  StepFour({Key key, this.code}) : super(key: key);
+  StepFour({Key key, this.code, this.onClickRegister}) : super(key: key);
 }
 
 class StepFourState extends State<StepFour> {
@@ -20,87 +20,90 @@ class StepFourState extends State<StepFour> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: TextFormField(
-              decoration: InputDecoration(
-                  labelText: titlePassword,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)))),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: TextFormField(
-              decoration: InputDecoration(
-                  labelText: titleRepassword,
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(5.0)))),
-            ),
-          ),
-          Container(
-            alignment: FractionalOffset.topLeft,
-            padding: EdgeInsets.only(top: 30, bottom: 10),
-            child: TextWidget(
-              txt: attentionCode,
-              color: Colors.black,
-            ),
-          ),
-          Row(
-            children: <Widget>[
-              TextWidget(
-                txt: widget.code,
-                txtSize: 20,
-                color: Colors.blue,
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: TextFormField(
+                decoration: InputDecoration(
+                    labelText: titlePassword,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)))),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15),
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                        //labelText: titleRepassword,
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(5.0)))),
-                  ),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: TextFormField(
+                decoration: InputDecoration(
+                    labelText: titleRepassword,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)))),
+              ),
+            ),
+            Container(
+              alignment: FractionalOffset.topLeft,
+              padding: EdgeInsets.only(top: 30, bottom: 10),
+              child: TextWidget(
+                txt: attentionCode,
+                color: Colors.black,
+              ),
+            ),
+            Row(
               children: <Widget>[
-                Checkbox(
-                  value: checkPolicy,
-                  onChanged: (value) {
-                    setState(() {
-                      checkPolicy = value;
-                    });
-                  },
+                TextWidget(
+                  txt: widget.code,
+                  txtSize: 20,
+                  color: Colors.blue,
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 0),
-                    child: Container(
-                      alignment: FractionalOffset.topLeft,
-                      child: TextWidget(
-                        txtSize: 12,
-                        txt: 'Saya menyetujui Syarat & Ketentuan yang berlaku',
-                        color: Colors.blue,
-                      ),
+                    padding: const EdgeInsets.only(left: 15),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          //labelText: titleRepassword,
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5.0)))),
                     ),
                   ),
                 )
               ],
             ),
-          ),
-          _btnDaftar()
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                children: <Widget>[
+                  Checkbox(
+                    value: checkPolicy,
+                    onChanged: (value) {
+                      setState(() {
+                        checkPolicy = value;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 0),
+                      child: Container(
+                        alignment: FractionalOffset.topLeft,
+                        child: TextWidget(
+                          txtSize: 12,
+                          txt:
+                              'Saya menyetujui Syarat & Ketentuan yang berlaku',
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            _btnDaftar()
+          ],
+        ),
       ),
     );
   }
@@ -115,7 +118,9 @@ class StepFourState extends State<StepFour> {
           txt: 'DAFTAR',
           btnColor: Colors.blue,
           borderRedius: 5,
-          onClick: () => {debugPrint('btn success')}),
+          onClick: () => {
+                widget.onClickRegister(),
+              }),
     );
   }
 }

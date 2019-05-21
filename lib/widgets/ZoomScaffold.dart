@@ -52,9 +52,9 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
   createContentDisplay() {
     return zoomAndSlideContent(new Container(
       child: new Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         appBar: new AppBar(
-          backgroundColor: Colors.grey[200],
+          backgroundColor: Colors.white,
           elevation: 0.0,
           leading: new IconButton(
               icon: new Icon(

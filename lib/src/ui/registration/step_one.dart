@@ -4,10 +4,14 @@ import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class StepOne extends StatefulWidget {
+  Function onSubmit;
+
   @override
   State<StatefulWidget> createState() {
     return StepOneState();
   }
+
+  StepOne(this.onSubmit);
 }
 
 class StepOneState extends State<StepOne> {
@@ -174,7 +178,9 @@ class StepOneState extends State<StepOne> {
           txt: 'SUBMIT',
           btnColor: Colors.blue,
           borderRedius: 5,
-          onClick: () => {debugPrint('btn success')}),
+          onClick: () => {
+            widget.onSubmit()
+          }),
     );
   }
 }

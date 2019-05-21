@@ -5,14 +5,22 @@ class TextWidget extends StatelessWidget {
   final Color color;
   final double txtSize;
   final String fontFamily;
+  final TextAlign align;
 
-  const TextWidget({this.txt, this.color, this.txtSize, this.fontFamily});
+  const TextWidget(
+      {Key key,
+      this.txt,
+      this.color,
+      this.txtSize,
+      this.fontFamily,
+      this.align})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(txt,
         style:
             TextStyle(color: color, fontSize: txtSize, fontFamily: fontFamily),
-        textAlign: TextAlign.center);
+        textAlign: align != null ? this.align : TextAlign.center);
   }
 }

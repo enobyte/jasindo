@@ -4,6 +4,7 @@ class SideMenu extends StatelessWidget {
   Function onClick;
 
   final List<MenuItem> options = [
+    MenuItem(Icons.home, 'Dashboard'),
     MenuItem(Icons.search, 'Buku Panduan'),
     MenuItem(Icons.shopping_basket, 'Berita'),
     MenuItem(Icons.favorite, 'Informasi'),

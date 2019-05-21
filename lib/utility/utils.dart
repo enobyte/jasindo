@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/bloc-provider.dart';
+
 String randomString() {
   const chars = "abcdefghijklmnopqrstuvwxyz";
   Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
@@ -8,4 +11,15 @@ String randomString() {
     result += chars[rnd.nextInt(chars.length)];
   }
   return result.toUpperCase();
+}
+
+Future<Widget> routeToWidget(BuildContext context, Widget widget){
+  return Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) {
+      return BlocProvider(
+        child: widget,
+      );
+    }),
+  );
 }

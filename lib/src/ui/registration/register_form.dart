@@ -17,6 +17,8 @@ class RegisterForm extends StatefulWidget {
 class RegisterFormState extends State<RegisterForm> {
   int _indexStep = 0;
   Color _indexColors = Colors.blue;
+  bool _visibleNext = true;
+  bool _visibleBack = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,6 @@ class RegisterFormState extends State<RegisterForm> {
           centerTitle: true,
           backgroundColor: Colors.white),
       body: new Container(
-        //constraints: BoxConstraints.expand(),
         child: Column(
           children: <Widget>[
             new Padding(
@@ -42,42 +43,46 @@ class RegisterFormState extends State<RegisterForm> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        elevation: 0,
+        color: Colors.transparent,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 25.0),
+          padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              RaisedButton(
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.arrow_back_ios),
-                    Text("BACK"),
-                  ],
+              Visibility(
+                visible: _visibleBack,
+                child: RawMaterialButton(
+                  fillColor: Colors.green,
+                  elevation: 0,
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.arrow_back_ios),
+                      Text('BACK'),
+                    ],
+                  ),
+                  onPressed: () =>
+                  {
+                    _decrease()
+                  },
                 ),
-                color: Colors.white,
-                onPressed: () {
-                  setState(() {
-                    if (_indexStep > 0) {
-                      _indexStep--;
-                    }
-                  });
-                },
               ),
-              RaisedButton(
-                child: Row(
-                  children: <Widget>[
-                    Text("NEXT"),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
+              Visibility(
+                visible: _visibleNext,
+                child: RawMaterialButton(
+                  fillColor: Colors.blue,
+                  elevation: 0,
+                  child: Row(
+                    children: <Widget>[
+                      Text('NEXT'),
+                      Icon(Icons.arrow_forward_ios)
+                    ],
+                  ),
+                  onPressed: () =>
+                  {
+                    _increaseTab()
+                  },
                 ),
-                color: Colors.white,
-                onPressed: () {
-                  setState(() {
-                    if (_indexStep < 4) {
-                      _indexStep++;
-                    }
-                  });
-                },
               ),
             ],
           ),
@@ -90,18 +95,42 @@ class RegisterFormState extends State<RegisterForm> {
     Widget _widget;
     switch (index) {
       case 0:
-        _widget = StepOne();
+        setState(() {
+          _visibleNavigation(false, false);
+        });
+        _widget = StepOne(() =>
+        {
+          _increaseTab()
+        });
         break;
       case 1:
+        setState(() {
+          _visibleNavigation(true, true);
+        });
         _widget = StepTwo();
         break;
       case 2:
+        setState(() {
+          _visibleNavigation(true, true);
+        });
         _widget = StepThree();
         break;
       case 3:
-        _widget = StepFour(code: randomString());
+        setState(() {
+          _visibleNavigation(false, true);
+        });
+        _widget = StepFour(
+          code: randomString(),
+          onClickRegister: () =>
+          {
+            _increaseTab()
+          },
+        );
         break;
       case 4:
+        setState(() {
+          _visibleNavigation(false, false);
+        });
         _widget = StepFive();
         break;
     }
@@ -198,4 +227,26 @@ class RegisterFormState extends State<RegisterForm> {
       ],
     );
   }
+
+  _visibleNavigation(bool next, bool back) {
+    _visibleNext = next;
+    _visibleBack = back;
+  }
+
+  _increaseTab() {
+    setState(() {
+      if (_indexStep < 4) {
+        _indexStep++;
+      }
+    });
+  }
+
+  _decrease(){
+    setState(() {
+      if (_indexStep > 0) {
+        _indexStep--;
+      }
+    });
+  }
 }
+

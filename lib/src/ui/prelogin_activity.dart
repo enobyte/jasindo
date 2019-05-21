@@ -22,7 +22,7 @@ class PreloginActivity extends StatelessWidget {
 
   Widget buttonComponet(BuildContext context) {
     return new Positioned(
-      bottom: 48.0,
+      bottom: MediaQuery.of(context).size.height / 20,
       left: 0.5,
       right: 0.5,
       child: Padding(

@@ -33,7 +33,7 @@ class ButtonWidget extends StatelessWidget {
             txt: txt,
             txtSize: txtSize,
           ),
-          elevation: 4.0,
+          elevation: 0.0,
           color: btnColor,
           splashColor: Colors.blueAccent,
           onPressed: () {
