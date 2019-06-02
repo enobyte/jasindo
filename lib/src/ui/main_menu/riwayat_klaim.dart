@@ -158,20 +158,25 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       width: MediaQuery.of(context).size.width / 4,
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 60,
-                child: Text(
-                  'Rentang Waktu',
-                  maxLines: 2,
+          InkWell(
+            onTap: () => {
+              debugPrint('klik rentang waktu')
+            },
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 60,
+                  child: Text(
+                    'Rentang Waktu',
+                    maxLines: 2,
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.calendar_today,
-                color: Colors.green,
-              ),
-            ],
+                Icon(
+                  Icons.calendar_today,
+                  color: Colors.green,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -190,7 +195,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _listHistoryClaimContent() {
     return Card(
-      elevation: 3,
+      margin: EdgeInsets.all(5),
+      elevation: 4,
       shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
       child: Column(
         children: <Widget>[_claimContentTop(), _claimContentMiddle(), __claimContentBottom()],

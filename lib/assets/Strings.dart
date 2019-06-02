@@ -19,3 +19,5 @@ final String attentionActiveAccount = 'untuk mengaktifkan akun Jasindo Health';
 final String attentionCheckMail =
     'Silahakan cek Inbox atau SPAM folder email anda';
 final String attentionCodeNotSend = 'Kode aktifasi tidak terkirim?';
+final String titleForgotPass = 'Lupa Kata Sandi?';
+final String descFortgotPass = 'Silahakan masukkan email anda yang terdaftar untuk menerima tata cara reset kata sandi';
