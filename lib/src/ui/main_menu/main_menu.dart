@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
+import 'package:jasindo_app/src/ui/main_menu/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
+import 'package:jasindo_app/src/ui/webview_form.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
@@ -102,11 +104,12 @@ class MainMenuState extends State<MainMenu> {
                       align: TextAlign.start,
                     ),
                     RaisedButton(
+                      onPressed: () => {},
                       child: TextWidget(
                         txt: 'CARI TAHU',
                         color: Colors.white,
                       ),
-                      //color: Colors.black,
+                      color: Colors.blue,
                     )
                   ],
                 ),
@@ -142,7 +145,10 @@ class MainMenuState extends State<MainMenu> {
                   Flexible(
                       child: Card(
                     elevation: 4,
-                    child: Container(child: menuItems('Provider Rekanan')),
+                    child: InkWell(
+                        onTap: () =>
+                            {routeToWidget(context, new ProviderRekanan())},
+                        child: Container(child: menuItems('Provider Rekanan'))),
                   )),
                 ]),
           ),
@@ -178,7 +184,7 @@ class MainMenuState extends State<MainMenu> {
         _contentPage = _scaleWidget();
         break;
       case 1:
-        _contentPage = Container();
+        _contentPage = WebViewContainer('https://google.com');
         break;
       default:
         _contentPage = _scaleWidget();
