@@ -29,14 +29,14 @@ class ProviderRekananState extends State<ProviderRekanan> {
   Widget _bannerTop() {
     return Container(
       height: MediaQuery.of(context).size.height / 2,
-      child: ImageCover(false, ''),
+      child: ImageCover(true, 'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
     );
   }
 
   Widget _viewBottom() {
     return Column(
       children: <Widget>[
-        _searchAllCity(),
+        _searchAllJaminan(),
         _searchChooseJaminan(),
         _btnSubmit(),
         _btnNearme()
@@ -44,9 +44,9 @@ class ProviderRekananState extends State<ProviderRekanan> {
     );
   }
 
-  Widget _searchAllCity() {
+  Widget _searchAllJaminan() {
     return Container(
-      margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+      margin: EdgeInsets.fromLTRB(30, 30, 30, 5),
       height: 40,
       alignment: FractionalOffset.center,
       padding: EdgeInsets.all(5),
@@ -86,7 +86,7 @@ class ProviderRekananState extends State<ProviderRekanan> {
 
   Widget _searchChooseJaminan() {
     return Container(
-      margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+      margin: EdgeInsets.fromLTRB(30, 5, 30, 10),
       height: 40,
       alignment: FractionalOffset.center,
       padding: EdgeInsets.all(5),

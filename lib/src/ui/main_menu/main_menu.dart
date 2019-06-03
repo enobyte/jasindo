@@ -2,14 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/berita.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
-import 'package:jasindo_app/src/ui/webview_form.dart';
+import 'package:jasindo_app/widgets/webview_form.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/ZoomScaffold.dart';
+
+import 'menu_side/pengaturan.dart';
+import 'menu_side/tentang.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -22,6 +27,7 @@ class MainMenuState extends State<MainMenu> {
   // ignore: close_sinks
   final changeSlide = new StreamController.broadcast();
   Widget _contentPage;
+  var titleAppbar = '';
 
   @override
   void didChangeDependencies() {
@@ -41,8 +47,8 @@ class MainMenuState extends State<MainMenu> {
       body: ZoomScaffold(
         menuScreen: SideMenu(
             onClick: (index) => {
-                  changeSlide.sink.add(null),
                   attachContent(index),
+                  changeSlide.sink.add(titleAppbar),
                 }),
         contentScreen: Layout(
             contentBuilder: (context) => Container(
@@ -181,13 +187,32 @@ class MainMenuState extends State<MainMenu> {
   Widget attachContent(int index) {
     switch (index) {
       case 0:
+        _setTitle('');
         _contentPage = _scaleWidget();
         break;
       case 1:
+        _setTitle('Buku Panduan');
         _contentPage = WebViewContainer('https://google.com');
         break;
+      case 2:
+        _setTitle('Berita');
+        _contentPage = News();
+        break;
+      case 3:
+        _setTitle('Informasi');
+        _contentPage = Information();
+        break;
+      case 4:
+        _setTitle('Tentang Kami');
+        _contentPage = About();
+        break;
+      case 5:
+        _setTitle('Pengaturan');
+        _contentPage = Setting();
+        break;
       default:
-        _contentPage = _scaleWidget();
+        _setTitle('Berita');
+        _contentPage = News();
         break;
     }
     return _contentPage;
@@ -204,5 +229,11 @@ class MainMenuState extends State<MainMenu> {
         Spacer(flex: 5),
       ],
     );
+  }
+
+  void _setTitle(title) {
+    setState(() {
+      this.titleAppbar = title;
+    });
   }
 }

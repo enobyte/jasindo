@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class ZoomScaffold extends StatefulWidget {
   final Widget menuScreen;
@@ -16,8 +17,9 @@ class ZoomScaffold extends StatefulWidget {
 class _ZoomScaffoldState extends State<ZoomScaffold>
     with TickerProviderStateMixin {
   StreamSubscription _subscription;
-
+  var title = '';
   MenuController menuController;
+
   Curve scaleDownCurve = new Interval(0.0, 0.3, curve: Curves.easeOut);
   Curve scaleUpCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
   Curve slideOutCurve = new Interval(0.0, 1.0, curve: Curves.easeOut);
@@ -26,7 +28,10 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
   @override
   void initState() {
     super.initState();
-    _subscription = widget.actionTogle.listen((_) => startToggle());
+    _subscription = widget.actionTogle.listen((params) => {
+          title = params,
+          startToggle(),
+        });
     menuController = new MenuController(
       vsync: this,
     )..addListener(() => setState(() {}));
@@ -54,6 +59,10 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
       child: new Scaffold(
         backgroundColor: Colors.white,
         appBar: new AppBar(
+          title: TextWidget(
+            txt: title,
+            color: Colors.black,
+          ),
           backgroundColor: Colors.white,
           elevation: 0.0,
           leading: new IconButton(
