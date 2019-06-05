@@ -23,7 +23,7 @@ class ImageCover extends StatelessWidget {
             ],
           )
         : Image.asset(pathImage,
-            fit: BoxFit.cover,
+            fit: BoxFit.fitWidth,
             height: double.infinity,
             width: double.infinity,
             alignment: Alignment.center);

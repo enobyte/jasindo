@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
-import 'package:jasindo_app/src/ui/main_menu/menu_side/berita.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
@@ -28,12 +28,7 @@ class MainMenuState extends State<MainMenu> {
   final changeSlide = new StreamController.broadcast();
   Widget _contentPage;
   var titleAppbar = '';
-
-  @override
-  void didChangeDependencies() {
-    _contentPage = _scaleWidget();
-    super.didChangeDependencies();
-  }
+  bool isFirst = true;
 
   @override
   void dispose() {
@@ -53,7 +48,7 @@ class MainMenuState extends State<MainMenu> {
         contentScreen: Layout(
             contentBuilder: (context) => Container(
                   color: Colors.white,
-                  child: _contentPage,
+                  child: isFirst ? _scaleWidget() : _contentPage,
                 )),
         actionTogle: changeSlide.stream,
       ),
@@ -128,7 +123,7 @@ class MainMenuState extends State<MainMenu> {
   Widget _menuBox() {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.all(30),
         alignment: FractionalOffset.center,
         child: Row(children: [
           Expanded(
@@ -136,26 +131,34 @@ class MainMenuState extends State<MainMenu> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Flexible(
-                      child: Card(
-                    elevation: 4,
-                    child: InkWell(
-                      onTap: () => {
-                            routeToWidget(
-                              context,
-                              new DataPeserta(),
-                            )
-                          },
-                      child: Container(child: menuItems('Data Peserta')),
+                    child: Card(
+                      elevation: 4,
+                      child: InkWell(
+                        onTap: () => {
+                              routeToWidget(
+                                context,
+                                new DataPeserta(),
+                              )
+                            },
+                        child: Container(
+                            child: menuItems('Data Peserta',
+                                'lib/assets/images/ic_peserta.png')),
+                      ),
                     ),
-                  )),
+                  ),
                   Flexible(
-                      child: Card(
-                    elevation: 4,
-                    child: InkWell(
+                    child: Card(
+                      elevation: 4,
+                      child: InkWell(
                         onTap: () =>
                             {routeToWidget(context, new ProviderRekanan())},
-                        child: Container(child: menuItems('Provider Rekanan'))),
-                  )),
+                        child: Container(
+                          child: menuItems('Provider Rekanan',
+                              'lib/assets/images/ic_provider.png'),
+                        ),
+                      ),
+                    ),
+                  ),
                 ]),
           ),
           Expanded(
@@ -163,20 +166,26 @@ class MainMenuState extends State<MainMenu> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Flexible(
-                      child: Card(
-                    elevation: 4,
-                    child: InkWell(
-                      child: Container(
-                        child: menuItems('Riwayat Klaim'),
+                    child: Card(
+                      elevation: 4,
+                      child: InkWell(
+                        child: Container(
+                          child: menuItems('Riwayat Klaim',
+                              'lib/assets/images/ic_riwayatclaim.png'),
+                        ),
+                        onTap: () =>
+                            {routeToWidget(context, new RiwayatKlaim())},
                       ),
-                      onTap: () => {routeToWidget(context, new RiwayatKlaim())},
                     ),
-                  )),
+                  ),
                   Flexible(
-                      child: Card(
-                    elevation: 4,
-                    child: Container(child: menuItems('Hubungi Call Center')),
-                  )),
+                    child: Card(
+                      elevation: 4,
+                      child: Container(
+                          child: menuItems('Hubungi Call Center',
+                              'lib/assets/images/ic_callcenter.png')),
+                    ),
+                  ),
                 ]),
           ),
         ]),
@@ -185,6 +194,9 @@ class MainMenuState extends State<MainMenu> {
   }
 
   Widget attachContent(int index) {
+    setState(() {
+      isFirst = false;
+    });
     switch (index) {
       case 0:
         _setTitle('');
@@ -211,22 +223,22 @@ class MainMenuState extends State<MainMenu> {
         _contentPage = Setting();
         break;
       default:
-        _setTitle('Berita');
-        _contentPage = News();
+        _setTitle('');
+        _contentPage = _scaleWidget();
         break;
     }
     return _contentPage;
   }
 
-  Widget menuItems(String title) {
+  Widget menuItems(String title, String image) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Spacer(flex: 5),
-        Icon(Icons.print),
-        Spacer(flex: 2),
+        SizedBox(height: 10),
+        Expanded(
+          child: Image.asset(image, alignment: Alignment.center),
+        ),
         Text(title),
-        Spacer(flex: 5),
+        SizedBox(height: 20)
       ],
     );
   }

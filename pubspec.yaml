@@ -49,6 +49,11 @@ flutter:
   assets:
      - lib/assets/images/login_img.png
      - lib/assets/images/dummycard.png
+     - lib/assets/images/logo_small.png
+     - lib/assets/images/ic_peserta.png
+     - lib/assets/images/ic_riwayatclaim.png
+     - lib/assets/images/ic_provider.png
+     - lib/assets/images/ic_callcenter.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

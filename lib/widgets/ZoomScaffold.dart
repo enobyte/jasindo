@@ -74,13 +74,13 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
                 startToggle();
               }),
           actions: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.access_time,
-                color: Colors.grey,
-              ),
-            )
+            title == ''
+                ? Image.asset(
+                    'lib/assets/images/logo_small.png',
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.center,
+                  )
+                : Container()
           ],
         ),
         body: widget.contentScreen.contentBuilder(context),
