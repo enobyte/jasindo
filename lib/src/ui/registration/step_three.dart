@@ -3,10 +3,14 @@ import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class StepThree extends StatefulWidget {
+  String _email;
+
   @override
   State<StatefulWidget> createState() {
     return StepThreeState();
   }
+
+  StepThree(this._email);
 }
 
 class StepThreeState extends State<StepThree> {
@@ -17,7 +21,7 @@ class StepThreeState extends State<StepThree> {
       child: Column(
         children: <Widget>[
           _viewInformation('8000123456789101', '20 September 2019',
-              'Andi Arlyn Anwar', '0812345678', 'enoraden@gmail.com'),
+              'Andi Arlyn Anwar', '0812345678', widget._email),
           _confirmation()
         ],
       ),

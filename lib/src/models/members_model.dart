@@ -57,8 +57,7 @@ class _Data {
   @JsonKey(name: 'image')
   String photo;
 
-  factory _Data.fromJson(Map<String, dynamic> json) =>
-      _$_DataFromJson(json);
+  factory _Data.fromJson(Map<String, dynamic> json) => _$_DataFromJson(json);
 
   Map<String, dynamic> toJson() => _$_DataToJson(this);
 }

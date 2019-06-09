@@ -27,12 +27,12 @@ class SharedPreferencesHelper {
 
 
 
-  static Future<bool> setMember(String value) async {
+  static Future<bool> setDoRegistration(String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.setString(_member, value);
   }
 
-  static Future<String> getMember() async {
+  static Future<String> getDoRegistration() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(_member) ?? '';
   }

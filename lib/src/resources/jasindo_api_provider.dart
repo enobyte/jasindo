@@ -3,7 +3,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:jasindo_app/src/appConfig.dart';
-import 'package:jasindo_app/src/models/adcps/members_model.dart';
+import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 
 import '../models/item_model.dart';
@@ -22,17 +23,17 @@ class JasindoApiProvider {
     }
   }
 
-  Future<MemberModels> fetchDoRegister(
+  Future<DoRegistrationModel> fetchDoRegister(
       {Map<String, dynamic> body}) async {
     final response = await client.post(
-      "$_baseUrl/member/adcps_validating",
+      "$_baseUrl/member/adcps_login",
       body: json.encode(body),
       headers: {
         "Authorization": SharedPreferencesHelper.getToken().toString(),
       },
     );
     if (response.statusCode == 200) {
-      return MemberModels.fromJson(json.decode(response.body));
+      return DoRegistrationModel.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load doRegistration');
     }

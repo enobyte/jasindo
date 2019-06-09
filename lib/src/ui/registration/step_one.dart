@@ -23,6 +23,7 @@ class StepOneState extends State<StepOne> {
   String yearValue;
   String monthValue;
   final _cardNumbController = TextEditingController();
+  bool _validateCard = false;
   bool _isLoading = false;
 
   DoRegistrationBloc bloc = DoRegistrationBloc();
@@ -66,7 +67,8 @@ class StepOneState extends State<StepOne> {
         decoration: InputDecoration(
             labelText: titleInsertCard,
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5.0)))),
+                borderRadius: BorderRadius.all(Radius.circular(5.0))),
+            errorText: _validateCard ? "Pastikan No. kartu terisi" : null),
         controller: _cardNumbController,
       ),
     );
@@ -156,6 +158,7 @@ class StepOneState extends State<StepOne> {
     return Expanded(
       child: Container(
         margin: EdgeInsets.only(right: 5.0, left: 5.0),
+        padding: EdgeInsets.only(right: 8, left: 8),
         alignment: FractionalOffset.center,
         decoration: BoxDecoration(
             border: Border.all(
@@ -163,6 +166,7 @@ class StepOneState extends State<StepOne> {
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
+            isExpanded: true,
             hint: Text('Month'),
             value: monthValue,
             onChanged: (newValue) {
@@ -298,15 +302,28 @@ class StepOneState extends State<StepOne> {
           txt: 'SUBMIT',
           btnColor: Colors.blue,
           borderRedius: 5,
-          onClick: () => {_onSubmit()}),
+          onClick: () => {
+                _onSubmit(),
+              }),
     );
   }
 
   void _onSubmit() {
     setState(() {
+      if (_cardNumbController.text.length != 16) {
+        _validateCard = true;
+        return;
+      } else {
+        _validateCard = false;
+      }
+      if (dayValue == null || monthValue == null || yearValue == null) {
+        utils.showToast(context, 'Harap lengkapi tanggal lahir');
+        return;
+      } else {
+        _doRegistration();
+      }
       _isLoading = true;
     });
-    _doRegistration();
   }
 
   _doRegistration() {
@@ -317,11 +334,11 @@ class StepOneState extends State<StepOne> {
     bloc.fetchDoRegistration(
         request.toMap(),
         (status, message) => {
-              getData(status, message),
+              _getData(status, message),
             });
   }
 
-  getData(bool status, String message) {
+  _getData(bool status, String message) {
     setState(() {
       _isLoading = false;
     });

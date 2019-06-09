@@ -113,7 +113,7 @@ class RegisterFormState extends State<RegisterForm> {
         setState(() {
           _visibleNavigation(true, true);
         });
-        _widget = StepThree();
+        _widget = StepThree('enoraden@gmail.com');
         break;
       case 3:
         setState(() {

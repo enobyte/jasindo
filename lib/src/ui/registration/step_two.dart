@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
-import 'package:jasindo_app/src/models/adcps/members_model.dart';
+import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -14,16 +14,16 @@ class StepTwo extends StatefulWidget {
 }
 
 class StepTwoState extends State<StepTwo> {
-  MemberModels memberModel;
+  DoRegistrationModel doRegistrationModel;
   String _name = "";
 
   @override
   void initState() {
     super.initState();
-    SharedPreferencesHelper.getMember().then((onValue) {
-      memberModel = MemberModels.fromJson(json.decode(onValue));
+    SharedPreferencesHelper.getDoRegistration().then((onValue) {
+      doRegistrationModel = DoRegistrationModel.fromJson(json.decode(onValue));
       setState(() {
-        _name = memberModel.data.name;
+        _name = doRegistrationModel.data.name;
       });
     });
   }
@@ -44,11 +44,11 @@ class StepTwoState extends State<StepTwo> {
                   ),
                 ),
                 Container(
-                  alignment: FractionalOffset.topLeft,
                   child: TextWidget(
                     txt: _name,
                     txtSize: 24,
                     color: Colors.blue,
+                    align: TextAlign.left,
                   ),
                 ),
                 Padding(
