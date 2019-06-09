@@ -4,6 +4,7 @@ import 'package:jasindo_app/src/ui/registration/step_four.dart';
 import 'package:jasindo_app/src/ui/registration/step_one.dart';
 import 'package:jasindo_app/src/ui/registration/step_three.dart';
 import 'package:jasindo_app/src/ui/registration/step_two.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -19,6 +20,12 @@ class RegisterFormState extends State<RegisterForm> {
   Color _indexColors = Colors.blue;
   bool _visibleNext = true;
   bool _visibleBack = true;
+
+  @override
+  void dispose() {
+    super.dispose();
+    SharedPreferencesHelper.clearAllPreference();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +68,7 @@ class RegisterFormState extends State<RegisterForm> {
                       Text('BACK'),
                     ],
                   ),
-                  onPressed: () =>
-                  {
-                    _decrease()
-                  },
+                  onPressed: () => {_decrease()},
                 ),
               ),
               Visibility(
@@ -78,10 +82,7 @@ class RegisterFormState extends State<RegisterForm> {
                       Icon(Icons.arrow_forward_ios)
                     ],
                   ),
-                  onPressed: () =>
-                  {
-                    _increaseTab()
-                  },
+                  onPressed: () => {_increaseTab()},
                 ),
               ),
             ],
@@ -98,16 +99,12 @@ class RegisterFormState extends State<RegisterForm> {
         setState(() {
           _visibleNavigation(false, false);
         });
-        _widget = StepOne(() =>
-        {
-          _increaseTab()
-        });
+        _widget = StepOne(() => {_increaseTab()});
         break;
       case 1:
-        setState(() {
-          _visibleNavigation(true, true);
-        });
-        _widget = StepTwo();
+        _widget = StepTwo((phone, email, reEmail) => {
+              _validatingStepTwo(phone, email, reEmail),
+            });
         break;
       case 2:
         setState(() {
@@ -121,10 +118,7 @@ class RegisterFormState extends State<RegisterForm> {
         });
         _widget = StepFour(
           code: randomString(),
-          onClickRegister: () =>
-          {
-            _increaseTab()
-          },
+          onClickRegister: () => {_increaseTab()},
         );
         break;
       case 4:
@@ -241,12 +235,25 @@ class RegisterFormState extends State<RegisterForm> {
     });
   }
 
-  _decrease(){
+  _decrease() {
     setState(() {
       if (_indexStep > 0) {
         _indexStep--;
       }
     });
   }
-}
 
+  _validatingStepTwo(String phone, String email, String reEmail) {
+    if (phone.length < 10 || !validateEmail(email) || email != reEmail) {
+      setState(() {
+        _visibleNavigation(false, true);
+      });
+    } else {
+      SharedPreferencesHelper.setPhone(phone);
+      SharedPreferencesHelper.setEmail(email);
+      setState(() {
+        _visibleNavigation(true, true);
+      });
+    }
+  }
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/doregistration_bloc.dart';
 import 'package:jasindo_app/src/models/requests/doReqRequest.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as utils;
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
@@ -19,19 +20,147 @@ class StepOne extends StatefulWidget {
 }
 
 class StepOneState extends State<StepOne> {
-  String dayValue;
-  String yearValue;
-  String monthValue;
+  String dayValue = '999';
+  String yearValue = '999';
+  String monthValue = '999';
   final _cardNumbController = TextEditingController();
   bool _validateCard = false;
   bool _isLoading = false;
-
   DoRegistrationBloc bloc = DoRegistrationBloc();
+
+  final List<String> listMonth = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+  ];
+
+  final List<String> listDays = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31"
+  ];
+
+  final List<String> listYear = [
+    '2019',
+    '2018',
+    '2017',
+    '2016',
+    '2015',
+    '2014',
+    '2013',
+    '2012',
+    '2011',
+    '2010',
+    '2009',
+    '2008',
+    '2007',
+    '2006',
+    '2005',
+    '2004',
+    '2003',
+    '2002',
+    '2001',
+    '2000',
+    '1999',
+    '1998',
+    '1997',
+    '1996',
+    '1995',
+    '1994',
+    '1993',
+    '1992',
+    '1991',
+    '1990',
+    '1989',
+    '1988',
+    '1987',
+    '1986',
+    '1985',
+    '1984',
+    '1983',
+    '1982',
+    '1981',
+    '1980',
+    '1979',
+    '1978',
+    '1977',
+    '1976',
+    '1975',
+    '1974',
+    '1973',
+    '1972',
+    '1971',
+    '1970',
+    '1969',
+    '1968',
+    '1967',
+    '1966',
+    '1965',
+    '1964',
+    '1963',
+    '1962',
+    '1961',
+    '1960',
+    '1959',
+    '1958',
+    '1957',
+    '1956',
+    '1955',
+    '1954',
+    '1953',
+    '1952',
+    '1951',
+    '1950',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _initalValue();
+  }
 
   @override
   void dispose() {
     super.dispose();
     bloc.dispose();
+    _cardNumbController.dispose();
   }
 
   @override
@@ -108,45 +237,14 @@ class StepOneState extends State<StepOne> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           hint: Text('Date'),
-          value: dayValue,
+          value: listDays.firstWhere((data) => data.startsWith(dayValue),
+              orElse: () => null),
           onChanged: (newValue) {
             setState(() {
               dayValue = newValue;
             });
           },
-          items: <String>[
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31"
-          ].map<DropdownMenuItem<String>>((value) {
+          items: listDays.map<DropdownMenuItem<String>>((value) {
             return DropdownMenuItem(value: value, child: Text(value));
           }).toList(),
         ),
@@ -168,26 +266,14 @@ class StepOneState extends State<StepOne> {
           child: DropdownButton<String>(
             isExpanded: true,
             hint: Text('Month'),
-            value: monthValue,
+            value: listMonth.firstWhere((data) => data.startsWith(monthValue),
+                orElse: () => null),
             onChanged: (newValue) {
               setState(() {
                 monthValue = newValue;
               });
             },
-            items: <String>[
-              "01",
-              "02",
-              "03",
-              "04",
-              "05",
-              "06",
-              "07",
-              "08",
-              "09",
-              "10",
-              "11",
-              "12",
-            ].map<DropdownMenuItem<String>>((value) {
+            items: listMonth.map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem(value: value, child: Text(value));
             }).toList(),
           ),
@@ -207,84 +293,14 @@ class StepOneState extends State<StepOne> {
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           hint: Text('Year'),
-          value: yearValue,
+          value: listYear.firstWhere((data) => data.startsWith(yearValue),
+              orElse: () => null),
           onChanged: (newValue) {
             setState(() {
               yearValue = newValue;
             });
           },
-          items: <String>[
-            '2019',
-            '2018',
-            '2017',
-            '2016',
-            '2015',
-            '2014',
-            '2013',
-            '2012',
-            '2011',
-            '2010',
-            '2009',
-            '2008',
-            '2007',
-            '2006',
-            '2005',
-            '2004',
-            '2003',
-            '2002',
-            '2001',
-            '2000',
-            '1999',
-            '1998',
-            '1997',
-            '1996',
-            '1995',
-            '1994',
-            '1993',
-            '1992',
-            '1991',
-            '1990',
-            '1989',
-            '1988',
-            '1987',
-            '1986',
-            '1985',
-            '1984',
-            '1983',
-            '1982',
-            '1981',
-            '1980',
-            '1979',
-            '1978',
-            '1977',
-            '1976',
-            '1975',
-            '1974',
-            '1973',
-            '1972',
-            '1971',
-            '1970',
-            '1969',
-            '1968',
-            '1967',
-            '1966',
-            '1965',
-            '1964',
-            '1963',
-            '1962',
-            '1961',
-            '1960',
-            '1959',
-            '1958',
-            '1957',
-            '1956',
-            '1955',
-            '1954',
-            '1953',
-            '1952',
-            '1951',
-            '1950',
-          ].map<DropdownMenuItem<String>>((value) {
+          items: listYear.map<DropdownMenuItem<String>>((value) {
             return DropdownMenuItem(value: value, child: Text(value));
           }).toList(),
         ),
@@ -343,9 +359,31 @@ class StepOneState extends State<StepOne> {
       _isLoading = false;
     });
     if (status) {
+      SharedPreferencesHelper.setCardNumb(_cardNumbController.text);
+      SharedPreferencesHelper.setYear(yearValue);
+      SharedPreferencesHelper.setMonth(monthValue);
+      SharedPreferencesHelper.setDay(dayValue);
       widget.onSubmit();
     } else {
       utils.showToast(context, message);
     }
+  }
+
+  _initalValue() {
+    SharedPreferencesHelper.getCardNumb().then((card) {
+      _cardNumbController.text = card;
+    });
+
+    SharedPreferencesHelper.getDay().then((days) {
+      dayValue = days;
+    });
+
+    SharedPreferencesHelper.getMonth().then((month) {
+      monthValue = month;
+    });
+
+    SharedPreferencesHelper.getYear().then((year) {
+      yearValue = year;
+    });
   }
 }
