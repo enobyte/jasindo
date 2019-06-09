@@ -14,7 +14,12 @@ class PreloginActivity extends StatelessWidget {
 
   Widget background() {
     return new Container(
-      child: Image.asset('lib/assets/images/login_img.png'),
+      child: Image.asset(
+        'lib/assets/images/logo_title.png',
+        height: double.infinity,
+        width: double.infinity,
+        fit: BoxFit.fitWidth,
+      ),
       alignment: FractionalOffset.center,
       decoration: BoxDecoration(color: Colors.white),
     );

@@ -5,11 +5,11 @@ class SideMenu extends StatelessWidget {
 
   final List<MenuItem> options = [
     MenuItem(Icons.home, 'Dashboard'),
-    MenuItem(Icons.search, 'Buku Panduan'),
-    MenuItem(Icons.shopping_basket, 'Berita'),
-    MenuItem(Icons.favorite, 'Informasi'),
-    MenuItem(Icons.code, 'Tentang Kami'),
-    MenuItem(Icons.format_list_bulleted, 'Pengaturan'),
+    MenuItem(Icons.library_books, 'Buku Panduan'),
+    MenuItem(Icons.highlight, 'Berita'),
+    MenuItem(Icons.info, 'Informasi'),
+    MenuItem(Icons.error, 'Tentang Kami'),
+    MenuItem(Icons.settings, 'Pengaturan'),
   ];
 
   @override

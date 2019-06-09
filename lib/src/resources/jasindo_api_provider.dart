@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' show Client;
+
+import 'package:http/http.dart';
 import 'package:jasindo_app/src/appConfig.dart';
+import 'package:jasindo_app/src/models/adcps/members_model.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
+
 import '../models/item_model.dart';
 
 class JasindoApiProvider {
@@ -12,11 +16,25 @@ class JasindoApiProvider {
   Future<ItemModel> fetchMovieList() async {
     final response = await client.get("$_baseUrl/popular?api_key=$_apiKey");
     if (response.statusCode == 200) {
-      // If the call to the server was successful, parse the JSON
       return ItemModel.fromJson(json.decode(response.body));
     } else {
-      // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
+    }
+  }
+
+  Future<MemberModels> fetchDoRegister(
+      {Map<String, dynamic> body}) async {
+    final response = await client.post(
+      "$_baseUrl/member/adcps_validating",
+      body: json.encode(body),
+      headers: {
+        "Authorization": SharedPreferencesHelper.getToken().toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      return MemberModels.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load doRegistration');
     }
   }
 

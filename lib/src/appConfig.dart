@@ -6,10 +6,10 @@ class AppConfig {
   static String get baseUrl {
     switch (appFlavor) {
       case Flavor.RELEASE:
-        return '';
+        return 'http://103.107.103.56:8000/api';
       case Flavor.DEVELOPMENT:
       default:
-        return 'http://api.themoviedb.org/3/movie';
+        return 'http://103.107.103.56:8000/api';
     }
   }
 }
