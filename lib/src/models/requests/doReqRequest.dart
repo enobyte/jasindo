@@ -18,7 +18,6 @@ class ReqDoRegistration {
     map["card_number"] = cardNumber;
     map["birth_date"] = birthDate;
     map["email"] = email;
-
     return map;
   }
 }

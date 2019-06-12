@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:jasindo_app/src/appConfig.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/src/models/forgotPass.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 
@@ -34,6 +35,21 @@ class JasindoApiProvider {
     );
     if (response.statusCode == 200) {
       return DoRegistrationModel.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to load doRegistration');
+    }
+  }
+
+  Future<ForgotPassModels> forgotPass({Map<String, dynamic> body}) async {
+    final response = await client.post(
+      "$_baseUrl/member/preforgotpass",
+      body: json.encode(body),
+      headers: {
+        "Authorization": SharedPreferencesHelper.getToken().toString(),
+      },
+    );
+    if (response.statusCode == 200) {
+      return ForgotPassModels.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to load doRegistration');
     }

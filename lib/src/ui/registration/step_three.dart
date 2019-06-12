@@ -1,27 +1,43 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
+import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class StepThree extends StatefulWidget {
-  String _email;
-
   @override
   State<StatefulWidget> createState() {
     return StepThreeState();
   }
-
-  StepThree(this._email);
 }
 
 class StepThreeState extends State<StepThree> {
+  DoRegistrationModel doRegistrationModel;
+
+  String _email;
+  String _day;
+  String _month;
+  String _year;
+  String _name;
+  String _phone;
+  String _cardNumber;
+  String _birthDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _initalValue();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
+      margin: EdgeInsets.only(top: 30.0),
       child: Column(
         children: <Widget>[
-          _viewInformation('8000123456789101', '20 September 2019',
-              'Andi Arlyn Anwar', '0812345678', widget._email),
+          _viewInformation(_cardNumber, _birthDate, _name, _phone, _email),
           _confirmation()
         ],
       ),
@@ -41,7 +57,6 @@ class StepThreeState extends State<StepThree> {
   Widget _titleInformation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         TextWidget(txt: titleNoCard),
         TextWidget(txt: titleDOB),
@@ -55,7 +70,6 @@ class StepThreeState extends State<StepThree> {
   Widget _valueInformation(vCardNo, vTglLahir, vName, vNoHp, vEmail) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         TextWidget(
           txt: vCardNo,
@@ -82,12 +96,49 @@ class StepThreeState extends State<StepThree> {
   }
 
   Widget _viewInformation(vCardNo, vTglLahir, vName, vNoHp, vEmail) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        _titleInformation(),
-        _valueInformation(vCardNo, vTglLahir, vName, vNoHp, vEmail)
-      ],
+    return Container(
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: 10),
+          _titleInformation(),
+          SizedBox(width: 10),
+          _valueInformation(vCardNo, vTglLahir, vName, vNoHp, vEmail)
+        ],
+      ),
     );
+  }
+
+  _initalValue() {
+    SharedPreferencesHelper.getDoRegistration().then((onValue) {
+      doRegistrationModel = DoRegistrationModel.fromJson(json.decode(onValue));
+      _name = doRegistrationModel.data.name;
+    });
+
+    SharedPreferencesHelper.getCardNumb().then((card) {
+      _cardNumber = card;
+    });
+
+    SharedPreferencesHelper.getDay().then((days) {
+      _day = days;
+      _birthDate = _day;
+    });
+
+    SharedPreferencesHelper.getMonth().then((month) {
+      _month = month;
+      _birthDate = _day + ' ' + _month;
+    });
+
+    SharedPreferencesHelper.getYear().then((year) {
+      _year = year;
+      _birthDate = _day + ' ' + _month + ' ' + _year;
+    });
+
+    SharedPreferencesHelper.getPhone().then((value) {
+      _phone = value;
+    });
+
+    SharedPreferencesHelper.getEmail().then((value) {
+      _email = value;
+    });
   }
 }
