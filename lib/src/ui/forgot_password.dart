@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/forgotpass_bloc.dart';
-import 'package:jasindo_app/src/models/requests/doReqForgot.dart';
+import 'package:jasindo_app/src/models/requests/do_req_forgot.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
-import 'package:jasindo_app/utility/utils.dart' as u;
 
 class ForgotPassword extends StatefulWidget {
   @override

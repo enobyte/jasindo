@@ -117,7 +117,6 @@ class RegisterFormState extends State<RegisterForm> {
           _visibleNavigation(false, true);
         });
         _widget = StepFour(
-          code: randomString(),
           onClickRegister: () => {_increaseTab()},
         );
         break;

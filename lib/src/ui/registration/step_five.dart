@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
+import 'package:jasindo_app/src/blocs/activeuser_bloc.dart';
+import 'package:jasindo_app/src/models/requests/do_req_activeuser.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
+import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/pin_input/pin_put.dart';
 
@@ -12,58 +16,74 @@ class StepFive extends StatefulWidget {
 }
 
 class StepFiveState extends State<StepFive> {
+  bool _isLoading = false;
+  String _code = "";
+  String _email = "";
+  ActiveUserBloc bloc = ActiveUserBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferencesHelper.getEmail().then((value) {
+      _email = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
-      child: Column(
-        children: <Widget>[
-          Icon(Icons.mail),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: TextWidget(
-              txt: attentionVerifyMail,
-              txtSize: 12,
+    return ProgressDialog(
+      child: Container(
+        margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
+        child: Column(
+          children: <Widget>[
+            Icon(Icons.mail),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: TextWidget(
+                txt: attentionVerifyMail,
+                txtSize: 12,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: TextWidget(
-              txt: 'enoraden@gmail.com',
-              color: Colors.red,
-              txtSize: 14,
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: TextWidget(
+                txt: 'enoraden@gmail.com',
+                color: Colors.red,
+                txtSize: 14,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: TextWidget(
-              txt: attentionActiveAccount,
-              txtSize: 12,
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: TextWidget(
+                txt: attentionActiveAccount,
+                txtSize: 12,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: TextWidget(
-              txt: attentionCheckMail,
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: TextWidget(
+                txt: attentionCheckMail,
+                txtSize: 8,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PinPut(
+                fieldsCount: 4,
+                actionButtonsEnabled: false,
+                onSubmit: (code) => {this._code = code},
+              ),
+            ),
+            _btnAktifasi(),
+            TextWidget(
+              txt: attentionCodeNotSend,
               txtSize: 8,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: PinPut(
-              fieldsCount: 4,
-              actionButtonsEnabled: false,
-              onSubmit: () => {},
-            ),
-          ),
-          _btnAktifasi(),
-          TextWidget(
-            txt: attentionCodeNotSend,
-            txtSize: 8,
-          ),
-          _btnResendCode()
-        ],
+            _btnResendCode()
+          ],
+        ),
       ),
+      inAsyncCall: _isLoading,
     );
   }
 
@@ -77,7 +97,7 @@ class StepFiveState extends State<StepFive> {
           txt: 'AKTIFASI',
           btnColor: Colors.blue,
           borderRedius: 5,
-          onClick: () => {debugPrint('btn success')}),
+          onClick: () => {_onSubmit()}),
     );
   }
 
@@ -94,5 +114,28 @@ class StepFiveState extends State<StepFive> {
           borderRedius: 5,
           onClick: () => {debugPrint('btn success')}),
     );
+  }
+
+  _onSubmit() {
+    setState(() {
+      _isLoading = true;
+    });
+    ReqActiveUser request = ReqActiveUser(email: _email, code: _code);
+    bloc.activeUser(
+        request.toMap(),
+        (status, data) => {
+              _getData(status, data),
+            });
+  }
+
+  _getData(bool status, String message) {
+    setState(() {
+      _isLoading = false;
+    });
+    if (status) {
+      Navigator.pushNamedAndRemoveUntil(context, "/login_menu", (_) => false);
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }

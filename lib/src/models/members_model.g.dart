@@ -30,12 +30,14 @@ _Data _$_DataFromJson(Map<String, dynamic> json) {
       deleteAt: json['DeletedAt'] as String,
       cardNumb: json['card_number'] as String,
       birthDate: json['birth_date'] as String,
-      phone: json['phone'] as int,
+      phone: json['phone'] as String,
       email: json['email'] as String,
       name: json['name'] as String,
       firebaseToken: json['firebase_token'] as String,
       token: json['token'] as String,
-      photo: json['image'] as String);
+      photo: json['image'] as String,
+      isActive: json['is_active'] as bool,
+      activeCode: json['active_code'] as String);
 }
 
 Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
@@ -50,5 +52,7 @@ Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
       'name': instance.name,
       'firebase_token': instance.firebaseToken,
       'token': instance.token,
-      'image': instance.photo
+      'image': instance.photo,
+      'is_active': instance.isActive,
+      'active_code': instance.activeCode
     };

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/bloc-provider.dart';
 
-String randomString() {
+Future<String> randomString() async {
   const chars = "abcdefghijklmnopqrstuvwxyz";
   Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
   String result = "";

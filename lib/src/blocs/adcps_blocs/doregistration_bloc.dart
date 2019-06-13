@@ -13,7 +13,7 @@ class DoRegistrationBloc {
       _doRegistrationFetch.stream;
 
   fetchDoRegistration(Map<String, dynamic> body, Function callback) async {
-    DoRegistrationModel model = await _repository.fetchRegistraion(body: body);
+    DoRegistrationModel model = await _repository.fetchRegistration(body: body);
     if (model.data != null) {
       SharedPreferencesHelper.setDoRegistration(json.encode(model.toJson()));
     }

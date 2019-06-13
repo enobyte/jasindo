@@ -33,13 +33,15 @@ class StepThreeState extends State<StepThree> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 30.0),
-      child: Column(
-        children: <Widget>[
-          _viewInformation(_cardNumber, _birthDate, _name, _phone, _email),
-          _confirmation()
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(top: 30.0),
+        child: Column(
+          children: <Widget>[
+            _viewInformation(_cardNumber, _birthDate, _name, _phone, _email),
+            _confirmation()
+          ],
+        ),
       ),
     );
   }

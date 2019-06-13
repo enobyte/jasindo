@@ -8,6 +8,7 @@ class AppConfig {
       case Flavor.RELEASE:
         return 'http://103.107.103.56:8000/api';
       case Flavor.DEVELOPMENT:
+        return 'http://103.107.103.56:8000/api';
       default:
         return 'http://103.107.103.56:8000/api';
     }

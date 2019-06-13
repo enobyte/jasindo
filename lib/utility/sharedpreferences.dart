@@ -9,6 +9,7 @@ class SharedPreferencesHelper {
   static final String _year = 'year';
   static final String _month = 'month';
   static final String _day = 'day';
+  static final String _login = 'login';
 
   static Future<bool> clearPreference(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -26,6 +27,7 @@ class SharedPreferencesHelper {
     preferences.getString(_year);
     preferences.getString(_month);
     preferences.getString(_day);
+    preferences.getString(_login);
     return preferences.clear();
   }
 
@@ -35,7 +37,7 @@ class SharedPreferencesHelper {
 
   static Future<bool> setToken(String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.setString(_token, value);
+    return preferences.setString(_token, "Bearer "+value);
   }
 
   static Future<String> getToken() async {
@@ -44,7 +46,7 @@ class SharedPreferencesHelper {
   }
 
   /// ------------------------------------------------------------
-  /// Set Get Member Json Data Preference
+  /// Set Get Member ADCPS Json Data Preference
   /// ------------------------------------------------------------
   static Future<bool> setDoRegistration(String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -54,6 +56,19 @@ class SharedPreferencesHelper {
   static Future<String> getDoRegistration() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(_member) ?? '';
+  }
+
+  /// ------------------------------------------------------------
+  /// Set Get Login Json Data Preference
+  /// ------------------------------------------------------------
+  static Future<bool> setDoLogin(String value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setString(_login, value);
+  }
+
+  static Future<String> getDoLogin() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(_login) ?? '';
   }
 
   /// ------------------------------------------------------------

@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:jasindo_app/main_dev.dart';
+import 'package:jasindo_app/main.dart';
 import 'package:jasindo_app/src/app.dart';
 
 void main() {

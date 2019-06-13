@@ -14,6 +14,10 @@ class MemberModels {
       _$MemberModelsFromJson(json);
 
   Map<String, dynamic> toJson() => _$MemberModelsToJson(this);
+
+  MemberModels.withError(String error)
+      : message = error,
+        status = false;
 }
 
 @JsonSerializable()
@@ -30,7 +34,9 @@ class _Data {
       this.name,
       this.firebaseToken,
       this.token,
-      this.photo});
+      this.photo,
+      this.isActive,
+      this.activeCode});
 
   @JsonKey(name: 'ID')
   int id;
@@ -45,7 +51,7 @@ class _Data {
   @JsonKey(name: 'birth_date')
   String birthDate;
   @JsonKey(name: 'phone')
-  int phone;
+  String phone;
   @JsonKey(name: 'email')
   String email;
   @JsonKey(name: 'name')
@@ -56,6 +62,10 @@ class _Data {
   String token;
   @JsonKey(name: 'image')
   String photo;
+  @JsonKey(name: 'is_active')
+  bool isActive;
+  @JsonKey(name: 'active_code')
+  String activeCode;
 
   factory _Data.fromJson(Map<String, dynamic> json) => _$_DataFromJson(json);
 

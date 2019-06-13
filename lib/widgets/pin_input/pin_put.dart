@@ -10,7 +10,7 @@ class PinPut extends StatefulWidget {
     this.clearButtonIcon = const Icon(Icons.backspace, size: 30),
     this.pasteButtonIcon = const Icon(Icons.content_paste, size: 30),
     this.isTextObscure = false,
-    this.keyboardType = TextInputType.number,
+    this.keyboardType = TextInputType.text,
     this.keyboardAction = TextInputAction.next,
     this.actionButtonsEnabled = true,
     this.unFocusWhen = false,
