@@ -59,6 +59,7 @@ class StepTwoState extends State<StepTwo> {
               ),
             ),
             Container(
+              alignment: FractionalOffset.topLeft,
               child: TextWidget(
                 txt: _name,
                 txtSize: 24,

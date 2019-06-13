@@ -18,19 +18,17 @@ class DoRegistrationModel {
 
 @JsonSerializable()
 class _Data {
-
   _Data(
       {this.name,
       this.payorInfo,
       this.corporateInfo,
       this.policyNumber,
-      this.memberId,
-      this.payorMemberId,
+      this.bateOfBirth,
       this.memberType,
       this.employeeId,
       this.dependentId,
       this.activeFlag,
-      this.corporateRemarks,
+      this.helpLine,
       this.responseCode,
       this.responseDescription});
 
@@ -42,10 +40,8 @@ class _Data {
   String corporateInfo;
   @JsonKey(name: 'PolicyNumber')
   String policyNumber;
-  @JsonKey(name: 'MemberId')
-  String memberId;
-  @JsonKey(name: 'PayorMemberId')
-  String payorMemberId;
+  @JsonKey(name: 'DateOfBirth')
+  String bateOfBirth;
   @JsonKey(name: 'MemberType')
   String memberType;
   @JsonKey(name: 'EmployeeId')
@@ -54,8 +50,8 @@ class _Data {
   String dependentId;
   @JsonKey(name: 'ActiveFlag')
   String activeFlag;
-  @JsonKey(name: 'CorporateRemarks')
-  String corporateRemarks;
+  @JsonKey(name: 'HelpLine')
+  String helpLine;
   @JsonKey(name: 'ResponseCode')
   String responseCode;
   @JsonKey(name: 'ResponseDescription')

@@ -55,6 +55,7 @@ class StepFourState extends State<StepFour> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: TextFormField(
+                obscureText: true,
                 controller: _passwordController,
                 decoration: InputDecoration(
                     labelText: titlePassword,
@@ -66,6 +67,7 @@ class StepFourState extends State<StepFour> {
               padding: const EdgeInsets.only(top: 15),
               child: TextFormField(
                 controller: _rePasswordController,
+                obscureText: true,
                 decoration: InputDecoration(
                     labelText: titleRepassword,
                     border: OutlineInputBorder(

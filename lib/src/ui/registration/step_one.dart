@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/doregistration_bloc.dart';
 import 'package:jasindo_app/src/models/requests/do_req_register.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as utils;
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
@@ -177,7 +178,7 @@ class StepOneState extends State<StepOne> {
                 width: MediaQuery.of(context).size.width / 3,
               ),
               TextWidget(
-                  txt: attentionInsertCard, color: Colors.blue, txtSize: 10),
+                  txt: attentionInsertCard, color: blueStandart, txtSize: 10),
               _insertCard(),
               _insertDate(),
               _btnSubmit(),
@@ -312,13 +313,13 @@ class StepOneState extends State<StepOne> {
 
   Widget _btnSubmit() {
     return Container(
-      margin: EdgeInsets.fromLTRB(40.0, 30.0, 40.0, 0.0),
+      padding: EdgeInsets.only(left: 60, right: 60, top: 30),
       child: ButtonWidget(
           height: 40,
           txtSize: 12,
           txtColor: Colors.white,
           txt: 'SUBMIT',
-          btnColor: Colors.blue,
+          btnColor: blueStandart,
           borderRedius: 5,
           onClick: () => {
                 _onSubmit(),

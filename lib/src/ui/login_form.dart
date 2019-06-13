@@ -4,6 +4,7 @@ import 'package:jasindo_app/src/blocs/login_bloc.dart';
 import 'package:jasindo_app/src/models/requests/do_req_login.dart';
 import 'package:jasindo_app/src/ui/forgot_password.dart';
 import 'package:jasindo_app/src/ui/registration/register_form.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -39,7 +40,7 @@ class LoginFormState extends State<LoginForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextWidget(
-                  txt: "Selamat Datang!", color: Colors.blue, txtSize: 24),
+                  txt: "Selamat Datang!", color: blueStandart, txtSize: 30),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
@@ -73,23 +74,25 @@ class LoginFormState extends State<LoginForm> {
                 margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
                 alignment: FractionalOffset.centerRight,
                 child: InkWell(
-                  child: TextWidget(txt: "Lupa Kata Sandi", color: Colors.blue),
+                  child: TextWidget(txt: "Lupa Kata Sandi", color: blueStandart),
                   onTap: () => {_openForgotPassword(context)},
                 ),
               ),
               SizedBox(
                 width: double.infinity,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+                  padding: const EdgeInsets.fromLTRB(40.0, 70.0, 40.0, 0.0),
                   child: ButtonTheme(
                     child: new RaisedButton(
-                      child: const TextWidget(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      child: TextWidget(
                         color: Colors.white,
                         txt: 'LOGIN',
                         txtSize: 12.0,
                       ),
                       elevation: 4.0,
-                      color: Colors.blue,
+                      color: blueStandart,
                       splashColor: Colors.blueAccent,
                       onPressed: () {
                         _onSubmitLogin(context);
@@ -101,7 +104,7 @@ class LoginFormState extends State<LoginForm> {
               ),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 15.0, horizontal: 0.0),
+                    const EdgeInsets.symmetric(vertical: 30.0, horizontal: 0.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -109,7 +112,7 @@ class LoginFormState extends State<LoginForm> {
                     TextWidget(txt: "Pengguna Baru?"),
                     Spacer(flex: 1),
                     GestureDetector(
-                      child: TextWidget(txt: "DAFTAR", color: Colors.blue),
+                      child: TextWidget(txt: "DAFTAR", color: blueStandart),
                       onTap: () => {_openRegisterForm(context)},
                     ),
                     Spacer(flex: 20),

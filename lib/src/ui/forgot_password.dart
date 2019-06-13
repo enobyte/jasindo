@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/forgotpass_bloc.dart';
 import 'package:jasindo_app/src/models/requests/do_req_forgot.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
@@ -38,13 +39,13 @@ class ForgotPasswordState extends State<ForgotPassword> {
       body: Builder(
         builder: (BuildContext context) => ProgressDialog(
               child: Container(
-                margin: EdgeInsets.all(20),
+                margin: EdgeInsets.all(30),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextWidget(
                       txt: titleForgotPass,
-                      color: Colors.blue,
+                      color: blueStandart,
                       txtSize: 24,
                       align: TextAlign.left,
                     ),
@@ -63,14 +64,17 @@ class ForgotPasswordState extends State<ForgotPassword> {
                         decoration: InputDecoration(labelText: "Email"),
                       ),
                     ),
-                    ButtonWidget(
-                        height: 40,
-                        txtSize: 12,
-                        txtColor: Colors.white,
-                        txt: 'KIRIM',
-                        btnColor: Colors.blue,
-                        borderRedius: 5,
-                        onClick: () => {_onSubmit()}),
+                    Container(
+                      padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+                      child: ButtonWidget(
+                          height: 40,
+                          txtSize: 12,
+                          txtColor: Colors.white,
+                          txt: 'KIRIM',
+                          btnColor: blueStandart,
+                          borderRedius: 5,
+                          onClick: () => {_onSubmit()}),
+                    ),
                   ],
                 ),
               ),

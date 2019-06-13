@@ -32,55 +32,57 @@ class StepFiveState extends State<StepFive> {
   @override
   Widget build(BuildContext context) {
     return ProgressDialog(
-      child: Container(
-        margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
-        child: Column(
-          children: <Widget>[
-            Icon(Icons.mail),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: TextWidget(
-                txt: attentionVerifyMail,
-                txtSize: 12,
+      child: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
+          child: Column(
+            children: <Widget>[
+              Icon(Icons.mail),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextWidget(
+                  txt: attentionVerifyMail,
+                  txtSize: 12,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TextWidget(
-                txt: 'enoraden@gmail.com',
-                color: Colors.red,
-                txtSize: 14,
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: TextWidget(
+                  txt: 'enoraden@gmail.com',
+                  color: Colors.red,
+                  txtSize: 14,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: TextWidget(
-                txt: attentionActiveAccount,
-                txtSize: 12,
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: TextWidget(
+                  txt: attentionActiveAccount,
+                  txtSize: 12,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: TextWidget(
-                txt: attentionCheckMail,
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextWidget(
+                  txt: attentionCheckMail,
+                  txtSize: 8,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: PinPut(
+                  fieldsCount: 4,
+                  actionButtonsEnabled: false,
+                  onSubmit: (code) => {this._code = code},
+                ),
+              ),
+              _btnAktifasi(),
+              TextWidget(
+                txt: attentionCodeNotSend,
                 txtSize: 8,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: PinPut(
-                fieldsCount: 4,
-                actionButtonsEnabled: false,
-                onSubmit: (code) => {this._code = code},
-              ),
-            ),
-            _btnAktifasi(),
-            TextWidget(
-              txt: attentionCodeNotSend,
-              txtSize: 8,
-            ),
-            _btnResendCode()
-          ],
+              _btnResendCode()
+            ],
+          ),
         ),
       ),
       inAsyncCall: _isLoading,

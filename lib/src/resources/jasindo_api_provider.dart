@@ -20,21 +20,17 @@ class JasindoApiProvider {
   ///
 
   JasindoApiProvider() {
-    String _token = "";
     SharedPreferencesHelper.getToken().then((token) {
-      _token = token;
-    });
-    Options options = Options(
-        receiveTimeout: 5000,
-        connectTimeout: 5000,
-        baseUrl: _baseUrl,
-        headers: FormData.from({
-          'Authorization': _token,
-        }),
-        contentType: ContentType.parse("application/json"));
+      Options options = Options(
+          receiveTimeout: 5000,
+          connectTimeout: 5000,
+          baseUrl: _baseUrl,
+          headers: {'Authorization': token},
+          contentType: ContentType.parse("application/json"));
 
-    _dio = Dio(options);
-    _setupLoggingInterceptor();
+      _dio = Dio(options);
+      _setupLoggingInterceptor();
+    });
   }
 
   String _handleError(Error error) {
@@ -70,6 +66,7 @@ class JasindoApiProvider {
 
     _dio.interceptor.request.onSend = (Options options) {
       print("--> ${options.method} ${options.path}");
+      print("Header: ${options.headers}");
       print("Content type: ${options.contentType}");
       print("Body: ${options.data}");
       print("<-- END HTTP");

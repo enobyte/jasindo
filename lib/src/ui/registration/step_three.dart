@@ -27,8 +27,8 @@ class StepThreeState extends State<StepThree> {
 
   @override
   void initState() {
-    super.initState();
     _initalValue();
+    super.initState();
   }
 
   @override
@@ -113,7 +113,9 @@ class StepThreeState extends State<StepThree> {
   _initalValue() {
     SharedPreferencesHelper.getDoRegistration().then((onValue) {
       doRegistrationModel = DoRegistrationModel.fromJson(json.decode(onValue));
-      _name = doRegistrationModel.data.name;
+      setState(() {
+        _name = doRegistrationModel.data.name;
+      });
     });
 
     SharedPreferencesHelper.getCardNumb().then((card) {
