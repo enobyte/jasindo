@@ -24,7 +24,7 @@ class _WebViewContainerState extends State<WebViewContainer> {
   @override
   void initState() {
     super.initState();
-    _isLoadingPage = false;
+    _isLoadingPage = true;
   }
 
   @override

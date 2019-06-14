@@ -40,7 +40,10 @@ class LoginFormState extends State<LoginForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextWidget(
-                  txt: "Selamat Datang!", color: blueStandart, txtSize: 30),
+                  txt: "Selamat Datang!",
+                  color: blueStandart,
+                  txtSize: 30,
+                  fontFamily: 'SF-Bold'),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
@@ -74,7 +77,10 @@ class LoginFormState extends State<LoginForm> {
                 margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
                 alignment: FractionalOffset.centerRight,
                 child: InkWell(
-                  child: TextWidget(txt: "Lupa Kata Sandi", color: blueStandart),
+                  child: TextWidget(
+                      txt: "Lupa Kata Sandi",
+                      color: blueStandart,
+                      fontFamily: 'SF-Semibold'),
                   onTap: () => {_openForgotPassword(context)},
                 ),
               ),
@@ -112,7 +118,11 @@ class LoginFormState extends State<LoginForm> {
                     TextWidget(txt: "Pengguna Baru?"),
                     Spacer(flex: 1),
                     GestureDetector(
-                      child: TextWidget(txt: "DAFTAR", color: blueStandart),
+                      child: TextWidget(
+                        txt: "DAFTAR",
+                        color: blueStandart,
+                        fontFamily: 'SF-Semibold',
+                      ),
                       onTap: () => {_openRegisterForm(context)},
                     ),
                     Spacer(flex: 20),

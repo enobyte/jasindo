@@ -4,6 +4,7 @@ import 'package:jasindo_app/utility/utils.dart' as u;
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 import '../../change_pass.dart';
+import '../../term_condition.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -74,7 +75,7 @@ class SettingState extends State<Setting> {
         ButtonTheme(
           minWidth: MediaQuery.of(context).size.width / 3,
           child: RaisedButton(
-            onPressed: () => {},
+            onPressed: () => {u.routeToWidget(context, TermCondition())},
             child: TextWidget(
               txt: 'Syarat & Ketentuan',
               color: Colors.white,

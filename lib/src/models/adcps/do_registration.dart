@@ -14,6 +14,10 @@ class DoRegistrationModel {
       _$DoRegistrationModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$DoRegistrationModelToJson(this);
+
+  DoRegistrationModel.withError(String error)
+      : message = error,
+        status = false;
 }
 
 @JsonSerializable()

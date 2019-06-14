@@ -74,7 +74,7 @@ class PreloginActivity extends StatelessWidget {
                     txtSize: 18.0,
                   ),
                   elevation: 4.0,
-                  color: btnColorOrange,
+                  color: orangeColor1,
                   splashColor: Colors.blueGrey,
                   onPressed: () {
                     _openRegisterForm(context);

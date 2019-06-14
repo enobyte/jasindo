@@ -113,12 +113,12 @@ class JasindoApiProvider {
   ///
   Future<DoRegistrationModel> fetchDoRegister(
       {Map<String, dynamic> body}) async {
-    final response = await _dio.post("$_baseUrl/member/adcps_login",
-        data: json.encode(body));
-    if (response.statusCode == 200) {
+    try{
+      final response = await _dio.post("$_baseUrl/member/adcps_login",
+          data: json.encode(body));
       return DoRegistrationModel.fromJson(response.data);
-    } else {
-      throw Exception('Failed to load doRegistration');
+    }catch(error, _){
+      return DoRegistrationModel.withError(_handleError(error));
     }
   }
 

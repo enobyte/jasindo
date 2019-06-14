@@ -173,7 +173,7 @@ class StepOneState extends State<StepOne> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image.asset(
-                "lib/assets/images/dummycard.png",
+                "lib/assets/images/card.jpeg",
                 height: 100,
                 width: MediaQuery.of(context).size.width / 3,
               ),

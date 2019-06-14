@@ -25,8 +25,16 @@ class StepFiveState extends State<StepFive> {
   void initState() {
     super.initState();
     SharedPreferencesHelper.getEmail().then((value) {
-      _email = value;
+      setState(() {
+        _email = value;
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    SharedPreferencesHelper.clearAllPreference();
   }
 
   @override
@@ -48,7 +56,7 @@ class StepFiveState extends State<StepFive> {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: TextWidget(
-                  txt: 'enoraden@gmail.com',
+                  txt: _email,
                   color: Colors.red,
                   txtSize: 14,
                 ),

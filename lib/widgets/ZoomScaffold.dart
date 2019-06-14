@@ -66,9 +66,9 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
           backgroundColor: Colors.white,
           elevation: 0.0,
           leading: new IconButton(
-              icon: new Icon(
-                Icons.menu,
-                color: Colors.black,
+              icon: new Image.asset(
+                'lib/assets/images/ic_burger.png',
+                height: 25,
               ),
               onPressed: () {
                 startToggle();

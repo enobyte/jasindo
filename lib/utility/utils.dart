@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/bloc-provider.dart';
+import 'package:intl/intl.dart';
 
 Future<String> randomString() async {
   const chars = "abcdefghijklmnopqrstuvwxyz";
@@ -38,4 +39,11 @@ bool validateEmail(String value) {
     return false;
   else
     return true;
+}
+
+//Use yyyymmdd
+String formatDate(String value){
+  value = value+'T132700';
+  var datetime = DateTime.parse(value);
+  return DateFormat("dd-MMM-yyyy").format(datetime);
 }

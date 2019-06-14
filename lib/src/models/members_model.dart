@@ -7,8 +7,9 @@ class MemberModels {
   String message;
   bool status;
   _Data data;
+  _Adcps adcps;
 
-  MemberModels({this.message, this.status, this.data});
+  MemberModels({this.message, this.status, this.data, this.adcps});
 
   factory MemberModels.fromJson(Map<String, dynamic> json) =>
       _$MemberModelsFromJson(json);
@@ -70,4 +71,50 @@ class _Data {
   factory _Data.fromJson(Map<String, dynamic> json) => _$_DataFromJson(json);
 
   Map<String, dynamic> toJson() => _$_DataToJson(this);
+}
+
+@JsonSerializable()
+class _Adcps {
+  _Adcps(
+      {this.name,
+      this.payorInfo,
+      this.corporateInfo,
+      this.policyNumber,
+      this.bateOfBirth,
+      this.memberType,
+      this.employeeId,
+      this.dependentId,
+      this.activeFlag,
+      this.helpLine,
+      this.responseCode,
+      this.responseDescription});
+
+  @JsonKey(name: 'FullName')
+  String name;
+  @JsonKey(name: 'PayorInfo')
+  String payorInfo;
+  @JsonKey(name: 'CorporateInfo')
+  String corporateInfo;
+  @JsonKey(name: 'PolicyNumber')
+  String policyNumber;
+  @JsonKey(name: 'DateOfBirth')
+  String bateOfBirth;
+  @JsonKey(name: 'MemberType')
+  String memberType;
+  @JsonKey(name: 'EmployeeId')
+  String employeeId;
+  @JsonKey(name: 'DependentId')
+  String dependentId;
+  @JsonKey(name: 'ActiveFlag')
+  String activeFlag;
+  @JsonKey(name: 'HelpLine')
+  String helpLine;
+  @JsonKey(name: 'ResponseCode')
+  String responseCode;
+  @JsonKey(name: 'ResponseDescription')
+  String responseDescription;
+
+  factory _Adcps.fromJson(Map<String, dynamic> json) => _$_AdcpsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$_AdcpsToJson(this);
 }

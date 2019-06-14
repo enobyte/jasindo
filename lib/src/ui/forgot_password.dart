@@ -48,6 +48,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
                       color: blueStandart,
                       txtSize: 24,
                       align: TextAlign.left,
+                      fontFamily: 'SF-Bold',
                     ),
                     SizedBox(
                       height: 10,

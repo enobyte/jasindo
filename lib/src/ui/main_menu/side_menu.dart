@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/utility/colors.dart';
+import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class SideMenu extends StatelessWidget {
   Function onClick;
+  String name;
 
   final List<MenuItem> options = [
     MenuItem(Icons.home, 'Dashboard'),
@@ -29,19 +32,18 @@ class SideMenu extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Selamat Datang',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
+                TextWidget(
+                  txt: 'Selamat Datang',
+                  color: blueStandart,
+                  txtSize: 12,
                 ),
-                Text(
-                  'Tatiana',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
+                SizedBox(height: 4),
+                TextWidget(
+                  txt: name,
+                  align: TextAlign.left,
+                  fontFamily: 'SF-Bold',
+                  color: blueStandart,
+                  txtSize: 20,
                 )
               ],
             ),
@@ -80,7 +82,7 @@ class SideMenu extends StatelessWidget {
     await this.onClick(index);
   }
 
-  SideMenu({this.onClick});
+  SideMenu({this.onClick, this.name});
 }
 
 class MenuItem {

@@ -1,14 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/register_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/requests/do_req_registerinternal.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as u;
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
+
+import '../term_condition.dart';
 
 class StepFour extends StatefulWidget {
   Function onClickRegister;
@@ -24,8 +28,10 @@ class StepFour extends StatefulWidget {
 class StepFourState extends State<StepFour> {
   final _passwordController = TextEditingController();
   final _rePasswordController = TextEditingController();
+  final _verificationCodeController = TextEditingController();
   DoRegisterBloc bloc = DoRegisterBloc();
-  bool checkPolicy = false;
+  bool _checkPolicy = false;
+  bool _verifyCode = false;
   String code = "";
   String _email;
   String _day;
@@ -43,6 +49,15 @@ class StepFourState extends State<StepFour> {
       _setCode(value);
     });
     _populateData();
+    _verificationCodeController.addListener(onChangeVerifyCode);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _passwordController.dispose();
+    _rePasswordController.dispose();
+    _verificationCodeController.dispose();
   }
 
   @override
@@ -93,6 +108,7 @@ class StepFourState extends State<StepFour> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 15),
                     child: TextFormField(
+                      controller: _verificationCodeController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius:
@@ -107,10 +123,10 @@ class StepFourState extends State<StepFour> {
               child: Row(
                 children: <Widget>[
                   Checkbox(
-                    value: checkPolicy,
+                    value: _checkPolicy,
                     onChanged: (value) {
                       setState(() {
-                        checkPolicy = value;
+                        _checkPolicy = value;
                       });
                     },
                   ),
@@ -119,11 +135,24 @@ class StepFourState extends State<StepFour> {
                       padding: const EdgeInsets.only(left: 0),
                       child: Container(
                         alignment: FractionalOffset.topLeft,
-                        child: TextWidget(
-                          txtSize: 12,
-                          txt:
-                              'Saya menyetujui Syarat & Ketentuan yang berlaku',
-                          color: Colors.blue,
+                        child: RichText(
+                          text: TextSpan(
+                              text: 'Saya menyetujui ',
+                              style: DefaultTextStyle.of(context).style,
+                              children: [
+                                TextSpan(
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        u.routeToWidget(
+                                            context, TermCondition());
+                                      },
+                                    text: 'Syarat & Ketentuan ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: orangeColor1,
+                                    )),
+                                TextSpan(text: 'yang berlaku'),
+                              ]),
                         ),
                       ),
                     ),
@@ -131,7 +160,7 @@ class StepFourState extends State<StepFour> {
                 ],
               ),
             ),
-            _btnDaftar()
+            _checkPolicy && _verifyCode ? _btnDaftar() : Container()
           ],
         ),
       ),
@@ -146,7 +175,7 @@ class StepFourState extends State<StepFour> {
           txtSize: 12,
           txtColor: Colors.white,
           txt: 'DAFTAR',
-          btnColor: Colors.blue,
+          btnColor: blueStandart,
           borderRedius: 5,
           onClick: () => {_onSubmit()}),
     );
@@ -220,5 +249,17 @@ class StepFourState extends State<StepFour> {
     setState(() {
       this.code = code;
     });
+  }
+
+  onChangeVerifyCode() {
+    if (_verificationCodeController.text == this.code) {
+      setState(() {
+        _verifyCode = true;
+      });
+    }else {
+      setState(() {
+        _verifyCode = false;
+      });
+    }
   }
 }

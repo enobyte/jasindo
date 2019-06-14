@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -59,11 +60,12 @@ class StepTwoState extends State<StepTwo> {
               ),
             ),
             Container(
+              padding: EdgeInsets.only(top: 5),
               alignment: FractionalOffset.topLeft,
               child: TextWidget(
                 txt: _name,
                 txtSize: 24,
-                color: Colors.blue,
+                color: blueStandart,
                 align: TextAlign.left,
               ),
             ),
@@ -84,8 +86,9 @@ class StepTwoState extends State<StepTwo> {
               alignment: FractionalOffset.topRight,
               padding: EdgeInsets.only(top: 5),
               child: TextWidget(
+                txtSize: 9,
                 txt: attentionInsertHP,
-                color: Colors.red,
+                color: orangeColor1,
               ),
             ),
             Padding(

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class StepThree extends StatefulWidget {
@@ -24,6 +26,7 @@ class StepThreeState extends State<StepThree> {
   String _phone;
   String _cardNumber;
   String _birthDate;
+  final paddingHeigh = 20.0;
 
   @override
   void initState() {
@@ -35,7 +38,7 @@ class StepThreeState extends State<StepThree> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        margin: EdgeInsets.only(top: 30.0),
+        margin: EdgeInsets.only(top: 30.0, left: 20, right: 20),
         child: Column(
           children: <Widget>[
             _viewInformation(_cardNumber, _birthDate, _name, _phone, _email),
@@ -48,10 +51,11 @@ class StepThreeState extends State<StepThree> {
 
   Widget _confirmation() {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: EdgeInsets.only(top: 50),
       child: TextWidget(
         txt: contConfirmUserInfo,
         txtSize: 12,
+        fontFamily: 'SF-Semibold',
       ),
     );
   }
@@ -60,11 +64,23 @@ class StepThreeState extends State<StepThree> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        TextWidget(txt: titleNoCard),
-        TextWidget(txt: titleDOB),
-        TextWidget(txt: titleName),
-        TextWidget(txt: titleNoHp),
-        TextWidget(txt: titleEmail),
+        Container(
+          child: TextWidget(txt: titleNoCard),
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+        ),
+        Container(
+          child: TextWidget(txt: titleDOB),
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+        ),
+        Container(
+          child: TextWidget(txt: titleName),
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+        ),
+        Container(
+          child: TextWidget(txt: titleNoHp),
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+        ),
+        Container(child: TextWidget(txt: titleEmail)),
       ],
     );
   }
@@ -73,25 +89,48 @@ class StepThreeState extends State<StepThree> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        TextWidget(
-          txt: vCardNo,
-          color: Colors.blue,
+        Container(
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+          child: TextWidget(
+            txt: vCardNo,
+            color: blueStandart,
+            fontFamily: 'SF-Semibold',
+          ),
         ),
-        TextWidget(
-          txt: vTglLahir,
-          color: Colors.blue,
+        Container(
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+          child: TextWidget(
+            txt: vTglLahir,
+            color: blueStandart,
+            fontFamily: 'SF-Semibold',
+          ),
         ),
-        TextWidget(
-          txt: vName,
-          color: Colors.blue,
+        Container(
+          padding: EdgeInsets.only(bottom: paddingHeigh),
+          child: TextWidget(
+            txt: vName,
+            color: blueStandart,
+            fontFamily: 'SF-Semibold',
+          ),
         ),
-        TextWidget(
-          txt: vNoHp,
-          color: Colors.blue,
+        Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(bottom: paddingHeigh),
+              child: TextWidget(
+                txt: vNoHp,
+                color: blueStandart,
+                fontFamily: 'SF-Semibold',
+              ),
+            ),
+          ],
         ),
-        TextWidget(
-          txt: vEmail,
-          color: Colors.blue,
+        Container(
+          child: TextWidget(
+            txt: vEmail,
+            color: blueStandart,
+            fontFamily: 'SF-Semibold',
+          ),
         )
       ],
     );
@@ -134,7 +173,7 @@ class StepThreeState extends State<StepThree> {
 
     SharedPreferencesHelper.getYear().then((year) {
       _year = year;
-      _birthDate = _day + ' ' + _month + ' ' + _year;
+      _birthDate = formatDate(_year + _month + _day);
     });
 
     SharedPreferencesHelper.getPhone().then((value) {

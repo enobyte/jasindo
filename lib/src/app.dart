@@ -8,7 +8,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.light(),
+      theme: ThemeData(fontFamily: 'SF-Regular'),
       home: Scaffold(
         body: PreloginActivity(),
       ),

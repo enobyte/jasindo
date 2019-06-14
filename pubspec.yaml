@@ -31,6 +31,7 @@ dependencies:
   shared_preferences: ^0.5.3+1
   json_annotation: ^2.0.0
   dio: ^1.0.14
+  intl: ^0.15.8
 
 
 dev_dependencies:
@@ -52,6 +53,23 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  fonts:
+    - family: SF-Black
+      fonts:
+        - asset: lib/assets/fonts/SF-Pro-Display-Black.otf
+    - family: SF-Bold
+      fonts:
+        - asset: lib/assets/fonts/SF-Pro-Display-Bold.otf
+    - family: SF-Regular
+      fonts:
+        - asset: lib/assets/fonts/SF-Pro-Display-Regular.otf
+    - family: SF-Thin
+      fonts:
+        - asset: lib/assets/fonts/SF-Pro-Display-Thin.otf
+    - family: SF-Semibold
+      fonts:
+        - asset: lib/assets/fonts/SF-Pro-Display-Semibold.otf
+
   # To add assets to your application, add an assets section, like this:
   assets:
     - lib/assets/images/login_img.png
@@ -63,6 +81,8 @@ flutter:
     - lib/assets/images/ic_callcenter.png
     - lib/assets/images/logo_title.png
     - lib/assets/images/logo_medium.png
+    - lib/assets/images/card.png
+    - lib/assets/images/ic_burger.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

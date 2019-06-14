@@ -12,14 +12,18 @@ MemberModels _$MemberModelsFromJson(Map<String, dynamic> json) {
       status: json['status'] as bool,
       data: json['data'] == null
           ? null
-          : _Data.fromJson(json['data'] as Map<String, dynamic>));
+          : _Data.fromJson(json['data'] as Map<String, dynamic>),
+      adcps: json['adcps'] == null
+          ? null
+          : _Adcps.fromJson(json['adcps'] as Map<String, dynamic>));
 }
 
 Map<String, dynamic> _$MemberModelsToJson(MemberModels instance) =>
     <String, dynamic>{
       'message': instance.message,
       'status': instance.status,
-      'data': instance.data
+      'data': instance.data,
+      'adcps': instance.adcps
     };
 
 _Data _$_DataFromJson(Map<String, dynamic> json) {
@@ -55,4 +59,35 @@ Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
       'image': instance.photo,
       'is_active': instance.isActive,
       'active_code': instance.activeCode
+    };
+
+_Adcps _$_AdcpsFromJson(Map<String, dynamic> json) {
+  return _Adcps(
+      name: json['FullName'] as String,
+      payorInfo: json['PayorInfo'] as String,
+      corporateInfo: json['CorporateInfo'] as String,
+      policyNumber: json['PolicyNumber'] as String,
+      bateOfBirth: json['DateOfBirth'] as String,
+      memberType: json['MemberType'] as String,
+      employeeId: json['EmployeeId'] as String,
+      dependentId: json['DependentId'] as String,
+      activeFlag: json['ActiveFlag'] as String,
+      helpLine: json['HelpLine'] as String,
+      responseCode: json['ResponseCode'] as String,
+      responseDescription: json['ResponseDescription'] as String);
+}
+
+Map<String, dynamic> _$_AdcpsToJson(_Adcps instance) => <String, dynamic>{
+      'FullName': instance.name,
+      'PayorInfo': instance.payorInfo,
+      'CorporateInfo': instance.corporateInfo,
+      'PolicyNumber': instance.policyNumber,
+      'DateOfBirth': instance.bateOfBirth,
+      'MemberType': instance.memberType,
+      'EmployeeId': instance.employeeId,
+      'DependentId': instance.dependentId,
+      'ActiveFlag': instance.activeFlag,
+      'HelpLine': instance.helpLine,
+      'ResponseCode': instance.responseCode,
+      'ResponseDescription': instance.responseDescription
     };

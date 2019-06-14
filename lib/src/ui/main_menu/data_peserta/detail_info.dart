@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/ImageCircle.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -10,6 +14,22 @@ class DetailInfoPeserta extends StatefulWidget {
 }
 
 class DetailInfoPesertaState extends State<DetailInfoPeserta> {
+  String _noCard,
+      _corporate,
+      _level,
+      _typeMember,
+      _policy,
+      _dateBirth,
+      _benefit,
+      _polisPeriod,
+      _name;
+
+  @override
+  void initState() {
+    _initView();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -33,7 +53,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Perusahaan', color: Colors.blue),
-                    Text('PT ABCD')
+                    TextWidget(txt: _corporate)
                   ],
                 ),
               ),
@@ -46,7 +66,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Level', color: Colors.blue),
-                    Text('VIP')
+                    TextWidget(txt: _level)
                   ],
                 ),
               ),
@@ -59,7 +79,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'No Kartu', color: Colors.blue),
-                    Text('8000123456789')
+                    TextWidget(txt: _noCard)
                   ],
                 ),
               ),
@@ -72,7 +92,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Tipe Peserta', color: Colors.blue),
-                    Text('Principal')
+                    TextWidget(txt: _typeMember)
                   ],
                 ),
               ),
@@ -85,7 +105,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Policy', color: Colors.blue),
-                    Text('HEALTH INSURED')
+                    TextWidget(txt: _policy)
                   ],
                 ),
               ),
@@ -98,7 +118,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Tanggal Lahir', color: Colors.blue),
-                    Text('26 September 1981')
+                    TextWidget(txt: _dateBirth)
                   ],
                 ),
               ),
@@ -111,7 +131,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Manfaat', color: Colors.blue),
-                    Text('RI500, RI100, Dental Maternity')
+                    TextWidget(txt: _benefit)
                   ],
                 ),
               ),
@@ -124,7 +144,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Periode Polis', color: Colors.blue),
-                    Text('Jan/01/2019 - Dec/31/2019')
+                    TextWidget(txt: _polisPeriod)
                   ],
                 ),
               ),
@@ -160,7 +180,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
                   child: TextWidget(
-                    txt: 'ANDI ARLIN ANWAR',
+                    txt: _name,
                     color: Colors.white,
                   ),
                 ),
@@ -191,5 +211,22 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         ),
       )
     ]);
+  }
+
+  _initView() {
+    SharedPreferencesHelper.getDoLogin().then((onValue) {
+      final memberModels = MemberModels.fromJson(json.decode(onValue));
+      setState(() {
+        _name = memberModels.data.name;
+        _noCard = memberModels.data.cardNumb;
+        _corporate = memberModels.adcps.corporateInfo;
+        _level = "";
+        _typeMember = memberModels.adcps.memberType;
+        _policy = memberModels.adcps.payorInfo;
+        _dateBirth = memberModels.data.birthDate;
+        _benefit = "";
+        _polisPeriod = "";
+      });
+    });
   }
 }

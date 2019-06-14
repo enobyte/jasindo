@@ -1,12 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
+import 'package:jasindo_app/utility/colors.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/webview_form.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
@@ -29,6 +34,13 @@ class MainMenuState extends State<MainMenu> {
   Widget _contentPage;
   var titleAppbar = '';
   bool isFirst = true;
+  String _name;
+
+  @override
+  void initState() {
+    super.initState();
+    _initView();
+  }
 
   @override
   void dispose() {
@@ -44,7 +56,7 @@ class MainMenuState extends State<MainMenu> {
             onClick: (index) => {
                   attachContent(index),
                   changeSlide.sink.add(titleAppbar),
-                }),
+                }, name: _name,),
         contentScreen: Layout(
             contentBuilder: (context) => Container(
                   color: Colors.white,
@@ -110,7 +122,7 @@ class MainMenuState extends State<MainMenu> {
                         txt: 'CARI TAHU',
                         color: Colors.white,
                       ),
-                      color: Colors.blue,
+                      color: orangeColor2,
                     )
                   ],
                 ),
@@ -246,6 +258,15 @@ class MainMenuState extends State<MainMenu> {
   void _setTitle(title) {
     setState(() {
       this.titleAppbar = title;
+    });
+  }
+
+  _initView(){
+    SharedPreferencesHelper.getDoLogin().then((onValue) {
+      final memberModels = MemberModels.fromJson(json.decode(onValue));
+      setState(() {
+        _name = memberModels.data.name;
+      });
     });
   }
 }
