@@ -28,8 +28,8 @@ class ProviderRekananState extends State<ProviderRekanan> {
 
   Widget _bannerTop() {
     return Container(
-      height: MediaQuery.of(context).size.height / 2,
-      child: ImageCover(true, 'https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'),
+      height: MediaQuery.of(context).size.height / 3,
+      child: ImageCover(false, 'lib/assets/images/background_provider.png'),
     );
   }
 
@@ -56,7 +56,7 @@ class ProviderRekananState extends State<ProviderRekanan> {
           borderRadius: BorderRadius.all(Radius.circular(5))),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          hint: Text('SEMUA JAMINAN'),
+          hint: Text('SEMUA KOTA'),
           isExpanded: true,
           onChanged: (newValue) {
             setState(() {

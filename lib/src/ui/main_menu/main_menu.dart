@@ -53,10 +53,12 @@ class MainMenuState extends State<MainMenu> {
     return Scaffold(
       body: ZoomScaffold(
         menuScreen: SideMenu(
-            onClick: (index) => {
-                  attachContent(index),
-                  changeSlide.sink.add(titleAppbar),
-                }, name: _name,),
+          onClick: (index) => {
+                attachContent(index),
+                changeSlide.sink.add(titleAppbar),
+              },
+          name: _name,
+        ),
         contentScreen: Layout(
             contentBuilder: (context) => Container(
                   color: Colors.white,
@@ -249,8 +251,12 @@ class MainMenuState extends State<MainMenu> {
         Expanded(
           child: Image.asset(image, alignment: Alignment.center),
         ),
-        Text(title),
-        SizedBox(height: 20)
+        SizedBox(height: 10),
+        TextWidget(
+          txt: title,
+          fontFamily: 'SF-Semibold',
+        ),
+        SizedBox(height: 10)
       ],
     );
   }
@@ -261,7 +267,7 @@ class MainMenuState extends State<MainMenu> {
     });
   }
 
-  _initView(){
+  _initView() {
     SharedPreferencesHelper.getDoLogin().then((onValue) {
       final memberModels = MemberModels.fromJson(json.decode(onValue));
       setState(() {

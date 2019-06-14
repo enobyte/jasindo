@@ -41,9 +41,15 @@ bool validateEmail(String value) {
     return true;
 }
 
+String formatDateFormStandart(String value, String format){
+  var datetime = DateTime.parse(value);
+  return DateFormat(format).format(datetime);
+}
+
 //Use yyyymmdd
-String formatDate(String value){
+String formatDate(String value, String format){
+  print(value);
   value = value+'T132700';
   var datetime = DateTime.parse(value);
-  return DateFormat("dd-MMM-yyyy").format(datetime);
+  return DateFormat(format).format(datetime);
 }

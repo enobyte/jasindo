@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/activeuser_bloc.dart';
 import 'package:jasindo_app/src/models/requests/do_req_activeuser.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
@@ -45,7 +46,13 @@ class StepFiveState extends State<StepFive> {
           margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
           child: Column(
             children: <Widget>[
-              Icon(Icons.mail),
+              Image.asset(
+                'lib/assets/images/ic_mail.png',
+                height: 60,
+              ),
+              SizedBox(
+                height: 15,
+              ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: TextWidget(
@@ -57,7 +64,7 @@ class StepFiveState extends State<StepFive> {
                 padding: const EdgeInsets.all(5.0),
                 child: TextWidget(
                   txt: _email,
-                  color: Colors.red,
+                  color: orangeColor1,
                   txtSize: 14,
                 ),
               ),
@@ -86,7 +93,7 @@ class StepFiveState extends State<StepFive> {
               _btnAktifasi(),
               TextWidget(
                 txt: attentionCodeNotSend,
-                txtSize: 8,
+                txtSize: 15,
               ),
               _btnResendCode()
             ],
@@ -99,13 +106,13 @@ class StepFiveState extends State<StepFive> {
 
   Widget _btnAktifasi() {
     return Container(
-      margin: EdgeInsets.fromLTRB(40.0, 10.0, 40.0, 25.0),
+      margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 25.0),
       child: ButtonWidget(
           height: 40,
-          txtSize: 12,
+          txtSize: 16,
           txtColor: Colors.white,
           txt: 'AKTIFASI',
-          btnColor: Colors.blue,
+          btnColor: blueStandart,
           borderRedius: 5,
           onClick: () => {_onSubmit()}),
     );
@@ -120,7 +127,7 @@ class StepFiveState extends State<StepFive> {
           txtSize: 12,
           txtColor: Colors.white,
           txt: 'KIRIM ULANG',
-          btnColor: Colors.red,
+          btnColor: orangeColor1,
           borderRedius: 5,
           onClick: () => {debugPrint('btn success')}),
     );

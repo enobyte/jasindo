@@ -83,6 +83,13 @@ flutter:
     - lib/assets/images/logo_medium.png
     - lib/assets/images/card.png
     - lib/assets/images/ic_burger.png
+    - lib/assets/images/ic_mail.png
+    - lib/assets/images/ic_vip.png
+    - lib/assets/images/ic_date.png
+    - lib/assets/images/ic_sorting.png
+    - lib/assets/images/background_peserta.png
+    - lib/assets/images/ic_family.png
+    - lib/assets/images/background_provider.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

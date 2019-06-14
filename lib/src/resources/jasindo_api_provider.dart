@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
@@ -14,6 +15,7 @@ class JasindoApiProvider {
   Dio _dio;
   final _apiKey = '802b2c4b88ea1183e50e6b285a27696e';
   String _baseUrl = 'http://103.107.103.56:8000/api';
+  //String _baseUrl = 'http://169.254.224.69:8000/api';
 
   ///
   /// Property For Handle Interceptor
@@ -113,12 +115,22 @@ class JasindoApiProvider {
   ///
   Future<DoRegistrationModel> fetchDoRegister(
       {Map<String, dynamic> body}) async {
-    try{
+    try {
       final response = await _dio.post("$_baseUrl/member/adcps_login",
           data: json.encode(body));
       return DoRegistrationModel.fromJson(response.data);
-    }catch(error, _){
+    } catch (error, _) {
       return DoRegistrationModel.withError(_handleError(error));
+    }
+  }
+
+  Future<GetPlansModel> fetchGetPlans({Map<String, dynamic> body}) async {
+    try {
+      final response = await _dio.post("$_baseUrl/member/adcps_plan",
+          data: json.encode(body));
+      return GetPlansModel.fromJson(response.data);
+    } catch (error, _) {
+      return GetPlansModel.withError(_handleError(error));
     }
   }
 

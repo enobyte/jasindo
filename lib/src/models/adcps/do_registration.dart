@@ -33,6 +33,7 @@ class _Data {
       this.dependentId,
       this.activeFlag,
       this.helpLine,
+      this.vip,
       this.responseCode,
       this.responseDescription});
 
@@ -56,6 +57,8 @@ class _Data {
   String activeFlag;
   @JsonKey(name: 'HelpLine')
   String helpLine;
+  @JsonKey(name: 'VIP')
+  String vip;
   @JsonKey(name: 'ResponseCode')
   String responseCode;
   @JsonKey(name: 'ResponseDescription')

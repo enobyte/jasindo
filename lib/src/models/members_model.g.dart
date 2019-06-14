@@ -73,6 +73,7 @@ _Adcps _$_AdcpsFromJson(Map<String, dynamic> json) {
       dependentId: json['DependentId'] as String,
       activeFlag: json['ActiveFlag'] as String,
       helpLine: json['HelpLine'] as String,
+      vip: json['VIP'] as String,
       responseCode: json['ResponseCode'] as String,
       responseDescription: json['ResponseDescription'] as String);
 }
@@ -88,6 +89,7 @@ Map<String, dynamic> _$_AdcpsToJson(_Adcps instance) => <String, dynamic>{
       'DependentId': instance.dependentId,
       'ActiveFlag': instance.activeFlag,
       'HelpLine': instance.helpLine,
+      'VIP': instance.vip,
       'ResponseCode': instance.responseCode,
       'ResponseDescription': instance.responseDescription
     };

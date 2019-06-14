@@ -86,6 +86,7 @@ class _Adcps {
       this.dependentId,
       this.activeFlag,
       this.helpLine,
+      this.vip,
       this.responseCode,
       this.responseDescription});
 
@@ -109,6 +110,8 @@ class _Adcps {
   String activeFlag;
   @JsonKey(name: 'HelpLine')
   String helpLine;
+  @JsonKey(name: 'VIP')
+  String vip;
   @JsonKey(name: 'ResponseCode')
   String responseCode;
   @JsonKey(name: 'ResponseDescription')

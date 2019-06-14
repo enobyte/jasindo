@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferencesHelper {
   static final String _token = 'token';
   static final String _member = 'member';
+  static final String _plans = 'plans';
   static final String _phone = 'phone';
   static final String _email = 'email';
   static final String _cardNumber = 'cardNumb';
@@ -56,6 +57,19 @@ class SharedPreferencesHelper {
   static Future<String> getDoRegistration() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(_member) ?? '';
+  }
+
+  /// ------------------------------------------------------------
+  /// Set Get Plan ADCPS Json Data Preference
+  /// ------------------------------------------------------------
+  static Future<bool> setPlans(String value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setString(_plans, value);
+  }
+
+  static Future<String> getPlans() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(_plans) ?? '';
   }
 
   /// ------------------------------------------------------------

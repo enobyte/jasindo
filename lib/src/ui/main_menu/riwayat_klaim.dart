@@ -99,7 +99,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
             borderRadius: BorderRadius.all(Radius.circular(5))),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            hint: Text('SEMUA JAMINAN'),
+            hint: Text('TIPE KLAIM'),
             isExpanded: true,
             onChanged: (newValue) {
               setState(() {
@@ -142,10 +142,10 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                   maxLines: 2,
                 ),
               ),
-              Icon(
-                Icons.sort_by_alpha,
-                color: Colors.green,
-              ),
+              Image.asset(
+                'lib/assets/images/ic_sorting.png',
+                height: 20,
+              )
             ],
           ),
         ],
@@ -159,9 +159,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       child: Column(
         children: <Widget>[
           InkWell(
-            onTap: () => {
-              debugPrint('klik rentang waktu')
-            },
+            onTap: () => {debugPrint('klik rentang waktu')},
             child: Row(
               children: <Widget>[
                 SizedBox(
@@ -171,10 +169,10 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                     maxLines: 2,
                   ),
                 ),
-                Icon(
-                  Icons.calendar_today,
-                  color: Colors.green,
-                ),
+                Image.asset(
+                  'lib/assets/images/ic_date.png',
+                  height: 20,
+                )
               ],
             ),
           ),
@@ -199,7 +197,11 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       elevation: 4,
       shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
       child: Column(
-        children: <Widget>[_claimContentTop(), _claimContentMiddle(), __claimContentBottom()],
+        children: <Widget>[
+          _claimContentTop(),
+          _claimContentMiddle(),
+          __claimContentBottom()
+        ],
       ),
     );
   }
@@ -213,7 +215,11 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextWidget(txt: 'CLAIM ID', txtSize: 10, color: Colors.blue,),
+              TextWidget(
+                txt: 'CLAIM ID',
+                txtSize: 10,
+                color: Colors.blue,
+              ),
               SizedBox(height: 10),
               TextWidget(txt: 'PROVIDER', txtSize: 10, color: Colors.blue),
               TextWidget(txt: 'ADMISSION', txtSize: 10, color: Colors.blue),
@@ -294,11 +300,13 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           TextWidget(txt: 'REMARK', txtSize: 10, color: Colors.blue),
-          SizedBox(width: 10,),
+          SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: TextWidget(
               txt:
-                  'PEMBAYARAN DI TRANSFER KE BANK BCA CAB CILEDUG NO REK :12345678 A/D PT BUDI KEMULIAAN',
+                  'PEMBAYARAN DI TRANSFER KE BANK BCA CAB CILEDUG NO REK :12345678 A/D PT BUDI KEMULIAAN ',
               align: TextAlign.left,
               txtSize: 10,
             ),

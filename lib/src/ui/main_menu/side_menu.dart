@@ -7,7 +7,7 @@ class SideMenu extends StatelessWidget {
   String name;
 
   final List<MenuItem> options = [
-    MenuItem(Icons.home, 'Dashboard'),
+    MenuItem(Icons.home, 'Home'),
     MenuItem(Icons.library_books, 'Buku Panduan'),
     MenuItem(Icons.highlight, 'Berita'),
     MenuItem(Icons.info, 'Informasi'),

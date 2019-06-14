@@ -4,6 +4,7 @@ import 'package:jasindo_app/src/ui/registration/step_four.dart';
 import 'package:jasindo_app/src/ui/registration/step_one.dart';
 import 'package:jasindo_app/src/ui/registration/step_three.dart';
 import 'package:jasindo_app/src/ui/registration/step_two.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
@@ -33,7 +34,7 @@ class RegisterFormState extends State<RegisterForm> {
     return Scaffold(
       appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
-          title: Text("DAFTAR", style: TextStyle(color: Colors.black)),
+          title: Text("DAFTAR", style: TextStyle(color: blueStandart)),
           centerTitle: true,
           backgroundColor: Colors.white),
       body: new Container(

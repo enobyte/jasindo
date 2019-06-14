@@ -173,7 +173,7 @@ class StepThreeState extends State<StepThree> {
 
     SharedPreferencesHelper.getYear().then((year) {
       _year = year;
-      _birthDate = formatDate(_year + _month + _day);
+      _birthDate = formatDate(_year + _month + _day, "dd-MMM-yyyy");
     });
 
     SharedPreferencesHelper.getPhone().then((value) {

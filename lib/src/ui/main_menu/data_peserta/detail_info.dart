@@ -3,26 +3,25 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageCircle.dart';
+import 'package:jasindo_app/widgets/ImageCover.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class DetailInfoPeserta extends StatefulWidget {
+  List<String> benefit;
+  String polisPeriod;
+
   @override
   State<StatefulWidget> createState() {
     return DetailInfoPesertaState();
   }
+
+  DetailInfoPeserta({this.benefit, this.polisPeriod});
 }
 
 class DetailInfoPesertaState extends State<DetailInfoPeserta> {
-  String _noCard,
-      _corporate,
-      _level,
-      _typeMember,
-      _policy,
-      _dateBirth,
-      _benefit,
-      _polisPeriod,
-      _name;
+  String _noCard, _corporate, _level, _typeMember, _policy, _dateBirth, _name;
 
   @override
   void initState() {
@@ -40,15 +39,14 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           expandedHeight: MediaQuery.of(context).size.height / 3,
           flexibleSpace: FlexibleSpaceBar(background: _header()),
         ),
-        SliverFixedExtentList(
-          itemExtent: 30.0,
+        SliverList(
           delegate: SliverChildListDelegate(
             [
               Divider(
                 color: Colors.transparent,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -61,12 +59,12 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Level', color: Colors.blue),
-                    TextWidget(txt: _level)
+                    TextWidget(txt: _level == 'N' ? 'NON VIP' : 'VIP')
                   ],
                 ),
               ),
@@ -74,7 +72,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -87,7 +85,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -100,7 +98,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -113,7 +111,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -126,12 +124,19 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Manfaat', color: Colors.blue),
-                    TextWidget(txt: _benefit)
+                    SizedBox(
+                      width: 50,
+                    ),
+                    Expanded(
+                      child: TextWidget(
+                        align: TextAlign.right,
+                        txt: widget.benefit.join(', '),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -139,12 +144,12 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Periode Polis', color: Colors.blue),
-                    TextWidget(txt: _polisPeriod)
+                    TextWidget(txt: widget.polisPeriod)
                   ],
                 ),
               ),
@@ -160,9 +165,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
 
   Widget _header() {
     return Stack(fit: StackFit.expand, children: <Widget>[
-      Image.network(
-          'https://0.s3.envato.com/files/79885804/Crystal-Faces-Background-preview.jpg',
-          fit: BoxFit.cover),
+      ImageCover(false, 'lib/assets/images/background_peserta.png'),
       Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -185,25 +188,25 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Icon(
-                    Icons.stars,
-                    color: Colors.white,
-                  ),
-                )
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _level == 'Y'
+                        ? Image.asset(
+                            'lib/assets/images/ic_vip.png',
+                            height: 20,
+                          )
+                        : Container())
               ],
             ),
             Spacer(flex: 1),
             FlatButton.icon(
-              color: Colors.blue,
+              color: Colors.white,
               onPressed: () => {},
-              icon: Icon(
-                Icons.wc,
-                color: Colors.white,
+              icon: Image.asset(
+                'lib/assets/images/ic_family.png',
+                height: 15,
               ),
               label: TextWidget(
                 txt: 'Akun Keluarga',
-                color: Colors.white,
               ),
             ),
             Spacer(flex: 5),
@@ -220,12 +223,11 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         _name = memberModels.data.name;
         _noCard = memberModels.data.cardNumb;
         _corporate = memberModels.adcps.corporateInfo;
-        _level = "";
+        _level = memberModels.adcps.vip;
         _typeMember = memberModels.adcps.memberType;
-        _policy = memberModels.adcps.payorInfo;
-        _dateBirth = memberModels.data.birthDate;
-        _benefit = "";
-        _polisPeriod = "";
+        _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
+        _dateBirth =
+            formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
       });
     });
   }

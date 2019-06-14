@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
+import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/detail_info.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/manfaat_jaminan.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/BubbleTabIndicator.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -22,11 +29,15 @@ class DataPesertaState extends State<DataPeserta>
   ];
 
   TabController _tabController;
+  final bloc = GetPlansBloc();
+  List<String> listManfaat = new List();
+  String polishPeriod;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: tabs.length);
+    _fetchPlan();
   }
 
   @override
@@ -75,7 +86,10 @@ class DataPesertaState extends State<DataPeserta>
   Widget _contentPage(int index) {
     switch (index) {
       case 0:
-        return DetailInfoPeserta();
+        return DetailInfoPeserta(
+          benefit: listManfaat,
+          polisPeriod: polishPeriod,
+        );
         break;
       case 1:
         return BenefitGuaranty();
@@ -84,5 +98,28 @@ class DataPesertaState extends State<DataPeserta>
         return Container();
         break;
     }
+  }
+
+  _fetchPlan() {
+    SharedPreferencesHelper.getDoLogin().then((onValue) {
+      final memberModels = MemberModels.fromJson(json.decode(onValue));
+      ReqGetPlan request = ReqGetPlan(
+          cardNumber: memberModels.data.cardNumb,
+          birthDate: memberModels.data.birthDate.substring(0, 10));
+      bloc.fetchGetPlans(request.toMap(), (status, message) {
+        SharedPreferencesHelper.getPlans().then((onValue) {
+          final planModel = GetPlansModel.fromJson(json.decode(onValue));
+          setState(() {
+            for (var item in planModel.data) {
+              listManfaat.add(item.planType);
+            }
+            polishPeriod =
+                planModel.data[0].policyStartDate.replaceAll("-", "/") +
+                    ' - ' +
+                    planModel.data[0].policyEndDate.replaceAll("-", "/");
+          });
+        });
+      });
+    });
   }
 }
