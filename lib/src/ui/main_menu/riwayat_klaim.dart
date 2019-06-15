@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/gethistoryclaim_bloc.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
@@ -9,6 +10,7 @@ import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_histclaim.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class RiwayatKlaim extends StatefulWidget {
@@ -26,6 +28,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   GetHistClaimModel claimModel = GetHistClaimModel();
   bool isLoadingClaim = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final currancy = new NumberFormat("#,##0.00", "en_US");
 
   @override
   void initState() {
@@ -155,7 +158,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                       : claimModel.data.map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem(
                               value: value.claimId,
-                              child: Text(value.claimType));
+                              child: Text(value.claimType + ' (${value.claimId})'));
                         }).toList(),
                 ),
               ),
@@ -250,7 +253,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
               children: <Widget>[
                 _claimContentTop(snapshot, index),
                 _claimContentMiddle(snapshot, index),
-                __claimContentBottom(snapshot, index)
+                _claimContentBottom(snapshot, index)
               ],
             ))
         : Padding(
@@ -268,126 +271,197 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   Widget _claimContentTop(
       AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
     return Container(
-      margin: EdgeInsets.all(10),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            flex: 1,
-            child: Row(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          children: <Widget>[
+            Row(
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                      txt: 'CLAIM ID',
-                      txtSize: 10,
-                      color: Colors.blue,
-                    ),
-                    SizedBox(height: 10),
-                    TextWidget(
-                        txt: 'PROVIDER', txtSize: 10, color: Colors.blue),
-                    TextWidget(
-                        txt: 'ADMISSION', txtSize: 10, color: Colors.blue),
-                    TextWidget(
-                        txt: 'DISCHARGE', txtSize: 10, color: Colors.blue),
-                  ],
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      TextWidget(
+                        txt: 'CLAIM ID',
+                        txtSize: 10,
+                        color: Colors.blue,
+                        align: TextAlign.left,
+                      ),
+                      Spacer(flex: 12),
+                      TextWidget(
+                        txt: snapshot.data.data[index].claimId,
+                        txtSize: 10,
+                        align: TextAlign.left,
+                      ),
+                      Spacer(flex: 10),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                        txt: snapshot.data.data[index].claimId, txtSize: 10),
-                    SizedBox(height: 10),
-                    TextWidget(
-                        txt: snapshot.data.data[index].providerName,
-                        txtSize: 10),
-                    TextWidget(
-                        txt: snapshot.data.data[index].admissionDate,
-                        txtSize: 10),
-                    TextWidget(
-                        txt: snapshot.data.data[index].dischargeDate,
-                        txtSize: 10),
-                  ],
-                ),
+                Flexible(
+                  flex: 1,
+                  child: Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      TextWidget(
+                        txt: 'STATUS',
+                        txtSize: 10,
+                        color: Colors.blue,
+                        align: TextAlign.left,
+                      ),
+                      Spacer(flex: 20),
+                      TextWidget(
+                        txt: snapshot.data.data[index].status,
+                        txtSize: 10,
+                        align: TextAlign.left,
+                      ),
+                      Spacer(flex: 12),
+                    ],
+                  ),
+                )
               ],
             ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(txt: 'STATUS', txtSize: 10, color: Colors.blue),
-                    SizedBox(height: 10),
-                    TextWidget(
-                        txt: 'CLAIM TYPE', txtSize: 10, color: Colors.blue),
-                    TextWidget(txt: 'BENEFIT', txtSize: 10, color: Colors.blue),
-                    TextWidget(
-                        txt: 'DIAGNOSIS', txtSize: 10, color: Colors.blue),
-                  ],
-                ),
-                SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                        txt: snapshot.data.data[index].status, txtSize: 10),
-                    SizedBox(height: 10),
-                    TextWidget(
-                        txt: snapshot.data.data[index].claimType, txtSize: 10),
-                    TextWidget(txt: _planType, txtSize: 10),
-                    TextWidget(
-                      txt: snapshot.data.data[index].diagnosis,
-                      txtSize: 10,
-                      align: TextAlign.left,
-                    ),
-                  ],
-                ),
+            SizedBox(height: 10),
+            Table(
+              children: [
+                TableRow(children: [
+                  TextWidget(
+                    txt: 'PROVIDER',
+                    txtSize: 10,
+                    color: Colors.blue,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: snapshot.data.data[index].providerName,
+                    txtSize: 10,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: 'CLAIM TYPE',
+                    txtSize: 10,
+                    color: Colors.blue,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: snapshot.data.data[index].claimType,
+                    txtSize: 10,
+                    align: TextAlign.left,
+                  ),
+                ]),
+                TableRow(children: [
+                  TextWidget(
+                    txt: 'ADMISSION',
+                    txtSize: 10,
+                    color: Colors.blue,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: formatDateFormStandart(snapshot.data.data[index].admissionDate, 'MMM/dd/yyyy'),
+                    txtSize: 10,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: 'BENEFIT',
+                    txtSize: 10,
+                    color: Colors.blue,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: _planType,
+                    txtSize: 10,
+                    align: TextAlign.left,
+                  ),
+                ]),
+                //SizedBox(width: 8),
+                TableRow(children: [
+                  TextWidget(
+                    txt: 'DISCHARGE',
+                    txtSize: 10,
+                    color: Colors.blue,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: formatDateFormStandart(snapshot.data.data[index].dischargeDate, 'MMM/dd/yyyy'),
+                    txtSize: 10,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: 'DIAGNOSIS',
+                    txtSize: 10,
+                    color: Colors.blue,
+                    align: TextAlign.left,
+                  ),
+                  TextWidget(
+                    txt: snapshot.data.data[index].diagnosis,
+                    txtSize: 10,
+                    align: TextAlign.left,
+                  ),
+                ])
               ],
             ),
-          )
-        ],
-      ),
-    );
+            Container(
+                padding: EdgeInsets.only(top: 10),
+                child: Divider(
+                  height: 2,
+                )),
+          ],
+        ));
   }
 
   Widget _claimContentMiddle(
       AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
     return Container(
-      margin: EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      child: Column(
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              TextWidget(txt: 'INCURED', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: snapshot.data.data[index].incured, txtSize: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextWidget(txt: 'INCURED', txtSize: 10, color: Colors.blue),
+                  TextWidget(
+                      txt: 'Rp. ' +
+                          currancy.format(
+                              int.parse(snapshot.data.data[index].incured)),
+                      txtSize: 10),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextWidget(txt: 'APPROVED', txtSize: 10, color: Colors.blue),
+                  TextWidget(
+                      txt: 'Rp. ' +
+                          currancy.format(
+                              int.parse(snapshot.data.data[index].approved)),
+                      txtSize: 10),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextWidget(txt: 'EXCESS', txtSize: 10, color: Colors.blue),
+                  TextWidget(
+                      txt: 'Rp. ' +
+                          currancy.format(
+                              int.parse(snapshot.data.data[index].excess)),
+                      txtSize: 10),
+                ],
+              ),
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(txt: 'APPROVED', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: snapshot.data.data[index].approved, txtSize: 10),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(txt: 'EXCESS', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: snapshot.data.data[index].excess, txtSize: 10),
-            ],
-          ),
+          Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Divider(
+                height: 2,
+              )),
         ],
       ),
     );
   }
 
-  Widget __claimContentBottom(
+  Widget _claimContentBottom(
       AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
     return Container(
       margin: EdgeInsets.all(10),

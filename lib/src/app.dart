@@ -3,6 +3,7 @@ import 'package:jasindo_app/src/ui/main_menu/main_menu.dart';
 import 'package:jasindo_app/src/ui/prelogin_activity.dart';
 
 import 'ui/login_form.dart';
+import 'ui/splash_screen.dart';
 
 class App extends StatelessWidget {
   @override
@@ -10,7 +11,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'SF-Regular'),
       home: Scaffold(
-        body: PreloginActivity(),
+        body: SplashScreen(),
       ),
       routes: <String, WidgetBuilder>{
         '/main_menu': (BuildContext context) => new MainMenu(),
