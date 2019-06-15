@@ -9,7 +9,6 @@ import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_histclaim.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
-import 'package:jasindo_app/widgets/ImageCover.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class RiwayatKlaim extends StatefulWidget {
@@ -22,10 +21,11 @@ class RiwayatKlaim extends StatefulWidget {
 class RiwayatKlaimState extends State<RiwayatKlaim> {
   final bloc = GetHistoryClaimBloc();
   final planbloc = GetPlansBloc();
-  String _planId, _cardNumber, _birthDate;
-  GetPlansModel plansModel;
+  String _planId, _cardNumber, _birthDate, _claimId, _planType;
+  GetPlansModel plansModel = GetPlansModel();
+  GetHistClaimModel claimModel = GetHistClaimModel();
   bool isLoadingClaim = false;
-  List<String> typeClaim = List();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -42,6 +42,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Riwayat Klaim", color: Colors.black),
@@ -99,15 +100,20 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                     cardNumber: _cardNumber,
                     birthDate: _birthDate,
                     planId: _planId);
-                bloc.fetchHistClaim(request.toMap());
+                bloc.fetchHistClaim(
+                    request.toMap(),
+                    (callback, status, message) => {
+                          _collectHistoryClaim(callback, status, message),
+                        });
               });
             },
             value: _planId,
-            items: plansModel == null
+            items: plansModel.data == null
                 ? List<String>().map<DropdownMenuItem<String>>((value) {
                     return DropdownMenuItem(value: value, child: Text(value));
                   }).toList()
                 : plansModel.data.map<DropdownMenuItem<String>>((value) {
+                    _planType = value.planType;
                     return DropdownMenuItem(
                         value: value.planId, child: Text(value.planType));
                   }).toList(),
@@ -119,7 +125,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _klaimList() {
     return Expanded(
-      child: typeClaim.length > 0
+      child: claimModel.data != null && claimModel.data[0].responseCode == "200"
           ? Container(
               margin: EdgeInsets.all(10),
               height: 40,
@@ -137,12 +143,20 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                   isExpanded: true,
                   onChanged: (newValue) {
                     setState(() {
-                      //monthValue = newValue;
+                      _claimId = newValue;
                     });
                   },
-                  items: typeClaim.map<DropdownMenuItem<String>>((value) {
-                    return DropdownMenuItem(value: value, child: Text(value));
-                  }).toList(),
+                  value: _claimId,
+                  items: claimModel.data[0].responseCode != "200"
+                      ? List<String>().map<DropdownMenuItem<String>>((value) {
+                          return DropdownMenuItem(
+                              value: value, child: Text(value));
+                        }).toList()
+                      : claimModel.data.map<DropdownMenuItem<String>>((value) {
+                          return DropdownMenuItem(
+                              value: value.claimId,
+                              child: Text(value.claimType));
+                        }).toList(),
                 ),
               ),
             )
@@ -207,7 +221,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     return StreamBuilder(
         stream: bloc.getHistClaim,
         builder: (context, AsyncSnapshot<GetHistClaimModel> snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.data != null) {
             return Expanded(
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) =>
@@ -240,7 +254,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
               ],
             ))
         : Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 10),
+            padding:
+                EdgeInsets.only(top: MediaQuery.of(context).size.height / 10),
             child: Container(
               child: Image.asset(
                 'lib/assets/images/not_found.png',
@@ -255,55 +270,85 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(
-                txt: 'CLAIM ID',
-                txtSize: 10,
-                color: Colors.blue,
-              ),
-              SizedBox(height: 10),
-              TextWidget(txt: 'PROVIDER', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'ADMISSION', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'DISCHARGE', txtSize: 10, color: Colors.blue),
-            ],
+          Flexible(
+            flex: 1,
+            child: Row(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextWidget(
+                      txt: 'CLAIM ID',
+                      txtSize: 10,
+                      color: Colors.blue,
+                    ),
+                    SizedBox(height: 10),
+                    TextWidget(
+                        txt: 'PROVIDER', txtSize: 10, color: Colors.blue),
+                    TextWidget(
+                        txt: 'ADMISSION', txtSize: 10, color: Colors.blue),
+                    TextWidget(
+                        txt: 'DISCHARGE', txtSize: 10, color: Colors.blue),
+                  ],
+                ),
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextWidget(
+                        txt: snapshot.data.data[index].claimId, txtSize: 10),
+                    SizedBox(height: 10),
+                    TextWidget(
+                        txt: snapshot.data.data[index].providerName,
+                        txtSize: 10),
+                    TextWidget(
+                        txt: snapshot.data.data[index].admissionDate,
+                        txtSize: 10),
+                    TextWidget(
+                        txt: snapshot.data.data[index].dischargeDate,
+                        txtSize: 10),
+                  ],
+                ),
+              ],
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(txt: snapshot.data.data[index].claimId, txtSize: 10),
-              SizedBox(height: 10),
-              TextWidget(
-                  txt: snapshot.data.data[index].providerName, txtSize: 10),
-              TextWidget(
-                  txt: snapshot.data.data[index].admissionDate, txtSize: 10),
-              TextWidget(
-                  txt: snapshot.data.data[index].dischargeDate, txtSize: 10),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(txt: 'STATUS', txtSize: 10, color: Colors.blue),
-              SizedBox(height: 10),
-              TextWidget(txt: 'CLAIM TYPE', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'BENEFIT', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'DIAGNOSIS', txtSize: 10, color: Colors.blue),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextWidget(txt: snapshot.data.data[index].status, txtSize: 10),
-              SizedBox(height: 10),
-              TextWidget(txt: snapshot.data.data[index].claimType, txtSize: 10),
-              TextWidget(txt: "ngambil dari plan", txtSize: 10),
-              TextWidget(txt: snapshot.data.data[index].diagnosis, txtSize: 10),
-            ],
-          ),
+          Flexible(
+            flex: 1,
+            child: Row(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextWidget(txt: 'STATUS', txtSize: 10, color: Colors.blue),
+                    SizedBox(height: 10),
+                    TextWidget(
+                        txt: 'CLAIM TYPE', txtSize: 10, color: Colors.blue),
+                    TextWidget(txt: 'BENEFIT', txtSize: 10, color: Colors.blue),
+                    TextWidget(
+                        txt: 'DIAGNOSIS', txtSize: 10, color: Colors.blue),
+                  ],
+                ),
+                SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextWidget(
+                        txt: snapshot.data.data[index].status, txtSize: 10),
+                    SizedBox(height: 10),
+                    TextWidget(
+                        txt: snapshot.data.data[index].claimType, txtSize: 10),
+                    TextWidget(txt: _planType, txtSize: 10),
+                    TextWidget(
+                      txt: snapshot.data.data[index].diagnosis,
+                      txtSize: 10,
+                      align: TextAlign.left,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -355,8 +400,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           ),
           Expanded(
             child: TextWidget(
-              txt:
-                  'PEMBAYARAN DI TRANSFER KE BANK BCA CAB CILEDUG NO REK :12345678 A/D PT BUDI KEMULIAAN ',
+              txt: snapshot.data.data[index].remarks,
               align: TextAlign.left,
               txtSize: 10,
             ),
@@ -378,7 +422,24 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           plansModel = GetPlansModel.fromJson(json.decode(onValue));
           setState(() {});
         });
+        if (!status) {
+          _scaffoldKey.currentState
+              .showSnackBar(SnackBar(content: Text(message)));
+        }
       });
     });
+  }
+
+  _collectHistoryClaim(
+      GetHistClaimModel callback, bool status, String message) {
+    if (status) {
+      claimModel = callback;
+      setState(() {});
+    } else {
+      setState(() {
+        isLoadingClaim = false;
+      });
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }

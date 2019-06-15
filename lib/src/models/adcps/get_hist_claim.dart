@@ -53,6 +53,9 @@ class _Data {
   @JsonKey(name: 'Approved')
   String approved;
 
+  @JsonKey(name: 'Remarks')
+  String remarks;
+
   @JsonKey(name: 'ResponseCode')
   String responseCode;
 

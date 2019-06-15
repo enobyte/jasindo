@@ -38,7 +38,8 @@ _Data _$_DataFromJson(Map<String, dynamic> json) {
       excess: json['Excess'] as String,
       approved: json['Approved'] as String,
       responseCode: json['ResponseCode'] as String,
-      responseDescription: json['ResponseDescription'] as String);
+      responseDescription: json['ResponseDescription'] as String)
+    ..remarks = json['Remarks'] as String;
 }
 
 Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
@@ -52,6 +53,7 @@ Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
       'Incured': instance.incured,
       'Excess': instance.excess,
       'Approved': instance.approved,
+      'Remarks': instance.remarks,
       'ResponseCode': instance.responseCode,
       'ResponseDescription': instance.responseDescription
     };

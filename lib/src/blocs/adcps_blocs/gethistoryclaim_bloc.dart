@@ -8,9 +8,15 @@ class GetHistoryClaimBloc {
 
   Observable<GetHistClaimModel> get getHistClaim => _getHistClaimFetch.stream;
 
-  fetchHistClaim(Map<String, dynamic> body) async {
+  fetchHistClaim(
+      Map<String, dynamic> body,
+      Function(GetHistClaimModel, bool status, String message)
+          callback) async {
     GetHistClaimModel model = await _repository.fetchHistClaim(body: body);
+
     _getHistClaimFetch.sink.add(model);
+
+    callback(model, model.status, model.message);
   }
 
   dispose() {
