@@ -9,7 +9,7 @@ import 'package:jasindo_app/widgets/ImageCover.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class DetailInfoPeserta extends StatefulWidget {
-  List<String> benefit;
+  List<String> plans;
   String polisPeriod;
 
   @override
@@ -17,7 +17,7 @@ class DetailInfoPeserta extends StatefulWidget {
     return DetailInfoPesertaState();
   }
 
-  DetailInfoPeserta({this.benefit, this.polisPeriod});
+  DetailInfoPeserta({this.plans, this.polisPeriod});
 }
 
 class DetailInfoPesertaState extends State<DetailInfoPeserta> {
@@ -134,7 +134,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                     Expanded(
                       child: TextWidget(
                         align: TextAlign.right,
-                        txt: widget.benefit.join(', '),
+                        txt: widget.plans.join(', '),
                       ),
                     ),
                   ],

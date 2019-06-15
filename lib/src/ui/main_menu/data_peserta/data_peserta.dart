@@ -31,7 +31,9 @@ class DataPesertaState extends State<DataPeserta>
   TabController _tabController;
   final bloc = GetPlansBloc();
   List<String> listManfaat = new List();
-  String polishPeriod;
+  String polishPeriod, cardNumber, birthDate;
+
+  GetPlansModel plansModel;
 
   @override
   void initState() {
@@ -87,12 +89,16 @@ class DataPesertaState extends State<DataPeserta>
     switch (index) {
       case 0:
         return DetailInfoPeserta(
-          benefit: listManfaat,
+          plans: listManfaat,
           polisPeriod: polishPeriod,
         );
         break;
       case 1:
-        return BenefitGuaranty();
+        return BenefitGuaranty(
+          cardNumber: cardNumber,
+          birthDate: birthDate,
+          plans: plansModel,
+        );
         break;
       case 2:
         return Container();
@@ -103,20 +109,21 @@ class DataPesertaState extends State<DataPeserta>
   _fetchPlan() {
     SharedPreferencesHelper.getDoLogin().then((onValue) {
       final memberModels = MemberModels.fromJson(json.decode(onValue));
-      ReqGetPlan request = ReqGetPlan(
-          cardNumber: memberModels.data.cardNumb,
-          birthDate: memberModels.data.birthDate.substring(0, 10));
+      cardNumber = memberModels.data.cardNumb;
+      birthDate = memberModels.data.birthDate.substring(0, 10);
+      ReqGetPlan request =
+          ReqGetPlan(cardNumber: cardNumber, birthDate: birthDate);
       bloc.fetchGetPlans(request.toMap(), (status, message) {
         SharedPreferencesHelper.getPlans().then((onValue) {
-          final planModel = GetPlansModel.fromJson(json.decode(onValue));
+          plansModel = GetPlansModel.fromJson(json.decode(onValue));
           setState(() {
-            for (var item in planModel.data) {
+            for (var item in plansModel.data) {
               listManfaat.add(item.planType);
             }
             polishPeriod =
-                planModel.data[0].policyStartDate.replaceAll("-", "/") +
+                plansModel.data[0].policyStartDate.replaceAll("-", "/") +
                     ' - ' +
-                    planModel.data[0].policyEndDate.replaceAll("-", "/");
+                    plansModel.data[0].policyEndDate.replaceAll("-", "/");
           });
         });
       });

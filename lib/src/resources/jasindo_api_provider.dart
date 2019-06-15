@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
+import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
@@ -15,6 +17,7 @@ class JasindoApiProvider {
   Dio _dio;
   final _apiKey = '802b2c4b88ea1183e50e6b285a27696e';
   String _baseUrl = 'http://103.107.103.56:8000/api';
+
   //String _baseUrl = 'http://169.254.224.69:8000/api';
 
   ///
@@ -131,6 +134,27 @@ class JasindoApiProvider {
       return GetPlansModel.fromJson(response.data);
     } catch (error, _) {
       return GetPlansModel.withError(_handleError(error));
+    }
+  }
+
+  Future<GetBenefitModel> fetchGetBenefit({Map<String, dynamic> body}) async {
+    try {
+      final response = await _dio.post("$_baseUrl/member/adcps_benefit",
+          data: json.encode(body));
+      return GetBenefitModel.fromJson(response.data);
+    } catch (error, _) {
+      return GetBenefitModel.withError(_handleError(error));
+    }
+  }
+
+  Future<GetHistClaimModel> fetchGetHistClaim(
+      {Map<String, dynamic> body}) async {
+    try {
+      final response = await _dio.post("$_baseUrl/member/adcps_histclaim",
+          data: json.encode(body));
+      return GetHistClaimModel.fromJson(response.data);
+    } catch (error, _) {
+      return GetHistClaimModel.withError(_handleError(error));
     }
   }
 

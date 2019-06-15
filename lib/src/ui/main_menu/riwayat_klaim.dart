@@ -1,4 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/adcps_blocs/gethistoryclaim_bloc.dart';
+import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
+import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
+import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/src/models/requests/do_req_histclaim.dart';
+import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/widgets/ImageCover.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class RiwayatKlaim extends StatefulWidget {
@@ -9,6 +20,25 @@ class RiwayatKlaim extends StatefulWidget {
 }
 
 class RiwayatKlaimState extends State<RiwayatKlaim> {
+  final bloc = GetHistoryClaimBloc();
+  final planbloc = GetPlansBloc();
+  String _planId, _cardNumber, _birthDate;
+  GetPlansModel plansModel;
+  bool isLoadingClaim = false;
+  List<String> typeClaim = List();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPlan();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bloc.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,25 +91,26 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
             isExpanded: true,
             onChanged: (newValue) {
               setState(() {
-                //monthValue = newValue;
+                setState(() {
+                  _planId = newValue;
+                  isLoadingClaim = true;
+                });
+                ReqGetHistClaim request = ReqGetHistClaim(
+                    cardNumber: _cardNumber,
+                    birthDate: _birthDate,
+                    planId: _planId);
+                bloc.fetchHistClaim(request.toMap());
               });
             },
-            items: <String>[
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              'Dec'
-            ].map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem(value: value, child: Text(value));
-            }).toList(),
+            value: _planId,
+            items: plansModel == null
+                ? List<String>().map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList()
+                : plansModel.data.map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem(
+                        value: value.planId, child: Text(value.planType));
+                  }).toList(),
           ),
         ),
       ),
@@ -88,43 +119,34 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _klaimList() {
     return Expanded(
-      child: Container(
-        margin: EdgeInsets.all(10),
-        height: 40,
-        alignment: FractionalOffset.center,
-        padding: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            border: Border.all(
-                width: 1, style: BorderStyle.solid, color: Colors.black12),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            hint: Text('TIPE KLAIM'),
-            isExpanded: true,
-            onChanged: (newValue) {
-              setState(() {
-                //monthValue = newValue;
-              });
-            },
-            items: <String>[
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              'Dec'
-            ].map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem(value: value, child: Text(value));
-            }).toList(),
-          ),
-        ),
-      ),
+      child: typeClaim.length > 0
+          ? Container(
+              margin: EdgeInsets.all(10),
+              height: 40,
+              alignment: FractionalOffset.center,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 1,
+                      style: BorderStyle.solid,
+                      color: Colors.black12),
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  hint: Text('TIPE KLAIM'),
+                  isExpanded: true,
+                  onChanged: (newValue) {
+                    setState(() {
+                      //monthValue = newValue;
+                    });
+                  },
+                  items: typeClaim.map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem(value: value, child: Text(value));
+                  }).toList(),
+                ),
+              ),
+            )
+          : Container(),
     );
   }
 
@@ -182,31 +204,54 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   }
 
   Widget _listHistoryClaim() {
-    return Expanded(
-      child: ListView.builder(
-        itemBuilder: (BuildContext context, int index) =>
-            _listHistoryClaimContent(),
-        itemCount: 10,
-      ),
-    );
+    return StreamBuilder(
+        stream: bloc.getHistClaim,
+        builder: (context, AsyncSnapshot<GetHistClaimModel> snapshot) {
+          if (snapshot.hasData) {
+            return Expanded(
+              child: ListView.builder(
+                itemBuilder: (BuildContext context, int index) =>
+                    _listHistoryClaimContent(snapshot, index),
+                itemCount: snapshot.data.data.length,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          return isLoadingClaim
+              ? Center(child: CircularProgressIndicator())
+              : Container();
+        });
   }
 
-  Widget _listHistoryClaimContent() {
-    return Card(
-      margin: EdgeInsets.all(5),
-      elevation: 4,
-      shape: UnderlineInputBorder(borderSide: BorderSide(color: Colors.green)),
-      child: Column(
-        children: <Widget>[
-          _claimContentTop(),
-          _claimContentMiddle(),
-          __claimContentBottom()
-        ],
-      ),
-    );
+  Widget _listHistoryClaimContent(
+      AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
+    return snapshot.data.data[0].responseCode == "200"
+        ? Card(
+            margin: EdgeInsets.all(5),
+            elevation: 4,
+            shape: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.green)),
+            child: Column(
+              children: <Widget>[
+                _claimContentTop(snapshot, index),
+                _claimContentMiddle(snapshot, index),
+                __claimContentBottom(snapshot, index)
+              ],
+            ))
+        : Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 10),
+            child: Container(
+              child: Image.asset(
+                'lib/assets/images/not_found.png',
+                height: MediaQuery.of(context).size.height / 3,
+              ),
+            ),
+          );
   }
 
-  Widget _claimContentTop() {
+  Widget _claimContentTop(
+      AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -229,11 +274,14 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextWidget(txt: '123456', txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].claimId, txtSize: 10),
               SizedBox(height: 10),
-              TextWidget(txt: 'RS Budi Kemuliaan', txtSize: 10),
-              TextWidget(txt: 'Apr/01/2016', txtSize: 10),
-              TextWidget(txt: 'Apr/01/2016', txtSize: 10),
+              TextWidget(
+                  txt: snapshot.data.data[index].providerName, txtSize: 10),
+              TextWidget(
+                  txt: snapshot.data.data[index].admissionDate, txtSize: 10),
+              TextWidget(
+                  txt: snapshot.data.data[index].dischargeDate, txtSize: 10),
             ],
           ),
           Column(
@@ -249,11 +297,11 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TextWidget(txt: 'VALID CLAIM', txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].status, txtSize: 10),
               SizedBox(height: 10),
-              TextWidget(txt: 'CASHLESS', txtSize: 10),
-              TextWidget(txt: 'Rawat Jalan', txtSize: 10),
-              TextWidget(txt: 'Typhoid Fever', txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].claimType, txtSize: 10),
+              TextWidget(txt: "ngambil dari plan", txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].diagnosis, txtSize: 10),
             ],
           ),
         ],
@@ -261,7 +309,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     );
   }
 
-  Widget _claimContentMiddle() {
+  Widget _claimContentMiddle(
+      AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -271,21 +320,21 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextWidget(txt: 'INCURED', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'Rp.1000.000', txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].incured, txtSize: 10),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextWidget(txt: 'APPROVED', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'RS Budi Kemuliaan', txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].approved, txtSize: 10),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextWidget(txt: 'EXCESS', txtSize: 10, color: Colors.blue),
-              TextWidget(txt: 'RS Budi Kemuliaan', txtSize: 10),
+              TextWidget(txt: snapshot.data.data[index].excess, txtSize: 10),
             ],
           ),
         ],
@@ -293,7 +342,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     );
   }
 
-  Widget __claimContentBottom() {
+  Widget __claimContentBottom(
+      AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
     return Container(
       margin: EdgeInsets.all(10),
       child: Row(
@@ -314,5 +364,21 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
         ],
       ),
     );
+  }
+
+  _fetchPlan() {
+    SharedPreferencesHelper.getDoLogin().then((onValue) {
+      final memberModels = MemberModels.fromJson(json.decode(onValue));
+      _cardNumber = memberModels.data.cardNumb;
+      _birthDate = memberModels.data.birthDate.substring(0, 10);
+      ReqGetPlan request =
+          ReqGetPlan(cardNumber: _cardNumber, birthDate: _birthDate);
+      planbloc.fetchGetPlans(request.toMap(), (status, message) {
+        SharedPreferencesHelper.getPlans().then((onValue) {
+          plansModel = GetPlansModel.fromJson(json.decode(onValue));
+          setState(() {});
+        });
+      });
+    });
   }
 }

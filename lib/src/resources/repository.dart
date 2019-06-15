@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
+import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
+import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
@@ -18,6 +20,12 @@ class Repository {
 
   Future<GetPlansModel> fetchPlans({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGetPlans(body: body);
+
+  Future<GetBenefitModel> fetchBenefit({Map<String, dynamic> body}) =>
+      jasindoApiProvider.fetchGetBenefit(body: body);
+
+  Future<GetHistClaimModel> fetchHistClaim({Map<String, dynamic> body}) =>
+      jasindoApiProvider.fetchGetHistClaim(body: body);
 
   Future<MemberModels> actLogin({Map<String, dynamic> body}) =>
       jasindoApiProvider.login(body: body);
