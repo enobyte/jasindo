@@ -7,7 +7,7 @@ import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
-import 'package:jasindo_app/src/ui/main_menu/provider_rekanan.dart';
+import 'package:jasindo_app/src/ui/main_menu/provider/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
 import 'package:jasindo_app/utility/colors.dart';

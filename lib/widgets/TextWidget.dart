@@ -6,6 +6,7 @@ class TextWidget extends StatelessWidget {
   final double txtSize;
   final String fontFamily;
   final TextAlign align;
+  final int maxLine;
 
   const TextWidget(
       {Key key,
@@ -13,12 +14,14 @@ class TextWidget extends StatelessWidget {
       this.color,
       this.txtSize,
       this.fontFamily,
-      this.align})
+      this.align,
+      this.maxLine})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(txt == null ? "" : txt,
+        maxLines: maxLine,
         style:
             TextStyle(color: color, fontSize: txtSize, fontFamily: fontFamily),
         textAlign: align != null ? this.align : TextAlign.center);

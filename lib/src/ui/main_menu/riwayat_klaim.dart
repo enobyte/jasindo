@@ -23,12 +23,12 @@ class RiwayatKlaim extends StatefulWidget {
 class RiwayatKlaimState extends State<RiwayatKlaim> {
   final bloc = GetHistoryClaimBloc();
   final planbloc = GetPlansBloc();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final currancy = new NumberFormat("#,##0.00", "en_US");
   String _planId, _cardNumber, _birthDate, _claimId, _planType;
   GetPlansModel plansModel = GetPlansModel();
   GetHistClaimModel claimModel = GetHistClaimModel();
   bool isLoadingClaim = false;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final currancy = new NumberFormat("#,##0.00", "en_US");
 
   @override
   void initState() {
@@ -158,7 +158,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                       : claimModel.data.map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem(
                               value: value.claimId,
-                              child: Text(value.claimType + ' (${value.claimId})'));
+                              child: Text(
+                                  value.claimType + ' (${value.claimId})'));
                         }).toList(),
                 ),
               ),
@@ -355,7 +356,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                     align: TextAlign.left,
                   ),
                   TextWidget(
-                    txt: formatDateFormStandart(snapshot.data.data[index].admissionDate, 'MMM/dd/yyyy'),
+                    txt: formatDateFormStandart(
+                        snapshot.data.data[index].admissionDate, 'MMM/dd/yyyy'),
                     txtSize: 10,
                     align: TextAlign.left,
                   ),
@@ -380,7 +382,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                     align: TextAlign.left,
                   ),
                   TextWidget(
-                    txt: formatDateFormStandart(snapshot.data.data[index].dischargeDate, 'MMM/dd/yyyy'),
+                    txt: formatDateFormStandart(
+                        snapshot.data.data[index].dischargeDate, 'MMM/dd/yyyy'),
                     txtSize: 10,
                     align: TextAlign.left,
                   ),
