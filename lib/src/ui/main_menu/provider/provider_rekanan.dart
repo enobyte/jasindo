@@ -6,6 +6,7 @@ import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider/provider_content.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageCover.dart';
@@ -158,27 +159,36 @@ class ProviderRekananState extends State<ProviderRekanan> {
   Widget _viewBottom() {
     return Column(
       children: <Widget>[
-        _searchAllJaminan(),
+        _searchCity(),
         _searchChooseJaminan(),
+        SizedBox(
+          height: 10,
+        ),
         _btnSubmit(),
+        SizedBox(
+          height: 10,
+        ),
         _btnNearme()
       ],
     );
   }
 
-  Widget _searchAllJaminan() {
+  Widget _searchCity() {
     return Container(
       margin: EdgeInsets.fromLTRB(30, 30, 30, 5),
       height: 40,
       alignment: FractionalOffset.center,
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.only(left: 18),
       decoration: BoxDecoration(
           border: Border.all(
               width: 1, style: BorderStyle.solid, color: Colors.black12),
           borderRadius: BorderRadius.all(Radius.circular(5))),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          hint: Text('SEMUA KOTA'),
+          hint: TextWidget(
+            txt: 'SEMUA KOTA',
+            txtSize: 10,
+          ),
           isExpanded: true,
           onChanged: (newValue) {
             setState(() {
@@ -199,14 +209,17 @@ class ProviderRekananState extends State<ProviderRekanan> {
       margin: EdgeInsets.fromLTRB(30, 5, 30, 10),
       height: 40,
       alignment: FractionalOffset.center,
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.only(left: 18),
       decoration: BoxDecoration(
           border: Border.all(
               width: 1, style: BorderStyle.solid, color: Colors.black12),
           borderRadius: BorderRadius.all(Radius.circular(5))),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
-          hint: Text('PILIH JAMINAN'),
+          hint: TextWidget(
+            txt: 'PILIH JAMINAN',
+            txtSize: 10,
+          ),
           isExpanded: true,
           onChanged: (newValue) {
             setState(() {
@@ -230,15 +243,19 @@ class ProviderRekananState extends State<ProviderRekanan> {
 
   Widget _btnSubmit() {
     return RaisedButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       onPressed: () => {
-            routeToWidget(
-                context,
-                ProviderContent(
-                  listCity: _listCity,
-                  plansModel: plansModel,
-                  cityValue: cityValue,
-                  planId: _planId,
-                ))
+            _planId != null
+                ? routeToWidget(
+                    context,
+                    ProviderContent(
+                      listCity: _listCity,
+                      plansModel: plansModel,
+                      cityValue: cityValue,
+                      planId: _planId,
+                    ))
+                : _scaffoldKey.currentState.showSnackBar(
+                    SnackBar(content: Text('Jaminan harus dipilih')))
           },
       textColor: Colors.white,
       color: Color.fromRGBO(0, 96, 153, 1.0),
@@ -252,9 +269,10 @@ class ProviderRekananState extends State<ProviderRekanan> {
 
   Widget _btnNearme() {
     return RaisedButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       onPressed: () => {},
       textColor: Colors.white,
-      color: Colors.orange,
+      color: orangeColor1,
       splashColor: Colors.blueGrey,
       padding: EdgeInsets.only(left: 46, right: 46),
       child: new TextWidget(
@@ -282,6 +300,4 @@ class ProviderRekananState extends State<ProviderRekanan> {
       });
     });
   }
-
-
 }

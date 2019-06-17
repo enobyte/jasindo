@@ -42,7 +42,7 @@ class PreloginActivity extends StatelessWidget {
       left: 0.5,
       right: 0.5,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(40.0, 0.0, 40.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(60.0, 0.0, 60.0, 0.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[

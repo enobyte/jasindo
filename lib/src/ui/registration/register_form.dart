@@ -61,12 +61,20 @@ class RegisterFormState extends State<RegisterForm> {
               Visibility(
                 visible: _visibleBack,
                 child: RawMaterialButton(
-                  fillColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  fillColor: orangeColor1,
                   elevation: 0,
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.arrow_back_ios),
-                      Text('BACK'),
+                      Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.white,
+                      ),
+                      TextWidget(
+                        txt: 'BACK',
+                        color: Colors.white,
+                      ),
                     ],
                   ),
                   onPressed: () => {_decrease()},
@@ -75,12 +83,14 @@ class RegisterFormState extends State<RegisterForm> {
               Visibility(
                 visible: _visibleNext,
                 child: RawMaterialButton(
-                  fillColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  fillColor: blueStandart,
                   elevation: 0,
                   child: Row(
                     children: <Widget>[
-                      Text('NEXT'),
-                      Icon(Icons.arrow_forward_ios)
+                      TextWidget(txt: 'NEXT', color: Colors.white),
+                      Icon(Icons.arrow_forward_ios, color: Colors.white)
                     ],
                   ),
                   onPressed: () => {_increaseTab()},

@@ -56,7 +56,6 @@ class ProviderContentState extends State<ProviderContent> {
       body: Container(
         color: Colors.white,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[_topContent(), _listAction()],
         ),
       ),
@@ -156,8 +155,10 @@ class ProviderContentState extends State<ProviderContent> {
   Widget _btnSubmit() {
     return Expanded(
         child: Container(
+      height: 30,
       margin: EdgeInsets.only(left: 10, right: 10),
       child: RaisedButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           color: orangeColor2,
           onPressed: () => {
                 _fetchProvidder(),
@@ -172,7 +173,8 @@ class ProviderContentState extends State<ProviderContent> {
 
   Widget _searchAny() {
     return Container(
-      margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+      height: 40,
+      margin: EdgeInsets.fromLTRB(5, 5, 5, 10),
       width: MediaQuery.of(context).size.width / 2,
       alignment: FractionalOffset.center,
       padding: EdgeInsets.only(left: 5),
@@ -194,8 +196,10 @@ class ProviderContentState extends State<ProviderContent> {
   Widget _buttonNearMe() {
     return Expanded(
         child: Container(
+      height: 30,
       margin: EdgeInsets.only(left: 10, right: 10),
       child: RaisedButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: orangeColor2,
           onPressed: () => {},
           child: TextWidget(
@@ -209,8 +213,10 @@ class ProviderContentState extends State<ProviderContent> {
   Widget _buttonReset() {
     return Expanded(
         child: Container(
+      height: 30,
       margin: EdgeInsets.only(left: 10, right: 10),
       child: RaisedButton(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           color: Colors.brown,
           onPressed: () => {},
           child: TextWidget(
@@ -231,10 +237,8 @@ class ProviderContentState extends State<ProviderContent> {
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) =>
                       _contentProvider(
-                          snapshot.data.data[index].providerName
-                              .replaceAll(" ", ""),
-                          snapshot.data.data[index].providerId
-                              .replaceAll(" ", "")),
+                          snapshot.data.data[index].providerName.trim(),
+                          snapshot.data.data[index].providerId.trim()),
                   itemCount: snapshot.data.data.length,
                 );
               } else if (snapshot.hasError) {
@@ -261,17 +265,22 @@ class ProviderContentState extends State<ProviderContent> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 12, top: 8, bottom: 8),
-              child: Column(
-                children: <Widget>[
-                  TextWidget(
-                    txt: provider,
-                    align: TextAlign.left,
-                    maxLine: 1,
-                  ),
-                  TextWidget(txt: id, align: TextAlign.left),
-                ],
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.only(left: 12, top: 8, bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    TextWidget(
+                      txt: provider,
+                      color: blueStandart,
+                      fontFamily: 'SF-Semibold',
+                      align: TextAlign.left,
+                      maxLine: 2,
+                    ),
+                    TextWidget(txt: id, align: TextAlign.left),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -292,7 +301,8 @@ class ProviderContentState extends State<ProviderContent> {
       ReqGetProvider request = ReqGetProvider(
           cardNumber: member.data.cardNumb,
           birthDate: member.data.birthDate.substring(0, 10),
-          planId: changePlan == "" ? widget.planId : changePlan);
+          planId: changePlan == "" ? widget.planId : changePlan,
+          city: changeCity == "" ? widget.cityValue : changeCity);
       bloc.fetchBenefit(
           request.toMap(),
           (providerModel, status, message) => {

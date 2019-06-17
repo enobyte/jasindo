@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/doregistration_bloc.dart';
+import 'package:jasindo_app/src/models/key_value_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_register.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
@@ -28,20 +29,21 @@ class StepOneState extends State<StepOne> {
   bool _validateCard = false;
   bool _isLoading = false;
   DoRegistrationBloc bloc = DoRegistrationBloc();
+  List<String> monthList = List();
 
-  final List<String> listMonth = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
+  final List<KeyValueModel> listMonth = [
+    KeyValueModel(key: "01", value: "Jan"),
+    KeyValueModel(key: "02", value: "Feb"),
+    KeyValueModel(key: "03", value: "Mar"),
+    KeyValueModel(key: "04", value: "Apr"),
+    KeyValueModel(key: "05", value: "May"),
+    KeyValueModel(key: "06", value: "Jun"),
+    KeyValueModel(key: "07", value: "Jul"),
+    KeyValueModel(key: "08", value: "Aug"),
+    KeyValueModel(key: "09", value: "Sep"),
+    KeyValueModel(key: "10", value: "Oct"),
+    KeyValueModel(key: "11", value: "Nov"),
+    KeyValueModel(key: "12", value: "Dec")
   ];
 
   final List<String> listDays = [
@@ -149,11 +151,22 @@ class StepOneState extends State<StepOne> {
     '1952',
     '1951',
     '1950',
+    '1949',
+    '1948',
+    '1947',
+    '1946',
+    '1945',
+    '1944',
+    '1943',
+    '1942',
+    '1941',
+    '1940',
   ];
 
   @override
   void initState() {
     super.initState();
+    monthList = listMonth.map((value) => value.key).toList();
     _initalValue();
   }
 
@@ -173,7 +186,7 @@ class StepOneState extends State<StepOne> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image.asset(
-                "lib/assets/images/card.jpeg",
+                "lib/assets/images/card.png",
                 height: 100,
                 width: MediaQuery.of(context).size.width / 3,
               ),
@@ -200,7 +213,7 @@ class StepOneState extends State<StepOne> {
             labelText: titleInsertCard,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5.0))),
-            errorText: _validateCard ? "Pastikan No. kartu terisi" : null),
+            errorText: _validateCard ? "Pastikan No. kartu terisi dengan benar" : null),
         controller: _cardNumbController,
       ),
     );
@@ -269,7 +282,8 @@ class StepOneState extends State<StepOne> {
           child: DropdownButton<String>(
             isExpanded: true,
             hint: Text('Month'),
-            value: listMonth.firstWhere((data) => data.startsWith(monthValue),
+            value: listMonth.map((value) => value.key).toList().firstWhere(
+                (data) => data.startsWith(monthValue),
                 orElse: () => null),
             onChanged: (newValue) {
               setState(() {
@@ -277,7 +291,8 @@ class StepOneState extends State<StepOne> {
               });
             },
             items: listMonth.map<DropdownMenuItem<String>>((value) {
-              return DropdownMenuItem(value: value, child: Text(value));
+              return DropdownMenuItem(
+                  value: value.key, child: Text(value.value));
             }).toList(),
           ),
         ),
@@ -335,7 +350,7 @@ class StepOneState extends State<StepOne> {
       } else {
         _validateCard = false;
       }
-      if (dayValue == null || monthValue == null || yearValue == null) {
+      if (dayValue == '999' || monthValue == '999' || yearValue == '999') {
         utils.showToast(context, 'Harap lengkapi tanggal lahir');
         return;
       } else {

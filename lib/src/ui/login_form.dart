@@ -59,7 +59,7 @@ class LoginFormState extends State<LoginForm> {
                   controller: _passController,
                   obscureText: _isHidePassword,
                   decoration: InputDecoration(
-                      labelText: "Password",
+                      labelText: "Kata Sandi",
                       suffixIcon: IconButton(
                           icon: Icon(Icons.remove_red_eye),
                           onPressed: () {
@@ -95,7 +95,7 @@ class LoginFormState extends State<LoginForm> {
                       child: TextWidget(
                         color: Colors.white,
                         txt: 'LOGIN',
-                        txtSize: 12.0,
+                        txtSize: 14.0,
                       ),
                       elevation: 4.0,
                       color: blueStandart,

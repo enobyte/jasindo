@@ -108,7 +108,7 @@ class StepThreeState extends State<StepThree> {
         Container(
           padding: EdgeInsets.only(bottom: paddingHeigh),
           child: TextWidget(
-            txt: vName,
+            txt: vName.toString().trim(),
             color: blueStandart,
             fontFamily: 'SF-Semibold',
           ),
@@ -142,7 +142,7 @@ class StepThreeState extends State<StepThree> {
         children: <Widget>[
           SizedBox(width: 10),
           _titleInformation(),
-          SizedBox(width: 10),
+          SizedBox(width: 20),
           _valueInformation(vCardNo, vTglLahir, vName, vNoHp, vEmail)
         ],
       ),
@@ -173,7 +173,7 @@ class StepThreeState extends State<StepThree> {
 
     SharedPreferencesHelper.getYear().then((year) {
       _year = year;
-      _birthDate = formatDate(_year + _month + _day, "dd-MMM-yyyy");
+      _birthDate = formatDate(_year + _month + _day, "dd MMMM yyyy");
     });
 
     SharedPreferencesHelper.getPhone().then((value) {

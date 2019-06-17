@@ -46,7 +46,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
                     TextWidget(
                       txt: titleForgotPass,
                       color: blueStandart,
-                      txtSize: 24,
+                      txtSize: 28,
                       align: TextAlign.left,
                       fontFamily: 'SF-Bold',
                     ),
@@ -66,10 +66,10 @@ class ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+                      padding: EdgeInsets.only(right: 40, left: 40, top: 50),
                       child: ButtonWidget(
-                          height: 40,
-                          txtSize: 12,
+                          height: 50,
+                          txtSize: 14,
                           txtColor: Colors.white,
                           txt: 'KIRIM',
                           btnColor: blueStandart,

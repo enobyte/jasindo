@@ -64,7 +64,7 @@ class StepFourState extends State<StepFour> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
+        margin: EdgeInsets.only(left: 40.0, top: 0.0, right: 40),
         child: Column(
           children: <Widget>[
             Padding(
@@ -137,9 +137,11 @@ class StepFourState extends State<StepFour> {
                         alignment: FractionalOffset.topLeft,
                         child: RichText(
                           text: TextSpan(
-                              text: 'Saya menyetujui ',
                               style: DefaultTextStyle.of(context).style,
                               children: [
+                                TextSpan(
+                                    text: 'Saya menyetujui ',
+                                    style: TextStyle(fontSize: 12)),
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
@@ -148,10 +150,13 @@ class StepFourState extends State<StepFour> {
                                       },
                                     text: 'Syarat & Ketentuan ',
                                     style: TextStyle(
+                                      fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: orangeColor1,
                                     )),
-                                TextSpan(text: 'yang berlaku'),
+                                TextSpan(
+                                    text: 'yang berlaku',
+                                    style: TextStyle(fontSize: 12)),
                               ]),
                         ),
                       ),
@@ -160,7 +165,7 @@ class StepFourState extends State<StepFour> {
                 ],
               ),
             ),
-            _checkPolicy && _verifyCode ? _btnDaftar() : Container()
+            _btnDaftar()
           ],
         ),
       ),
@@ -169,7 +174,7 @@ class StepFourState extends State<StepFour> {
 
   Widget _btnDaftar() {
     return Container(
-      margin: EdgeInsets.fromLTRB(40.0, 30.0, 40.0, 0.0),
+      margin: EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 0.0),
       child: ButtonWidget(
           height: 40,
           txtSize: 12,
@@ -177,7 +182,8 @@ class StepFourState extends State<StepFour> {
           txt: 'DAFTAR',
           btnColor: blueStandart,
           borderRedius: 5,
-          onClick: () => {_onSubmit()}),
+          onClick:
+              _checkPolicy && _verifyCode ? () => {_onSubmit()} : () => {}),
     );
   }
 
@@ -252,11 +258,11 @@ class StepFourState extends State<StepFour> {
   }
 
   onChangeVerifyCode() {
-    if (_verificationCodeController.text == this.code) {
+    if (_verificationCodeController.text.toUpperCase() == this.code) {
       setState(() {
         _verifyCode = true;
       });
-    }else {
+    } else {
       setState(() {
         _verifyCode = false;
       });
