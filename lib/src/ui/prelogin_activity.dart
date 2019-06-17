@@ -3,6 +3,7 @@ import 'package:jasindo_app/src/blocs/bloc-provider.dart';
 import 'package:jasindo_app/src/ui/login_form.dart';
 import 'package:jasindo_app/src/ui/registration/register_form.dart';
 import 'package:jasindo_app/utility/colors.dart';
+import 'package:jasindo_app/widgets/ImageSvg.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class PreloginActivity extends StatelessWidget {
@@ -26,8 +27,9 @@ class PreloginActivity extends StatelessWidget {
 
   Widget background() {
     return new Container(
-      child: Image.asset(
-        'lib/assets/images/login_img.png',
+      child: ImageSvg(
+        isNetwork: false,
+        pathImage: 'lib/assets/images/logo.svg',
       ),
       alignment: FractionalOffset.center,
       decoration: BoxDecoration(color: Colors.white),
@@ -53,7 +55,6 @@ class PreloginActivity extends StatelessWidget {
                   txt: 'LOGIN',
                   txtSize: 18.0,
                 ),
-                elevation: 4.0,
                 color: blueStandart,
                 splashColor: Colors.blueGrey,
                 onPressed: () {
@@ -73,7 +74,6 @@ class PreloginActivity extends StatelessWidget {
                     txt: 'DAFTAR',
                     txtSize: 18.0,
                   ),
-                  elevation: 4.0,
                   color: orangeColor1,
                   splashColor: Colors.blueGrey,
                   onPressed: () {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/ImageCover.dart';
+import 'package:jasindo_app/widgets/ImageSvg.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -19,13 +20,12 @@ class SplashScreenState extends State<SplashScreen> {
 
   void navigationPage() {
     SharedPreferencesHelper.getToken().then((onValue) {
-      if(onValue.isNotEmpty){
+      if (onValue.isNotEmpty) {
         Navigator.of(context).pushReplacementNamed('/main_menu');
-      }else {
+      } else {
         Navigator.of(context).pushReplacementNamed('/prelogin_menu');
       }
     });
-
   }
 
   @override
@@ -37,7 +37,12 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Image.asset('lib/assets/images/login_img.png'),
+      child: Container(
+        height: MediaQuery.of(context).size.width / 2,
+        width: MediaQuery.of(context).size.width / 2,
+        child:
+            ImageSvg(isNetwork: false, pathImage: 'lib/assets/images/logo.svg'),
+      ),
     );
   }
 }

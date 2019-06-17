@@ -7,6 +7,7 @@ import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
@@ -147,6 +148,16 @@ class JasindoApiProvider {
     }
   }
 
+  Future<GetProviderModel> fetchGetProvider({Map<String, dynamic> body}) async {
+    try {
+      final response = await _dio.post("$_baseUrl/member/adcps_providers",
+          data: json.encode(body));
+      return GetProviderModel.fromJson(response.data);
+    } catch (error, _) {
+      return GetProviderModel.withError(_handleError(error));
+    }
+  }
+
   Future<GetHistClaimModel> fetchGetHistClaim(
       {Map<String, dynamic> body}) async {
     try {
@@ -194,6 +205,16 @@ class JasindoApiProvider {
   Future<StandartModels> activeUser({Map<String, dynamic> body}) async {
     try {
       final response = await _dio.post("$_baseUrl/member/activateuser",
+          data: json.encode(body));
+      return StandartModels.fromJson(response.data);
+    } catch (error, _) {
+      return StandartModels.withError(_handleError(error));
+    }
+  }
+
+  Future<StandartModels> changePass({Map<String, dynamic> body}) async {
+    try {
+      final response = await _dio.post("$_baseUrl/member/changepass",
           data: json.encode(body));
       return StandartModels.fromJson(response.data);
     } catch (error, _) {

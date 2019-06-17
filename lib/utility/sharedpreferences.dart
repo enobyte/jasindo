@@ -29,6 +29,7 @@ class SharedPreferencesHelper {
     preferences.getString(_month);
     preferences.getString(_day);
     preferences.getString(_login);
+    preferences.getString(_plans);
     return preferences.clear();
   }
 

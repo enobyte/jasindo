@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/adcps_blocs/getprovider_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/adcps/get_provider.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/src/models/requests/do_req_provider.dart';
+import 'package:jasindo_app/utility/colors.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class ProviderContent extends StatefulWidget {
   List<String> listCity;
-  GetPlansModel plansModel;
   String cityValue, planId;
+  GetPlansModel plansModel;
 
   @override
   State<StatefulWidget> createState() {
@@ -18,11 +26,28 @@ class ProviderContent extends StatefulWidget {
 
 class ProviderContentState extends State<ProviderContent> {
   String changeCity = "", changePlan = "";
+  GetProviderModel providerModel;
   final _searchController = TextEditingController();
+  final bloc = GetProviderBloc();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProvidder();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bloc.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Provider Rekanan", color: Colors.black),
@@ -132,7 +157,16 @@ class ProviderContentState extends State<ProviderContent> {
     return Expanded(
         child: Container(
       margin: EdgeInsets.only(left: 10, right: 10),
-      child: RaisedButton(onPressed: () => {}, child: Text('Sumit')),
+      child: RaisedButton(
+          color: orangeColor2,
+          onPressed: () => {
+                _fetchProvidder(),
+              },
+          child: TextWidget(
+            txt: 'SUBMIT',
+            txtSize: 10,
+            color: Colors.white,
+          )),
     ));
   }
 
@@ -162,10 +196,12 @@ class ProviderContentState extends State<ProviderContent> {
         child: Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       child: RaisedButton(
+          color: orangeColor2,
           onPressed: () => {},
           child: TextWidget(
             txt: 'NEAR ME',
             txtSize: 10,
+            color: Colors.white,
           )),
     ));
   }
@@ -175,10 +211,12 @@ class ProviderContentState extends State<ProviderContent> {
         child: Container(
       margin: EdgeInsets.only(left: 10, right: 10),
       child: RaisedButton(
+          color: Colors.brown,
           onPressed: () => {},
           child: TextWidget(
             txt: 'RESET',
             txtSize: 10,
+            color: Colors.white,
           )),
     ));
   }
@@ -186,19 +224,40 @@ class ProviderContentState extends State<ProviderContent> {
   Widget _listAction() {
     return Expanded(
       child: Container(
-        child: ListView.builder(
-          itemBuilder: (BuildContext context, int index) => _contentProvider(),
-          itemCount: 10,
-        ),
+        child: StreamBuilder(
+            stream: bloc.getProvier,
+            builder: (context, AsyncSnapshot<GetProviderModel> snapshot) {
+              if (snapshot.hasData && !isLoading) {
+                return ListView.builder(
+                  itemBuilder: (BuildContext context, int index) =>
+                      _contentProvider(
+                          snapshot.data.data[index].providerName
+                              .replaceAll(" ", ""),
+                          snapshot.data.data[index].providerId
+                              .replaceAll(" ", "")),
+                  itemCount: snapshot.data.data.length,
+                );
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+
+              return Center(child: CircularProgressIndicator());
+            }),
       ),
     );
   }
 
-  Widget _contentProvider() {
+  Widget _contentProvider(String provider, String id) {
     return Container(
+      decoration: new BoxDecoration(boxShadow: [
+        BoxShadow(
+          blurRadius: 2.0,
+          color: Colors.blue.withOpacity(.10),
+          offset: Offset(0.0, 5.0),
+        ),
+      ]),
       margin: EdgeInsets.all(4),
       child: Card(
-        elevation: 8,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -206,8 +265,12 @@ class ProviderContentState extends State<ProviderContent> {
               padding: EdgeInsets.only(left: 12, top: 8, bottom: 8),
               child: Column(
                 children: <Widget>[
-                  TextWidget(txt: 'THC'),
-                  TextWidget(txt: '0712'),
+                  TextWidget(
+                    txt: provider,
+                    align: TextAlign.left,
+                    maxLine: 1,
+                  ),
+                  TextWidget(txt: id, align: TextAlign.left),
                 ],
               ),
             ),
@@ -218,5 +281,34 @@ class ProviderContentState extends State<ProviderContent> {
         ),
       ),
     );
+  }
+
+  _fetchProvidder() {
+    setState(() {
+      isLoading = true;
+    });
+    SharedPreferencesHelper.getDoLogin().then((user) {
+      final member = MemberModels.fromJson(json.decode(user));
+      ReqGetProvider request = ReqGetProvider(
+          cardNumber: member.data.cardNumb,
+          birthDate: member.data.birthDate.substring(0, 10),
+          planId: changePlan == "" ? widget.planId : changePlan);
+      bloc.fetchBenefit(
+          request.toMap(),
+          (providerModel, status, message) => {
+                this.providerModel = providerModel,
+                _renderView(status, message)
+              });
+    });
+  }
+
+  _renderView(bool status, String message) {
+    if (status) {
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }

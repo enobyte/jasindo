@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as u;
+import 'package:jasindo_app/widgets/ImageSvg.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 import '../../change_pass.dart';
@@ -24,24 +26,25 @@ class SettingState extends State<Setting> {
           children: <Widget>[
             Container(
               alignment: FractionalOffset.center,
-              child: Image.asset(
-                'lib/assets/images/login_img.png',
-              ),
+              child: ImageSvg(
+                  isNetwork: false, pathImage: 'lib/assets/images/logo.svg'),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 20),
             Container(
               margin: EdgeInsets.only(left: 50, right: 50),
               child: TextWidget(
                 txt:
                     'Jasindo Health merupakan aplikasi ponsel dari PT. Asuransi Jasa Indonesia (PERSERO)',
-                color: Colors.blue,
+                color: blueStandart,
               ),
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 20),
             _rowSyarat(),
-            SizedBox(height: 15),
+            SizedBox(height: 30),
             RaisedButton(
-              color: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3))),
+              color: blueStandart,
               onPressed: () => {},
               child: TextWidget(
                 txt: 'Kontak Jasindo',
@@ -75,6 +78,9 @@ class SettingState extends State<Setting> {
         ButtonTheme(
           minWidth: MediaQuery.of(context).size.width / 3,
           child: RaisedButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(3))),
+            color: blueStandart,
             onPressed: () => {u.routeToWidget(context, TermCondition())},
             child: TextWidget(
               txt: 'Syarat & Ketentuan',
@@ -88,6 +94,9 @@ class SettingState extends State<Setting> {
         ButtonTheme(
           minWidth: MediaQuery.of(context).size.width / 3,
           child: RaisedButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(3))),
+            color: blueStandart,
             onPressed: () => {
                   u.routeToWidget(
                     context,

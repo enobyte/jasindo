@@ -4,6 +4,7 @@ import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/resources/jasindo_api_provider.dart';
@@ -24,6 +25,9 @@ class Repository {
   Future<GetBenefitModel> fetchBenefit({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGetBenefit(body: body);
 
+  Future<GetProviderModel> fetchProvider({Map<String, dynamic> body}) =>
+      jasindoApiProvider.fetchGetProvider(body: body);
+
   Future<GetHistClaimModel> fetchHistClaim({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGetHistClaim(body: body);
 
@@ -38,4 +42,7 @@ class Repository {
 
   Future<StandartModels> actActiveUser({Map<String, dynamic> body}) =>
       jasindoApiProvider.activeUser(body: body);
+
+  Future<StandartModels> actChangePassUser({Map<String, dynamic> body}) =>
+      jasindoApiProvider.changePass(body: body);
 }

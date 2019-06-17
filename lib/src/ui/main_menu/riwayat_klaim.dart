@@ -225,7 +225,9 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     return StreamBuilder(
         stream: bloc.getHistClaim,
         builder: (context, AsyncSnapshot<GetHistClaimModel> snapshot) {
-          if (snapshot.hasData && snapshot.data.data != null) {
+          if (snapshot.hasData &&
+              snapshot.data.data != null &&
+              !isLoadingClaim) {
             return Expanded(
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) =>
@@ -236,9 +238,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return isLoadingClaim
-              ? Center(child: CircularProgressIndicator())
-              : Container();
+          return isLoadingClaim ? Center(child: CircularProgressIndicator()) : Container();
         });
   }
 
@@ -488,6 +488,9 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   }
 
   _fetchPlan() {
+    setState(() {
+      isLoadingClaim = false;
+    });
     SharedPreferencesHelper.getDoLogin().then((onValue) {
       final memberModels = MemberModels.fromJson(json.decode(onValue));
       _cardNumber = memberModels.data.cardNumb;
@@ -511,12 +514,11 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       GetHistClaimModel callback, bool status, String message) {
     if (status) {
       claimModel = callback;
-      setState(() {});
     } else {
-      setState(() {
-        isLoadingClaim = false;
-      });
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
     }
+    setState(() {
+      isLoadingClaim = false;
+    });
   }
 }

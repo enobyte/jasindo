@@ -218,7 +218,7 @@ class MainMenuState extends State<MainMenu> {
         break;
       case 1:
         _setTitle('Buku Panduan');
-        _contentPage = WebViewContainer('https://google.com');
+        _contentPage = WebViewContainer('https://jasindo.co.id/uploads/cms_laporan_tahunan/Annual%20Report%20Jasindo%202016_Latest.pdf');
         break;
       case 2:
         _setTitle('Berita');
