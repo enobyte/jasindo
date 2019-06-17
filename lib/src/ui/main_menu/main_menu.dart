@@ -96,7 +96,7 @@ class MainMenuState extends State<MainMenu> {
               ],
             ),
             Positioned.fill(
-              top: MediaQuery.of(context).size.height / 6,
+              top: MediaQuery.of(context).size.height / 10,
               bottom: MediaQuery.of(context).size.height / 8,
               right: MediaQuery.of(context).size.width / 3,
               child: Container(

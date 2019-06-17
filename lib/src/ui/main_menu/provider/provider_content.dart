@@ -8,6 +8,7 @@ import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_provider.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class ProviderContent extends StatefulWidget {
@@ -165,7 +166,7 @@ class ProviderContentState extends State<ProviderContent> {
               },
           child: TextWidget(
             txt: 'SUBMIT',
-            txtSize: 10,
+            txtSize: 9,
             color: Colors.white,
           )),
     ));
@@ -197,14 +198,14 @@ class ProviderContentState extends State<ProviderContent> {
     return Expanded(
         child: Container(
       height: 30,
-      margin: EdgeInsets.only(left: 10, right: 10),
+      margin: EdgeInsets.only(left: 8, right: 8),
       child: RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: orangeColor2,
           onPressed: () => {},
           child: TextWidget(
             txt: 'NEAR ME',
-            txtSize: 10,
+            txtSize: 9,
             color: Colors.white,
           )),
     ));
@@ -221,7 +222,7 @@ class ProviderContentState extends State<ProviderContent> {
           onPressed: () => {},
           child: TextWidget(
             txt: 'RESET',
-            txtSize: 10,
+            txtSize: 9,
             color: Colors.white,
           )),
     ));
@@ -238,7 +239,8 @@ class ProviderContentState extends State<ProviderContent> {
                   itemBuilder: (BuildContext context, int index) =>
                       _contentProvider(
                           snapshot.data.data[index].providerName.trim(),
-                          snapshot.data.data[index].providerId.trim()),
+                          snapshot.data.data[index].providerId.trim(),
+                          snapshot.data.data[index].longituteLatitute.trim()),
                   itemCount: snapshot.data.data.length,
                 );
               } else if (snapshot.hasError) {
@@ -251,7 +253,16 @@ class ProviderContentState extends State<ProviderContent> {
     );
   }
 
-  Widget _contentProvider(String provider, String id) {
+  Widget _contentProvider(String provider, String id, String latlong) {
+    double totalDistance = 0.0;
+    if (latlong != "0" && latlong.isNotEmpty) {
+      String latitude = latlong.substring(0, latlong.indexOf(","));
+      String longitude =
+          latlong.substring(latlong.indexOf(",") + 1, latlong.length).trim();
+      totalDistance = calculateDistance(-6.181113, 106.826322,
+          double.parse(latitude), double.parse(longitude));
+    }
+
     return Container(
       decoration: new BoxDecoration(boxShadow: [
         BoxShadow(
@@ -282,6 +293,13 @@ class ProviderContentState extends State<ProviderContent> {
                   ],
                 ),
               ),
+            ),
+            Container(
+              child: TextWidget(
+                  txt: totalDistance
+                      .toString()
+                      .substring(0, totalDistance.toString().lastIndexOf(".")) + " KM",
+                  align: TextAlign.right),
             ),
             Container(
                 padding: EdgeInsets.all(4),
