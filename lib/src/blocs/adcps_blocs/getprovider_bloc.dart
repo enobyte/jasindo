@@ -9,7 +9,7 @@ class GetProviderBloc {
 
   Observable<GetProviderModel> get getProvier => _getProvidertFetch.stream;
 
-  fetchBenefit(Map<String, dynamic> body,
+  fetchProvider(Map<String, dynamic> body,
       Function(GetProviderModel, bool, String) callback) async {
     GetProviderModel model = await _repository.fetchProvider(body: body);
     _getProvidertFetch.sink.add(model);

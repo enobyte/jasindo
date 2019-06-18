@@ -46,9 +46,12 @@ class _Data {
   @JsonKey(name: 'ResponseDescription')
   String responseDescription;
 
+  @JsonKey(name: 'Distance')
+  String distance;
+
   _Data(this.providerId, this.providerName, this.providerCity,
       this.providerAddress, this.providerPhoneNum, this.longituteLatitute,
-      this.responseCode, this.responseDescription);
+      this.responseCode, this.responseDescription, this.distance);
 
   factory _Data.fromJson(Map<String, dynamic> json) => _$_DataFromJson(json);
 

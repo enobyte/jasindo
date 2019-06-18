@@ -34,7 +34,8 @@ _Data _$_DataFromJson(Map<String, dynamic> json) {
       json['ProviderPhoneNum'] as String,
       json['LongituteLatitute'] as String,
       json['ResponseCode'] as String,
-      json['ResponseDescription'] as String);
+      json['ResponseDescription'] as String,
+      json['Distance'] as String);
 }
 
 Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
@@ -45,5 +46,7 @@ Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
       'ProviderPhoneNum': instance.providerPhoneNum,
       'LongituteLatitute': instance.longituteLatitute,
       'ResponseCode': instance.responseCode,
-      'ResponseDescription': instance.responseDescription
+      'ResponseDescription': instance.responseDescription,
+      'Distance' : instance.distance
+
     };

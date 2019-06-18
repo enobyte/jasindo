@@ -10,6 +10,7 @@ import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
+import 'package:location/location.dart';
 
 class ProviderContent extends StatefulWidget {
   List<String> listCity;
@@ -32,11 +33,13 @@ class ProviderContentState extends State<ProviderContent> {
   final bloc = GetProviderBloc();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isLoading = true;
+  var location = new Location();
+  double latitude = 0.0, longitude = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _fetchProvidder();
+    _getLocationData();
   }
 
   @override
@@ -162,7 +165,8 @@ class ProviderContentState extends State<ProviderContent> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           color: orangeColor2,
           onPressed: () => {
-                _fetchProvidder(),
+                //_fetchProvidder(),
+                _getLocationData()
               },
           child: TextWidget(
             txt: 'SUBMIT',
@@ -202,7 +206,14 @@ class ProviderContentState extends State<ProviderContent> {
       child: RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: orangeColor2,
-          onPressed: () => {},
+          onPressed: () => {
+                widget.planId = "",
+                changePlan = "",
+                widget.cityValue = "",
+                changeCity = "",
+                //_fetchProvidder()
+                _getLocationData()
+              },
           child: TextWidget(
             txt: 'NEAR ME',
             txtSize: 9,
@@ -235,34 +246,23 @@ class ProviderContentState extends State<ProviderContent> {
             stream: bloc.getProvier,
             builder: (context, AsyncSnapshot<GetProviderModel> snapshot) {
               if (snapshot.hasData && !isLoading) {
+                snapshot.data.data
+                    .sort((a, b) => a.providerId.compareTo(b.providerId));
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) =>
-                      _contentProvider(
-                          snapshot.data.data[index].providerName.trim(),
-                          snapshot.data.data[index].providerId.trim(),
-                          snapshot.data.data[index].longituteLatitute.trim()),
+                      _contentProvider(snapshot, index),
                   itemCount: snapshot.data.data.length,
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
               }
-
               return Center(child: CircularProgressIndicator());
             }),
       ),
     );
   }
 
-  Widget _contentProvider(String provider, String id, String latlong) {
-    double totalDistance = 0.0;
-    if (latlong != "0" && latlong.isNotEmpty) {
-      String latitude = latlong.substring(0, latlong.indexOf(","));
-      String longitude =
-          latlong.substring(latlong.indexOf(",") + 1, latlong.length).trim();
-      totalDistance = calculateDistance(-6.181113, 106.826322,
-          double.parse(latitude), double.parse(longitude));
-    }
-
+  Widget _contentProvider(AsyncSnapshot<GetProviderModel> snapshot, int index) {
     return Container(
       decoration: new BoxDecoration(boxShadow: [
         BoxShadow(
@@ -283,23 +283,27 @@ class ProviderContentState extends State<ProviderContent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextWidget(
-                      txt: provider,
+                      txt: snapshot.data.data[index].providerName.trim(),
                       color: blueStandart,
                       fontFamily: 'SF-Semibold',
                       align: TextAlign.left,
                       maxLine: 2,
                     ),
-                    TextWidget(txt: id, align: TextAlign.left),
+                    TextWidget(
+                        txt: snapshot.data.data[index].providerId.trim(),
+                        align: TextAlign.left),
                   ],
                 ),
               ),
             ),
             Container(
               child: TextWidget(
-                  txt: totalDistance
-                      .toString()
-                      .substring(0, totalDistance.toString().lastIndexOf(".")) + " KM",
-                  align: TextAlign.right),
+                txt: snapshot.data.data[index].distance.substring(0,
+                        snapshot.data.data[index].distance.lastIndexOf(".")) +
+                    " KM",
+                align: TextAlign.right,
+                txtSize: 10,
+              ),
             ),
             Container(
                 padding: EdgeInsets.all(4),
@@ -320,8 +324,10 @@ class ProviderContentState extends State<ProviderContent> {
           cardNumber: member.data.cardNumb,
           birthDate: member.data.birthDate.substring(0, 10),
           planId: changePlan == "" ? widget.planId : changePlan,
-          city: changeCity == "" ? widget.cityValue : changeCity);
-      bloc.fetchBenefit(
+          city: changeCity == "" ? widget.cityValue : changeCity,
+          latitude: latitude,
+          longitude: longitude);
+      bloc.fetchProvider(
           request.toMap(),
           (providerModel, status, message) => {
                 this.providerModel = providerModel,
@@ -338,5 +344,22 @@ class ProviderContentState extends State<ProviderContent> {
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
     }
+  }
+
+  _getLocationData() async {
+    await location.getLocation().then((LocationData currentLocation) {
+      setState(() {
+        latitude = currentLocation.latitude;
+        longitude = currentLocation.longitude;
+        _fetchProvidder();
+      });
+    });
+
+    location.onLocationChanged().listen((LocationData currentLocation) {
+      setState(() {
+        latitude = currentLocation.latitude;
+        longitude = currentLocation.longitude;
+      });
+    });
   }
 }

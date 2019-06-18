@@ -2,21 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
-import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
-import 'package:jasindo_app/widgets/webview_form.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/ZoomScaffold.dart';
+import 'package:jasindo_app/widgets/webview_form.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 import 'menu_side/pengaturan.dart';
 import 'menu_side/tentang.dart';
@@ -195,9 +195,15 @@ class MainMenuState extends State<MainMenu> {
                   Flexible(
                     child: Card(
                       elevation: 4,
-                      child: Container(
-                          child: menuItems('Hubungi Call Center',
-                              'lib/assets/images/ic_callcenter.png')),
+                      child: InkWell(
+                        onTap: () => {
+                              //_phoneCusto()
+                              _makeCall()
+                            },
+                        child: Container(
+                            child: menuItems('Hubungi Call Center',
+                                'lib/assets/images/ic_callcenter.png')),
+                      ),
                     ),
                   ),
                 ]),
@@ -218,7 +224,8 @@ class MainMenuState extends State<MainMenu> {
         break;
       case 1:
         _setTitle('Buku Panduan');
-        _contentPage = WebViewContainer('https://jasindo.co.id/uploads/cms_laporan_tahunan/Annual%20Report%20Jasindo%202016_Latest.pdf');
+        _contentPage = WebViewContainer(
+            'https://jasindo.co.id/uploads/cms_laporan_tahunan/Annual%20Report%20Jasindo%202016_Latest.pdf');
         break;
       case 2:
         _setTitle('Berita');
@@ -274,5 +281,41 @@ class MainMenuState extends State<MainMenu> {
         _name = memberModels.data.name;
       });
     });
+  }
+
+  Future<void> _makeCall() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text('+62 21 80662207'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancle'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Call'),
+              onPressed: () {
+                UrlLauncher.launch("tel://+622180662207");
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

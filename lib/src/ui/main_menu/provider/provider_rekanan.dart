@@ -54,8 +54,8 @@ class ProviderRekananState extends State<ProviderRekanan> {
     'DUMAI',
     'GORONTALO',
     'GUNUNGSITOLI',
-    'JAKARTA'
-        'BARAT',
+    'JAKARTA',
+    'JAKARTA BARAT',
     'JAKARTA PUSAT',
     'JAKARTA SELATAN',
     'JAKARTA TIMUR',

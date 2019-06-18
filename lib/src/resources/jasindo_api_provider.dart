@@ -153,7 +153,8 @@ class JasindoApiProvider {
       final response = await _dio.post("$_baseUrl/member/adcps_providers",
           data: json.encode(body));
       return GetProviderModel.fromJson(response.data);
-    } catch (error, _) {
+    } catch (error, trace) {
+      print(trace.toString());
       return GetProviderModel.withError(_handleError(error));
     }
   }
