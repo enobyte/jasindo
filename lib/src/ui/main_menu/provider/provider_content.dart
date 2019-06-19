@@ -8,9 +8,9 @@ import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_provider.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
-import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:location/location.dart';
+
 
 class ProviderContent extends StatefulWidget {
   List<String> listCity;
@@ -39,13 +39,15 @@ class ProviderContentState extends State<ProviderContent> {
   @override
   void initState() {
     super.initState();
-    _getLocationData();
+    _getLocationData(changeCity == "" ? widget.cityValue : changeCity,
+        changePlan == "" ? widget.planId : changePlan);
   }
 
   @override
   void dispose() {
     super.dispose();
     bloc.dispose();
+    _searchController.dispose();
   }
 
   @override
@@ -165,8 +167,9 @@ class ProviderContentState extends State<ProviderContent> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           color: orangeColor2,
           onPressed: () => {
-                //_fetchProvidder(),
-                _getLocationData()
+                _getLocationData(
+                    changeCity == "" ? widget.cityValue : changeCity,
+                    changePlan == "" ? widget.planId : changePlan)
               },
           child: TextWidget(
             txt: 'SUBMIT',
@@ -206,14 +209,7 @@ class ProviderContentState extends State<ProviderContent> {
       child: RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           color: orangeColor2,
-          onPressed: () => {
-                widget.planId = "",
-                changePlan = "",
-                widget.cityValue = "",
-                changeCity = "",
-                //_fetchProvidder()
-                _getLocationData()
-              },
+          onPressed: () => {_setNearby()},
           child: TextWidget(
             txt: 'NEAR ME',
             txtSize: 9,
@@ -247,11 +243,13 @@ class ProviderContentState extends State<ProviderContent> {
             builder: (context, AsyncSnapshot<GetProviderModel> snapshot) {
               if (snapshot.hasData && !isLoading) {
                 snapshot.data.data
-                    .sort((a, b) => a.providerId.compareTo(b.providerId));
+                    ..sort((a, b) => a.providerId.compareTo(b.providerId));
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) =>
                       _contentProvider(snapshot, index),
-                  itemCount: snapshot.data.data.length,
+                  itemCount: snapshot.data.data == null
+                      ? 0
+                      : snapshot.data.data.length,
                 );
               } else if (snapshot.hasError) {
                 return Text(snapshot.error.toString());
@@ -298,9 +296,7 @@ class ProviderContentState extends State<ProviderContent> {
             ),
             Container(
               child: TextWidget(
-                txt: snapshot.data.data[index].distance.substring(0,
-                        snapshot.data.data[index].distance.lastIndexOf(".")) +
-                    " KM",
+                txt: snapshot.data.data[index].distance.trim(),
                 align: TextAlign.right,
                 txtSize: 10,
               ),
@@ -314,7 +310,7 @@ class ProviderContentState extends State<ProviderContent> {
     );
   }
 
-  _fetchProvidder() {
+  _fetchProvidder(String city, String planId) {
     setState(() {
       isLoading = true;
     });
@@ -323,8 +319,8 @@ class ProviderContentState extends State<ProviderContent> {
       ReqGetProvider request = ReqGetProvider(
           cardNumber: member.data.cardNumb,
           birthDate: member.data.birthDate.substring(0, 10),
-          planId: changePlan == "" ? widget.planId : changePlan,
-          city: changeCity == "" ? widget.cityValue : changeCity,
+          planId: planId,
+          city: city,
           latitude: latitude,
           longitude: longitude);
       bloc.fetchProvider(
@@ -346,20 +342,20 @@ class ProviderContentState extends State<ProviderContent> {
     }
   }
 
-  _getLocationData() async {
+  _getLocationData(String city, String planId) async {
     await location.getLocation().then((LocationData currentLocation) {
-      setState(() {
-        latitude = currentLocation.latitude;
-        longitude = currentLocation.longitude;
-        _fetchProvidder();
-      });
+      latitude = currentLocation.latitude;
+      longitude = currentLocation.longitude;
+      _fetchProvidder(city, planId);
     });
+//
+//    location.onLocationChanged().listen((LocationData currentLocation) {
+//      latitude = currentLocation.latitude;
+//      longitude = currentLocation.longitude;
+//    });
+  }
 
-    location.onLocationChanged().listen((LocationData currentLocation) {
-      setState(() {
-        latitude = currentLocation.latitude;
-        longitude = currentLocation.longitude;
-      });
-    });
+  _setNearby() {
+    _getLocationData("", changePlan == "" ? widget.planId : changePlan);
   }
 }
