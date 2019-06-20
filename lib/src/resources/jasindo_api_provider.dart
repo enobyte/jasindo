@@ -9,6 +9,7 @@ import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
+import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/messages_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
@@ -242,6 +243,17 @@ class JasindoApiProvider {
     } catch (error, stack) {
       print(stack.toString());
       return MessagesModels.withError(_handleError(error));
+    }
+  }
+
+  Future<DependentModels> getDependent(Map<String, dynamic> body) async {
+    try {
+      final response =
+      await _dio.post("$_baseUrl/member/adcps_dependent", data: json.encode(body));
+      return DependentModels.fromJson(response.data);
+    } catch (error, stack) {
+      print(stack.toString());
+      return DependentModels.withError(_handleError(error));
     }
   }
 }

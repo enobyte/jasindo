@@ -19,6 +19,7 @@ import 'package:jasindo_app/widgets/ZoomScaffold.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/pengaturan.dart';
+import 'menu_side/news/detail_berita.dart';
 import 'menu_side/tentang.dart';
 
 class MainMenu extends StatefulWidget {
@@ -89,10 +90,8 @@ class MainMenuState extends State<MainMenu> {
               dotBgColor: Colors.transparent,
               boxFit: BoxFit.cover,
               images: [
-                new NetworkImage(
-                    'https://cdn-images-1.medium.com/max/2000/1*GqdzzfB_BHorv7V2NV7Jgg.jpeg'),
-                new NetworkImage(
-                    'https://cdn-images-1.medium.com/max/2000/1*wnIEgP1gNMrK5gZU7QS0-A.jpeg'),
+                new NetworkImage('http://103.107.103.56/bumn.png'),
+                new NetworkImage('http://103.107.103.56/bumn.png'),
               ],
             ),
             Positioned.fill(
@@ -119,7 +118,7 @@ class MainMenuState extends State<MainMenu> {
                       align: TextAlign.start,
                     ),
                     RaisedButton(
-                      onPressed: () => {},
+                      onPressed: () => {routeToWidget(context, DetailNews())},
                       child: TextWidget(
                         txt: 'CARI TAHU',
                         color: Colors.white,

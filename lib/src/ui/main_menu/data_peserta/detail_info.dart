@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/adcps_blocs/getdependent_bloc.dart';
+import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/src/models/requests/do_req_dependent.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageCircle.dart';
@@ -21,12 +24,30 @@ class DetailInfoPeserta extends StatefulWidget {
 }
 
 class DetailInfoPesertaState extends State<DetailInfoPeserta> {
-  String _noCard, _corporate, _level, _typeMember, _policy, _dateBirth, _name;
+  String _noCard,
+      _corporate,
+      _level,
+      _typeMember,
+      _policy,
+      _dateBirth,
+      _name,
+      _dateBirtRequest,
+      _employId;
+  final bloc = GetDependentBloc();
+
+  DependentModels model;
 
   @override
   void initState() {
     _initView();
     super.initState();
+  }
+
+  int isSelected = -1;
+
+  _isSelected(int index) {
+    isSelected = index;
+    _showDependent(model);
   }
 
   @override
@@ -46,7 +67,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.transparent,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -59,7 +81,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -72,7 +95,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -85,7 +109,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -98,7 +123,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -111,7 +137,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -124,7 +151,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   children: <Widget>[
                     TextWidget(txt: 'Manfaat', color: Colors.blue),
@@ -144,7 +172,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 color: Colors.grey,
               ),
               Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding:
+                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -200,7 +229,9 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             Spacer(flex: 1),
             FlatButton.icon(
               color: Colors.white,
-              onPressed: () => {},
+              onPressed: () => {
+                    _fetchDependent(),
+                  },
               icon: Image.asset(
                 'lib/assets/images/ic_family.png',
                 height: 15,
@@ -228,7 +259,100 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
         _dateBirth =
             formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
+        _dateBirtRequest =
+            formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
+        _employId = memberModels.adcps.employeeId;
       });
     });
+  }
+
+  Future<void> _showDependent(DependentModels model) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextWidget(
+                txt: 'Principal',
+                align: TextAlign.center,
+              ),
+              Container(
+                  margin: EdgeInsets.only(top: 4),
+                  padding: EdgeInsets.all(4),
+                  width: double.infinity,
+                  color: Colors.grey,
+                  child: TextWidget(
+                    txt: _name,
+                    align: TextAlign.center,
+                    color: Colors.white,
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: TextWidget(
+                  txt: 'Dependent',
+                  align: TextAlign.center,
+                ),
+              ),
+              Container(
+                  height: 150.0,
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                            onTap: () => {
+                                  Navigator.of(context).pop(),
+                                  _isSelected(index)
+                                },
+                            child: Container(
+                                margin: EdgeInsets.all(4),
+                                padding: EdgeInsets.all(4),
+                                color: isSelected != null &&
+                                        isSelected ==
+                                            index //set condition like this. voila! if isSelected and list index matches it will colored as white else orange.
+                                    ? Colors.brown
+                                    : Colors.orange,
+                                child: TextWidget(
+                                  txt: model.data[index].name,
+                                  color: Colors.white,
+                                )));
+                      },
+                      itemCount: model.data.length)),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Switch'),
+              onPressed: () {
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _fetchDependent() {
+    ReqGetDependent request = ReqGetDependent(
+        cardNumber: _noCard,
+        birthDate: _dateBirtRequest,
+        employeeId: _employId);
+    bloc.fetchDependent(request.toMap(),
+        (model, status, message) => {_renderView(model, status, message)});
+  }
+
+  _renderView(DependentModels model, bool status, String message) {
+    if (status) {
+      this.model = model;
+      _showDependent(model);
+    }
   }
 }

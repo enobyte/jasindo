@@ -67,21 +67,25 @@ class AboutState extends State<About> {
 
   String _getAbout() {
     String description = "";
-    models.data.forEach((data) {
-      if (data.name == "aboutme") {
-        description = data.descriptions;
-      }
-    });
+    if (models.data != null) {
+      models.data.forEach((data) {
+        if (data.name == "aboutme") {
+          description = data.descriptions;
+        }
+      });
+    }
     return description;
   }
 
   String _getImage() {
     String image = "";
-    models.data.forEach((data) {
-      if (data.name == "aboutme") {
-        image = data.image;
-      }
-    });
+    if (models.data != null) {
+      models.data.forEach((data) {
+        if (data.name == "aboutme") {
+          image = data.image;
+        }
+      });
+    }
     return image;
   }
 }
