@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
@@ -15,10 +16,9 @@ import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/ZoomScaffold.dart';
-import 'package:jasindo_app/widgets/webview_form.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
-import 'menu_side/pengaturan.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/pengaturan.dart';
 import 'menu_side/tentang.dart';
 
 class MainMenu extends StatefulWidget {
@@ -224,8 +224,9 @@ class MainMenuState extends State<MainMenu> {
         break;
       case 1:
         _setTitle('Buku Panduan');
-        _contentPage = WebViewContainer(
+        _launchBukuPanduan(
             'https://jasindo.co.id/uploads/cms_laporan_tahunan/Annual%20Report%20Jasindo%202016_Latest.pdf');
+        _contentPage = Container();
         break;
       case 2:
         _setTitle('Berita');
@@ -236,6 +237,7 @@ class MainMenuState extends State<MainMenu> {
         _contentPage = Information();
         break;
       case 4:
+        AboutBloc();
         _setTitle('Tentang Kami');
         _contentPage = About();
         break;
@@ -302,7 +304,7 @@ class MainMenuState extends State<MainMenu> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancle'),
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -317,5 +319,13 @@ class MainMenuState extends State<MainMenu> {
         );
       },
     );
+  }
+
+  _launchBukuPanduan(String url) async {
+    if (await UrlLauncher.canLaunch(url)) {
+      await UrlLauncher.launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

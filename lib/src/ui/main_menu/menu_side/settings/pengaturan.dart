@@ -5,8 +5,9 @@ import 'package:jasindo_app/utility/utils.dart' as u;
 import 'package:jasindo_app/widgets/ImageSvg.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
-import '../../change_pass.dart';
-import '../../term_condition.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/change_pass.dart';
+import '../../../term_condition.dart';
+import 'contact_jasindo.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ class SettingState extends State<Setting> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(3))),
               color: blueStandart,
-              onPressed: () => {},
+              onPressed: () => {u.routeToWidget(context, JasindoContact())},
               child: TextWidget(
                 txt: 'Kontak Jasindo',
                 color: Colors.white,
@@ -59,11 +60,11 @@ class SettingState extends State<Setting> {
                 onPressed: () => {_logout()},
                 icon: Icon(
                   Icons.exit_to_app,
-                  color: Colors.green,
+                  color: orangeColor1,
                 ),
                 label: TextWidget(
                   txt: 'Keluar Aplikasi',
-                  color: Colors.green,
+                  color: orangeColor1,
                 ))
           ],
         ),

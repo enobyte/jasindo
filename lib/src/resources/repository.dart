@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:jasindo_app/src/models/abouts_model.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
+import 'package:jasindo_app/src/models/messages_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/resources/jasindo_api_provider.dart';
@@ -27,6 +29,10 @@ class Repository {
 
   Future<GetProviderModel> fetchProvider({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGetProvider(body: body);
+
+  Future<AboutsModels> fetchAbout() => jasindoApiProvider.fetchaboutJasindo();
+
+  Future<MessagesModels> actMessage(Map<String, dynamic> body) => jasindoApiProvider.messagestJasindo(body);
 
   Future<GetHistClaimModel> fetchHistClaim({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGetHistClaim(body: body);

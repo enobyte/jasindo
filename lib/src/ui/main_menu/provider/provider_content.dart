@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:location/location.dart';
-
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ProviderContent extends StatefulWidget {
   List<String> listCity;
@@ -35,6 +36,9 @@ class ProviderContentState extends State<ProviderContent> {
   bool isLoading = true;
   var location = new Location();
   double latitude = 0.0, longitude = 0.0;
+  final Set<Marker> _markers = Set();
+
+  Completer<GoogleMapController> _controller = Completer();
 
   @override
   void initState() {
@@ -226,7 +230,7 @@ class ProviderContentState extends State<ProviderContent> {
       child: RaisedButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
           color: Colors.brown,
-          onPressed: () => {},
+          onPressed: () => {Navigator.pop(context)},
           child: TextWidget(
             txt: 'RESET',
             txtSize: 9,
@@ -243,7 +247,8 @@ class ProviderContentState extends State<ProviderContent> {
             builder: (context, AsyncSnapshot<GetProviderModel> snapshot) {
               if (snapshot.hasData && !isLoading) {
                 snapshot.data.data
-                    ..sort((a, b) => a.providerId.compareTo(b.providerId));
+                  ..sort((a, b) =>
+                      int.parse(a.distance).compareTo(int.parse(b.distance)));
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) =>
                       _contentProvider(snapshot, index),
@@ -270,41 +275,46 @@ class ProviderContentState extends State<ProviderContent> {
         ),
       ]),
       margin: EdgeInsets.all(4),
-      child: Card(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(left: 12, top: 8, bottom: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                      txt: snapshot.data.data[index].providerName.trim(),
-                      color: blueStandart,
-                      fontFamily: 'SF-Semibold',
-                      align: TextAlign.left,
-                      maxLine: 2,
-                    ),
-                    TextWidget(
-                        txt: snapshot.data.data[index].providerId.trim(),
-                        align: TextAlign.left),
-                  ],
+      child: GestureDetector(
+        onTap: () => {
+              _detailProvider(snapshot, index),
+            },
+        child: Card(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(left: 12, top: 8, bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TextWidget(
+                        txt: snapshot.data.data[index].providerName.trim(),
+                        color: blueStandart,
+                        fontFamily: 'SF-Semibold',
+                        align: TextAlign.left,
+                        maxLine: 2,
+                      ),
+                      TextWidget(
+                          txt: snapshot.data.data[index].providerId.trim(),
+                          align: TextAlign.left),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Container(
-              child: TextWidget(
-                txt: snapshot.data.data[index].distance.trim(),
-                align: TextAlign.right,
-                txtSize: 10,
+              Container(
+                child: TextWidget(
+                  txt: snapshot.data.data[index].distance.trim() + " KM",
+                  align: TextAlign.right,
+                  txtSize: 10,
+                ),
               ),
-            ),
-            Container(
-                padding: EdgeInsets.all(4),
-                child: Icon(Icons.arrow_forward_ios))
-          ],
+              Container(
+                  padding: EdgeInsets.all(4),
+                  child: Icon(Icons.arrow_forward_ios))
+            ],
+          ),
         ),
       ),
     );
@@ -348,14 +358,115 @@ class ProviderContentState extends State<ProviderContent> {
       longitude = currentLocation.longitude;
       _fetchProvidder(city, planId);
     });
-//
-//    location.onLocationChanged().listen((LocationData currentLocation) {
-//      latitude = currentLocation.latitude;
-//      longitude = currentLocation.longitude;
-//    });
   }
 
   _setNearby() {
     _getLocationData("", changePlan == "" ? widget.planId : changePlan);
+  }
+
+  Future<void> _detailProvider(
+      AsyncSnapshot<GetProviderModel> snapshot, int index) async {
+    var lat = snapshot.data.data[index].longituteLatitute
+        .substring(0, snapshot.data.data[index].longituteLatitute.indexOf(","));
+
+    var longi = snapshot.data.data[index].longituteLatitute.substring(
+        snapshot.data.data[index].longituteLatitute.lastIndexOf(",") + 1);
+    _markers.clear();
+    _markers.add(Marker(
+        markerId: MarkerId(snapshot.data.data[index].providerId),
+        position: LatLng(double.parse(lat), double.parse(longi))));
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    TextWidget(
+                        txt: snapshot.data.data[index].providerName,
+                        color: blueStandart,
+                        fontFamily: 'SF-Semibold',
+                        align: TextAlign.center,
+                        txtSize: 12),
+                    SizedBox(height: 4),
+                    TextWidget(
+                        txt: snapshot.data.data[index].providerAddress,
+                        align: TextAlign.center,
+                        txtSize: 12),
+                    SizedBox(height: 8),
+                    _showPhone(snapshot.data.data[index].providerPhoneNum),
+                    SizedBox(height: 8),
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      child: GoogleMap(
+                        mapType: MapType.normal,
+                        markers: _markers,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(
+                              double.parse(snapshot
+                                  .data.data[index].longituteLatitute
+                                  .substring(
+                                      0,
+                                      snapshot
+                                          .data.data[index].longituteLatitute
+                                          .indexOf(","))),
+                              double.parse(snapshot
+                                  .data.data[index].longituteLatitute
+                                  .substring(snapshot
+                                          .data.data[index].longituteLatitute
+                                          .lastIndexOf(",") +
+                                      1))),
+                          zoom: 12.0,
+                        ),
+                        onMapCreated: (GoogleMapController controller) {
+                          _controller.complete(controller);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _showPhone(String phoneProvider) {
+    Widget widget;
+    if (phoneProvider.contains("/") && phoneProvider.contains("&")) {
+      widget = TextWidget(
+          txt: phoneProvider.substring(0, phoneProvider.indexOf('&')),
+          txtSize: 12);
+    } else if (phoneProvider.contains("/")) {
+      widget = TextWidget(
+          txt: phoneProvider.substring(0, phoneProvider.indexOf('/')),
+          txtSize: 12);
+    } else if (phoneProvider.contains(";")) {
+      widget = TextWidget(
+          txt: phoneProvider.substring(0, phoneProvider.indexOf(';')),
+          txtSize: 12);
+    } else if (phoneProvider.contains(",")) {
+      widget = TextWidget(
+          txt: phoneProvider.substring(0, phoneProvider.indexOf(',')),
+          txtSize: 12);
+    } else {
+      widget = TextWidget(txt: phoneProvider, txtSize: 12);
+    }
+    return widget;
   }
 }

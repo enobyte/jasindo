@@ -270,7 +270,19 @@ class ProviderRekananState extends State<ProviderRekanan> {
   Widget _btnNearme() {
     return RaisedButton(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      onPressed: () => {},
+      onPressed: () => {
+            _planId != null
+                ? routeToWidget(
+                    context,
+                    ProviderContent(
+                      listCity: _listCity,
+                      plansModel: plansModel,
+                      cityValue: cityValue,
+                      planId: _planId,
+                    ))
+                : _scaffoldKey.currentState.showSnackBar(
+                    SnackBar(content: Text('Jaminan harus dipilih')))
+          },
       textColor: Colors.white,
       color: orangeColor1,
       splashColor: Colors.blueGrey,

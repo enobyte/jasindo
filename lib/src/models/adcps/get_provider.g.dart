@@ -47,6 +47,5 @@ Map<String, dynamic> _$_DataToJson(_Data instance) => <String, dynamic>{
       'LongituteLatitute': instance.longituteLatitute,
       'ResponseCode': instance.responseCode,
       'ResponseDescription': instance.responseDescription,
-      'Distance' : instance.distance
-
+      'Distance': instance.distance
     };

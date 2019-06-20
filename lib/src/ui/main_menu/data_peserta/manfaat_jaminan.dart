@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getbenefit_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
@@ -81,6 +82,8 @@ class EntryItem extends StatelessWidget {
   }
 
   Widget _buildHeader(GetPlansModel plans, int index) {
+    final currancy = new NumberFormat("#,##0.00", "en_US");
+
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,11 +128,15 @@ class EntryItem extends StatelessWidget {
                     txt: plans.data[index].maxIdr.contains('9') &&
                             plans.data[index].maxIdr.length >= 8
                         ? "As Charged"
-                        : "${plans.data[index].maxIdr} ${plans.data[index].frequencyDesc}",
+                        : "${currancy.format(int.parse(plans.data[index].maxIdr))} ${plans.data[index].frequencyDesc}",
                     txtSize: 14,
                   ),
                   TextWidget(
-                    txt: plans.data[index].currentLimit,
+                    txt: plans.data[index].currentLimit.contains('9') &&
+                            plans.data[index].currentLimit.length >= 8
+                        ? "As Charged"
+                        : currancy
+                            .format(int.parse(plans.data[index].currentLimit)),
                     txtSize: 14,
                   ),
                 ],
@@ -149,6 +156,7 @@ class EntryItem extends StatelessWidget {
   }
 
   Widget _viewChildren(AsyncSnapshot<GetBenefitModel> snapshot) {
+    final currancy = new NumberFormat("#,##0.00", "en_US");
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -196,7 +204,8 @@ class EntryItem extends StatelessWidget {
                           txt: snapshot.data.data[index].maxIdr.contains('9') &&
                                   snapshot.data.data[index].maxIdr.length >= 8
                               ? "As Charged"
-                              : "${snapshot.data.data[index].maxIdr} ${snapshot.data.data[index].frequencyDesc}",
+                              : "${currancy.format(int.parse(snapshot.data.data[index].maxIdr))} "
+                                  "${snapshot.data.data[index].frequencyDesc}",
                           txtSize: 10,
                         ),
                         TextWidget(
@@ -205,7 +214,8 @@ class EntryItem extends StatelessWidget {
                                   snapshot.data.data[index].available.length >=
                                       8
                               ? "As Charged"
-                              : snapshot.data.data[index].available,
+                              : currancy.format(int.parse(
+                                  snapshot.data.data[index].available)),
                           txtSize: 10,
                         ),
                       ],

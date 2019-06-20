@@ -158,8 +158,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                       : claimModel.data.map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem(
                               value: value.claimId,
-                              child: Text(
-                                  value.claimType + ' (${value.claimId})'));
+                              child: Text(value.claimType));
                         }).toList(),
                 ),
               ),
@@ -238,7 +237,9 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          return isLoadingClaim ? Center(child: CircularProgressIndicator()) : Container();
+          return isLoadingClaim
+              ? Center(child: CircularProgressIndicator())
+              : Container();
         });
   }
 

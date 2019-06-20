@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/resources/repository.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';

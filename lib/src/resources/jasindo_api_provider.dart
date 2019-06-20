@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:jasindo_app/src/models/abouts_model.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/src/models/messages_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 
@@ -30,7 +32,6 @@ class JasindoApiProvider {
       Options options = Options(
           receiveTimeout: 5000,
           connectTimeout: 5000,
-          baseUrl: _baseUrl,
           headers: {'Authorization': token},
           contentType: ContentType.parse("application/json"));
 
@@ -220,6 +221,27 @@ class JasindoApiProvider {
       return StandartModels.fromJson(response.data);
     } catch (error, _) {
       return StandartModels.withError(_handleError(error));
+    }
+  }
+
+  Future<AboutsModels> fetchaboutJasindo() async {
+    try {
+      final response = await _dio.get("$_baseUrl/about");
+      return AboutsModels.fromJson(response.data);
+    } catch (error, stack) {
+      print(stack.toString());
+      return AboutsModels.withError(_handleError(error));
+    }
+  }
+
+  Future<MessagesModels> messagestJasindo(Map<String, dynamic> body) async {
+    try {
+      final response =
+          await _dio.post("$_baseUrl/sendmessage", data: json.encode(body));
+      return MessagesModels.fromJson(response.data);
+    } catch (error, stack) {
+      print(stack.toString());
+      return MessagesModels.withError(_handleError(error));
     }
   }
 }
