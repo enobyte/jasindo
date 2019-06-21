@@ -30,11 +30,11 @@ class CardMemberState extends State<CardMember> {
   @override
   void initState() {
     super.initState();
+    _initView();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
-    _initView();
   }
 
   @override
@@ -191,7 +191,8 @@ class CardMemberState extends State<CardMember> {
             setState(() {
               _name = memberModels.data.name;
               _noCard = memberModels.data.cardNumb;
-              _birthDate = memberModels.data.birthDate.substring(0, 10);
+              _birthDate = formatDate(
+                  memberModels.data.birthDate.substring(0, 10), 'dd MMMM yyyy');
               _corporate = memberModels.adcps.corporateInfo;
               _email = memberModels.data.email;
               _memberType = memberModels.adcps.memberType;
@@ -203,8 +204,9 @@ class CardMemberState extends State<CardMember> {
             setState(() {
               _name = dependentModel.name;
               _noCard = dependentModel.cardNo;
-              _birthDate =
-                  '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+              _birthDate = formatDate(
+                  '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
+                  'dd MMMM yyyy');
               _corporate = dependentModel.corporateInfo;
               _email = memberModels.data.email;
               _memberType = dependentModel.memberType;

@@ -9,6 +9,7 @@ import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_dependent.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
+import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageCircle.dart';
@@ -240,10 +241,23 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Spacer(flex: 5),
-            ImageCircle(
-                true,
-                'https://static.stayjapan.com/assets/user_no_photo-4896a2d64d70a002deec3046d0b6ea6e7f01628781493566c95a02361524af97.png',
-                80),
+            Material(
+              elevation: 4.0,
+              shape: CircleBorder(),
+              color: Colors.brown,
+              child: ClipRRect(
+                borderRadius: new BorderRadius.circular(8),
+                child: Container(
+                  padding: EdgeInsets.all(22),
+                  child: TextWidget(
+                    txtSize: 25,
+                    fontFamily: 'SF-Bold',
+                    txt: _name != null ? _name.substring(0, 1) : "",
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
             Spacer(flex: 1),
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -523,7 +537,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           _employId = memberModels.adcps.employeeId;
           _dateBirth = formatDateFormStandart(
               memberModels.data.birthDate, "dd MMMM yyyy");
-          _fetchPlan(_noCard, '${_dateBirth.split(" ")[2]}-${mmmmTomm(_dateBirth.split(" ")[1])}-${_dateBirth.split(" ")[0]}');
+          _fetchPlan(_noCard,
+              '${_dateBirth.split(" ")[2]}-${mmmmTomm(_dateBirth.split(" ")[1])}-${_dateBirth.split(" ")[0]}');
         });
       });
     });
