@@ -156,7 +156,10 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Tanggal Lahir', color: Colors.blue),
-                    TextWidget(txt: _dateBirth)
+                    TextWidget(
+                        txt: formatDate(
+                            '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}',
+                            "dd MMMM yyyy")),
                   ],
                 ),
               ),
