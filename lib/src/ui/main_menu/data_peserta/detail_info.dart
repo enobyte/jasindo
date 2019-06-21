@@ -13,6 +13,7 @@ import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageCircle.dart';
 import 'package:jasindo_app/widgets/ImageCover.dart';
+import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class DetailInfoPeserta extends StatefulWidget {
@@ -46,6 +47,13 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
   GetPlansModel plansModel;
 
   @override
+  void dispose() {
+    super.dispose();
+    bloc.dispose();
+    blocPlan.dispose();
+  }
+
+  @override
   void initState() {
     _checkDependent();
     super.initState();
@@ -58,152 +66,168 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
     _showDependent(model);
   }
 
+  bool isLoadingSwitch = false;
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          automaticallyImplyLeading: false, //disable back button
-          backgroundColor: Colors.transparent,
-          expandedHeight: MediaQuery.of(context).size.height / 3,
-          flexibleSpace: FlexibleSpaceBar(background: _header()),
+    return Stack(
+      children: <Widget>[
+        CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              automaticallyImplyLeading: false, //disable back button
+              backgroundColor: Colors.transparent,
+              expandedHeight: MediaQuery.of(context).size.height / 3,
+              flexibleSpace: FlexibleSpaceBar(background: _header()),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Divider(
+                    color: Colors.transparent,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 5, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'Perusahaan', color: Colors.blue),
+                        TextWidget(txt: _corporate)
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'Level', color: Colors.blue),
+                        TextWidget(
+                            txt: _level == 'Y' ||
+                                    _corporate == 'JAMKESTAMA (VVIP)' ||
+                                    _corporate == 'JAMKESMEN (VVIP)'
+                                ? 'VVIP'
+                                : 'NON VVIP')
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'No Kartu', color: Colors.blue),
+                        TextWidget(txt: _noCard)
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'Tipe Peserta', color: Colors.blue),
+                        TextWidget(txt: _typeMember)
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'Policy', color: Colors.blue),
+                        TextWidget(txt: _policy)
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'Tanggal Lahir', color: Colors.blue),
+                        TextWidget(
+                            txt: formatDate(
+                                '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}',
+                                "dd MMMM yyyy")),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      children: <Widget>[
+                        TextWidget(txt: 'Manfaat', color: Colors.blue),
+                        SizedBox(
+                          width: 50,
+                        ),
+                        Expanded(
+                          child: TextWidget(
+                            align: TextAlign.right,
+                            txt: widget.plans.join(', '),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        TextWidget(txt: 'Periode Polis', color: Colors.blue),
+                        TextWidget(txt: widget.polisPeriod)
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              Divider(
+        isLoadingSwitch
+            ? Container(
+                width: double.infinity,
+                height: double.infinity,
                 color: Colors.transparent,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'Perusahaan', color: Colors.blue),
-                    TextWidget(txt: _corporate)
-                  ],
+                child: Center(
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'Level', color: Colors.blue),
-                    TextWidget(
-                        txt: _level == 'Y' ||
-                                _corporate == 'JAMKESTAMA (VVIP)' ||
-                                _corporate == 'JAMKESMEN (VVIP)'
-                            ? 'VVIP'
-                            : 'NON VVIP')
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'No Kartu', color: Colors.blue),
-                    TextWidget(txt: _noCard)
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'Tipe Peserta', color: Colors.blue),
-                    TextWidget(txt: _typeMember)
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'Policy', color: Colors.blue),
-                    TextWidget(txt: _policy)
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'Tanggal Lahir', color: Colors.blue),
-                    TextWidget(
-                        txt: formatDate(
-                            '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}',
-                            "dd MMMM yyyy")),
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  children: <Widget>[
-                    TextWidget(txt: 'Manfaat', color: Colors.blue),
-                    SizedBox(
-                      width: 50,
-                    ),
-                    Expanded(
-                      child: TextWidget(
-                        align: TextAlign.right,
-                        txt: widget.plans.join(', '),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-              Container(
-                padding:
-                    EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    TextWidget(txt: 'Periode Polis', color: Colors.blue),
-                    TextWidget(txt: widget.polisPeriod)
-                  ],
-                ),
-              ),
-              Divider(
-                color: Colors.grey,
-              ),
-            ],
-          ),
-        ),
+              )
+            : Container()
       ],
     );
   }
@@ -388,6 +412,9 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
   }
 
   _fetchDependent() {
+    setState(() {
+      isLoadingSwitch = true;
+    });
     isSelected = -1;
     ReqGetDependent request = ReqGetDependent(
         cardNumber: _noCardRequest,
@@ -402,9 +429,15 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
       this.model = model;
       _showDependent(model);
     }
+    setState(() {
+      isLoadingSwitch = false;
+    });
   }
 
   _fetchPlan() {
+    setState(() {
+      isLoadingSwitch = true;
+    });
     ReqGetPlan request = ReqGetPlan(
         cardNumber: _noCard,
         birthDate:
@@ -421,6 +454,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
               plansModel.data[0].policyStartDate.replaceAll("-", "/") +
                   ' - ' +
                   plansModel.data[0].policyEndDate.replaceAll("-", "/");
+          isLoadingSwitch = false;
         });
       });
     });

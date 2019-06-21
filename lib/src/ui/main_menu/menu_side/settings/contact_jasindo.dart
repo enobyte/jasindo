@@ -24,6 +24,12 @@ class JasindoContactState extends State<JasindoContact> {
   final _scaffolKey = GlobalKey<ScaffoldState>();
 
   @override
+  void dispose() {
+    super.dispose();
+    bloc.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffolKey,

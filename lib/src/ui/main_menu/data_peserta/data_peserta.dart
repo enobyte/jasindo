@@ -47,8 +47,9 @@ class DataPesertaState extends State<DataPeserta>
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
+    _tabController.dispose();
+    bloc.dispose();
   }
 
   @override

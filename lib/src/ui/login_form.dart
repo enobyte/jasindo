@@ -24,6 +24,12 @@ class LoginFormState extends State<LoginForm> {
   bool _isLoading = false;
 
   @override
+  void dispose() {
+    super.dispose();
+    bloc.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,

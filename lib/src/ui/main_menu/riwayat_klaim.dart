@@ -41,6 +41,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   void dispose() {
     super.dispose();
     bloc.dispose();
+    planbloc.dispose();
   }
 
   @override

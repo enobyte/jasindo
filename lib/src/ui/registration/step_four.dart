@@ -58,6 +58,7 @@ class StepFourState extends State<StepFour> {
     _passwordController.dispose();
     _rePasswordController.dispose();
     _verificationCodeController.dispose();
+    bloc.dispose();
   }
 
   @override

@@ -36,6 +36,7 @@ class StepFiveState extends State<StepFive> {
   void dispose() {
     super.dispose();
     SharedPreferencesHelper.clearAllPreference();
+    bloc.dispose();
   }
 
   @override

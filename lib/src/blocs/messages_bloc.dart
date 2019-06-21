@@ -1,4 +1,3 @@
-import 'package:jasindo_app/src/models/abouts_model.dart';
 import 'package:jasindo_app/src/models/messages_model.dart';
 import 'package:jasindo_app/src/resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
