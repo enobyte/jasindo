@@ -168,10 +168,10 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         TextWidget(txt: 'Tanggal Lahir', color: Colors.blue),
-                        TextWidget(
-                            txt: formatDate(
-                                '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}',
-                                "dd MMMM yyyy")),
+                        TextWidget(txt: _dateBirth)
+                        //         formatDate(
+//                                '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}',
+//                                "dd MMMM yyyy")),
                       ],
                     ),
                   ),
@@ -301,11 +301,11 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         _level = memberModels.adcps.vip;
         _typeMember = memberModels.adcps.memberType;
         _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
-        _dateBirth =
-            formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
         _dateBirtRequest =
             formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
         _employId = memberModels.adcps.employeeId;
+        _dateBirth =
+            formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
       });
     });
   }
@@ -331,16 +331,19 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 align: TextAlign.center,
                 fontFamily: 'SF-Semibold',
               ),
-              Container(
-                  margin: EdgeInsets.only(top: 4),
-                  padding: EdgeInsets.all(4),
-                  width: double.infinity,
-                  color: Colors.grey,
-                  child: TextWidget(
-                    txt: _namePrinciple,
-                    align: TextAlign.center,
-                    color: Colors.white,
-                  )),
+              InkWell(
+                onTap: () => {_backToPrincipal()},
+                child: Container(
+                    margin: EdgeInsets.only(top: 4),
+                    padding: EdgeInsets.all(4),
+                    width: double.infinity,
+                    color: isSelected == -1 ? Colors.brown : Colors.orange,
+                    child: TextWidget(
+                      txt: _namePrinciple,
+                      align: TextAlign.center,
+                      color: Colors.white,
+                    )),
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextWidget(
@@ -362,9 +365,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                             child: Container(
                                 margin: EdgeInsets.all(4),
                                 padding: EdgeInsets.all(4),
-                                color: isSelected != null &&
-                                        isSelected ==
-                                            index //set condition like this. voila! if isSelected and list index matches it will colored as white else orange.
+                                color: isSelected != null && isSelected == index
                                     ? Colors.brown
                                     : Colors.orange,
                                 child: TextWidget(
@@ -385,24 +386,32 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             FlatButton(
               child: Text('GANTI'),
               onPressed: () {
-                SharedPreferencesHelper.setDependent(
-                    json.encode(this.model.data[isSelected]));
-                SharedPreferencesHelper.getDependent().then((onValue) {
-                  final dependentModel =
-                      ChooseDependent.fromJson(json.decode(onValue));
-                  setState(() {
-                    _name = dependentModel.name;
-                    _noCard = dependentModel.cardNo;
-                    _corporate = dependentModel.corporateInfo;
-                    _typeMember = dependentModel.memberType;
-                    _policy = dependentModel.policyNumber
-                        .toString()
-                        .replaceAll(" ", "");
-                    _dateBirth = dependentModel.bateOfBirth;
-                  });
-                  _fetchPlan();
+                if (isSelected == -1) {
                   Navigator.of(context).pop();
-                });
+                  _attemptBackPrincipal();
+                } else {
+                  SharedPreferencesHelper.setDependent(
+                      json.encode(this.model.data[isSelected]));
+                  SharedPreferencesHelper.getDependent().then((onValue) {
+                    final dependentModel =
+                        ChooseDependent.fromJson(json.decode(onValue));
+                    setState(() {
+                      _name = dependentModel.name;
+                      _noCard = dependentModel.cardNo;
+                      _corporate = dependentModel.corporateInfo;
+                      _typeMember = dependentModel.memberType;
+                      _policy = dependentModel.policyNumber
+                          .toString()
+                          .replaceAll(" ", "");
+                      _dateBirth = formatDate(
+                          '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
+                          "dd MMMM yyyy");
+                    });
+                    _fetchPlan(_noCard,
+                        '${_dateBirth.split(" ")[2]}-${mmmmTomm(_dateBirth.split(" ")[1])}-${_dateBirth.split(" ")[0]}');
+                    Navigator.of(context).pop();
+                  });
+                }
               },
             ),
           ],
@@ -434,14 +443,11 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
     });
   }
 
-  _fetchPlan() {
+  _fetchPlan(String noCard, String birthDate) {
     setState(() {
       isLoadingSwitch = true;
     });
-    ReqGetPlan request = ReqGetPlan(
-        cardNumber: _noCard,
-        birthDate:
-            '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}');
+    ReqGetPlan request = ReqGetPlan(cardNumber: _noCard, birthDate: birthDate);
     blocPlan.fetchGetPlans(request.toMap(), (status, message) {
       SharedPreferencesHelper.getPlans().then((onValue) {
         plansModel = GetPlansModel.fromJson(json.decode(onValue));
@@ -470,7 +476,6 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           final memberModels = MemberModels.fromJson(json.decode(member));
           setState(() {
             _noCardRequest = memberModels.data.cardNumb;
-            formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
             _dateBirtRequest = formatDateFormStandart(
                 memberModels.data.birthDate, "yyyy-MM-dd");
             _employId = memberModels.adcps.employeeId;
@@ -483,10 +488,44 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             _typeMember = dependentModel.memberType;
             _policy =
                 dependentModel.policyNumber.toString().replaceAll(" ", "");
-            _dateBirth = dependentModel.bateOfBirth;
+            _dateBirth = formatDate(
+                '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
+                "dd MMMM yyyy");
           });
         });
       }
+    });
+  }
+
+  _backToPrincipal() {
+    setState(() {
+      Navigator.of(context).pop();
+      _isSelected(-1);
+    });
+  }
+
+  _attemptBackPrincipal() {
+    setState(() {
+      SharedPreferencesHelper.clearPreference('dependent');
+      SharedPreferencesHelper.getDoLogin().then((onValue) {
+        final memberModels = MemberModels.fromJson(json.decode(onValue));
+        setState(() {
+          _name = memberModels.data.name;
+          _namePrinciple = memberModels.data.name;
+          _noCard = memberModels.data.cardNumb;
+          _noCardRequest = memberModels.data.cardNumb;
+          _corporate = memberModels.adcps.corporateInfo;
+          _level = memberModels.adcps.vip;
+          _typeMember = memberModels.adcps.memberType;
+          _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
+          _dateBirtRequest =
+              formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
+          _employId = memberModels.adcps.employeeId;
+          _dateBirth = formatDateFormStandart(
+              memberModels.data.birthDate, "dd MMMM yyyy");
+          _fetchPlan(_noCard, '${_dateBirth.split(" ")[2]}-${mmmmTomm(_dateBirth.split(" ")[1])}-${_dateBirth.split(" ")[0]}');
+        });
+      });
     });
   }
 }

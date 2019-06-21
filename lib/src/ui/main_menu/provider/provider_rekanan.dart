@@ -307,15 +307,19 @@ class ProviderRekananState extends State<ProviderRekanan> {
           final memberModels = MemberModels.fromJson(json.decode(onValue));
           _cardNumber = memberModels.data.cardNumb;
           _birthDate = memberModels.data.birthDate.substring(0, 10);
+          _attemptPlan(_cardNumber, _birthDate);
         });
       } else {
         final dependentModel = ChooseDependent.fromJson(json.decode(dependent));
         _cardNumber = dependentModel.cardNo;
         _birthDate =
             '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+        _attemptPlan(_cardNumber, _birthDate);
       }
-      _attemptPlan(_cardNumber, _birthDate);
     });
+
+
+
   }
 
   _attemptPlan(String cardNumber, String birthDate) {

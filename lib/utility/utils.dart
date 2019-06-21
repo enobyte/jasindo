@@ -105,3 +105,46 @@ String mmmTomm(String mmm) {
   }
   return mm;
 }
+
+String mmmmTomm(String mmm) {
+  String mm;
+  switch (mmm) {
+    case "January":
+      mm = "01";
+      break;
+    case "February":
+      mm = "02";
+      break;
+    case "March":
+      mm = "03";
+      break;
+    case "April":
+      mm = "04";
+      break;
+    case "May":
+      mm = "05";
+      break;
+    case "June":
+      mm = "06";
+      break;
+    case "July":
+      mm = "07";
+      break;
+    case "August":
+      mm = "08";
+      break;
+    case "September":
+      mm = "01";
+      break;
+    case "October":
+      mm = "10";
+      break;
+    case "November":
+      mm = "11";
+      break;
+    case "December":
+      mm = "12";
+      break;
+  }
+  return mm;
+}

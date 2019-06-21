@@ -11,12 +11,12 @@ class SharedPreferencesHelper {
   static final String _month = 'month';
   static final String _day = 'day';
   static final String _login = 'login';
-  static final String _dependent = 'dependent';
+  static final String dependent = 'dependent';
 
   static Future<bool> clearPreference(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.getString(key);
-    return preferences.clear();
+    return preferences.remove(key);
   }
 
   static Future<bool> clearAllPreference() async {
@@ -31,7 +31,7 @@ class SharedPreferencesHelper {
     preferences.getString(_day);
     preferences.getString(_login);
     preferences.getString(_plans);
-    preferences.getString(_dependent);
+    preferences.getString(dependent);
     return preferences.clear();
   }
 
@@ -80,12 +80,12 @@ class SharedPreferencesHelper {
   /// ------------------------------------------------------------
   static Future<bool> setDependent(String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.setString(_dependent, value);
+    return preferences.setString(dependent, value);
   }
 
   static Future<String> getDependent() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.getString(_dependent) ?? '';
+    return preferences.getString(dependent) ?? '';
   }
 
   /// ------------------------------------------------------------

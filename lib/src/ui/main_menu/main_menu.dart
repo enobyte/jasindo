@@ -35,7 +35,7 @@ class MainMenuState extends State<MainMenu> {
   Widget _contentPage;
   var titleAppbar = '';
   bool isFirst = true;
-  String _name;
+  String _name, _callCenter;
 
   @override
   void initState() {
@@ -280,6 +280,7 @@ class MainMenuState extends State<MainMenu> {
       final memberModels = MemberModels.fromJson(json.decode(onValue));
       setState(() {
         _name = memberModels.data.name;
+        _callCenter =memberModels.adcps.helpLine;
       });
     });
   }
@@ -295,7 +296,7 @@ class MainMenuState extends State<MainMenu> {
               children: <Widget>[
                 Column(
                   children: <Widget>[
-                    Text('+62 21 80662207'),
+                    Text(_callCenter),
                   ],
                 ),
               ],
@@ -311,7 +312,7 @@ class MainMenuState extends State<MainMenu> {
             FlatButton(
               child: Text('Call'),
               onPressed: () {
-                UrlLauncher.launch("tel://+622180662207");
+                UrlLauncher.launch("tel://" + _callCenter);
               },
             ),
           ],
