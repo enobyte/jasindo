@@ -2,9 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getdependent_bloc.dart';
+import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
+import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/choose_dependent_model.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_dependent.dart';
+import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageCircle.dart';
@@ -32,14 +36,18 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
       _dateBirth,
       _name,
       _dateBirtRequest,
+      _noCardRequest,
+      _namePrinciple,
       _employId;
   final bloc = GetDependentBloc();
+  final blocPlan = GetPlansBloc();
 
   DependentModels model;
+  GetPlansModel plansModel;
 
   @override
   void initState() {
-    _initView();
+    _checkDependent();
     super.initState();
   }
 
@@ -87,7 +95,12 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     TextWidget(txt: 'Level', color: Colors.blue),
-                    TextWidget(txt: _level == 'N' ? 'NON VIP' : 'VIP')
+                    TextWidget(
+                        txt: _level == 'Y' ||
+                                _corporate == 'JAMKESTAMA (VVIP)' ||
+                                _corporate == 'JAMKESMEN (VVIP)'
+                            ? 'VVIP'
+                            : 'NON VVIP')
                   ],
                 ),
               ),
@@ -218,7 +231,9 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 ),
                 Padding(
                     padding: const EdgeInsets.only(bottom: 10),
-                    child: _level == 'Y'
+                    child: _level == 'Y' ||
+                            _corporate == 'JAMKESTAMA (VVIP)' ||
+                            _corporate == 'JAMKESMEN (VVIP)'
                         ? Image.asset(
                             'lib/assets/images/ic_vip.png',
                             height: 20,
@@ -252,7 +267,9 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
       final memberModels = MemberModels.fromJson(json.decode(onValue));
       setState(() {
         _name = memberModels.data.name;
+        _namePrinciple = memberModels.data.name;
         _noCard = memberModels.data.cardNumb;
+        _noCardRequest = memberModels.data.cardNumb;
         _corporate = memberModels.adcps.corporateInfo;
         _level = memberModels.adcps.vip;
         _typeMember = memberModels.adcps.memberType;
@@ -275,9 +292,17 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Image.asset(
+                  'lib/assets/images/ic_family.png',
+                  height: 50,
+                ),
+              ),
               TextWidget(
-                txt: 'Principal',
+                txt: 'KARYAWAN',
                 align: TextAlign.center,
+                fontFamily: 'SF-Semibold',
               ),
               Container(
                   margin: EdgeInsets.only(top: 4),
@@ -285,14 +310,15 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   width: double.infinity,
                   color: Colors.grey,
                   child: TextWidget(
-                    txt: _name,
+                    txt: _namePrinciple,
                     align: TextAlign.center,
                     color: Colors.white,
                   )),
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: TextWidget(
-                  txt: 'Dependent',
+                  txt: 'KELUARGA',
+                  fontFamily: 'SF-Semibold',
                   align: TextAlign.center,
                 ),
               ),
@@ -324,14 +350,32 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text('BATAL'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             FlatButton(
-              child: Text('Switch'),
+              child: Text('GANTI'),
               onPressed: () {
+                SharedPreferencesHelper.setDependent(
+                    json.encode(this.model.data[isSelected]));
+                SharedPreferencesHelper.getDependent().then((onValue) {
+                  final dependentModel =
+                      ChooseDependent.fromJson(json.decode(onValue));
+                  setState(() {
+                    _name = dependentModel.name;
+                    _noCard = dependentModel.cardNo;
+                    _corporate = dependentModel.corporateInfo;
+                    _typeMember = dependentModel.memberType;
+                    _policy = dependentModel.policyNumber
+                        .toString()
+                        .replaceAll(" ", "");
+                    _dateBirth = dependentModel.bateOfBirth;
+                  });
+                  _fetchPlan();
+                  Navigator.of(context).pop();
+                });
               },
             ),
           ],
@@ -341,10 +385,11 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
   }
 
   _fetchDependent() {
+    isSelected = -1;
     ReqGetDependent request = ReqGetDependent(
-        cardNumber: _noCard,
+        cardNumber: _noCardRequest,
         birthDate: _dateBirtRequest,
-        employeeId: _employId);
+        employeeId: _employId.replaceAll(" ", ""));
     bloc.fetchDependent(request.toMap(),
         (model, status, message) => {_renderView(model, status, message)});
   }
@@ -354,5 +399,57 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
       this.model = model;
       _showDependent(model);
     }
+  }
+
+  _fetchPlan() {
+    ReqGetPlan request = ReqGetPlan(
+        cardNumber: _noCard,
+        birthDate:
+            '${_dateBirth.split("-")[2]}-${mmmTomm(_dateBirth.split("-")[0])}-${_dateBirth.split("-")[1]}');
+    blocPlan.fetchGetPlans(request.toMap(), (status, message) {
+      SharedPreferencesHelper.getPlans().then((onValue) {
+        plansModel = GetPlansModel.fromJson(json.decode(onValue));
+        widget.plans.clear();
+        setState(() {
+          for (var item in plansModel.data) {
+            widget.plans.add(item.planType);
+          }
+          widget.polisPeriod =
+              plansModel.data[0].policyStartDate.replaceAll("-", "/") +
+                  ' - ' +
+                  plansModel.data[0].policyEndDate.replaceAll("-", "/");
+        });
+      });
+    });
+  }
+
+  _checkDependent() {
+    SharedPreferencesHelper.getDependent().then((onValue) {
+      if (onValue.isEmpty) {
+        _initView();
+      } else {
+        final dependentModel = ChooseDependent.fromJson(json.decode(onValue));
+        SharedPreferencesHelper.getDoLogin().then((member) {
+          final memberModels = MemberModels.fromJson(json.decode(member));
+          setState(() {
+            _noCardRequest = memberModels.data.cardNumb;
+            formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
+            _dateBirtRequest = formatDateFormStandart(
+                memberModels.data.birthDate, "yyyy-MM-dd");
+            _employId = memberModels.adcps.employeeId;
+            _namePrinciple = memberModels.data.name;
+            _level = memberModels.adcps.vip;
+
+            _name = dependentModel.name;
+            _noCard = dependentModel.cardNo;
+            _corporate = dependentModel.corporateInfo;
+            _typeMember = dependentModel.memberType;
+            _policy =
+                dependentModel.policyNumber.toString().replaceAll(" ", "");
+            _dateBirth = dependentModel.bateOfBirth;
+          });
+        });
+      }
+    });
   }
 }

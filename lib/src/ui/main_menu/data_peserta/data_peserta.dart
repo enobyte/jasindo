@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/choose_dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/detail_info.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/manfaat_jaminan.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/BubbleTabIndicator.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
@@ -107,24 +109,38 @@ class DataPesertaState extends State<DataPeserta>
   }
 
   _fetchPlan() {
-    SharedPreferencesHelper.getDoLogin().then((onValue) {
-      final memberModels = MemberModels.fromJson(json.decode(onValue));
-      cardNumber = memberModels.data.cardNumb;
-      birthDate = memberModels.data.birthDate.substring(0, 10);
-      ReqGetPlan request =
-          ReqGetPlan(cardNumber: cardNumber, birthDate: birthDate);
-      bloc.fetchGetPlans(request.toMap(), (status, message) {
-        SharedPreferencesHelper.getPlans().then((onValue) {
-          plansModel = GetPlansModel.fromJson(json.decode(onValue));
-          setState(() {
-            for (var item in plansModel.data) {
-              listManfaat.add(item.planType);
-            }
-            polishPeriod =
-                plansModel.data[0].policyStartDate.replaceAll("-", "/") +
-                    ' - ' +
-                    plansModel.data[0].policyEndDate.replaceAll("-", "/");
-          });
+    SharedPreferencesHelper.getDependent().then((dependent) {
+      if (dependent.isEmpty) {
+        SharedPreferencesHelper.getDoLogin().then((onValue) {
+          final memberModels = MemberModels.fromJson(json.decode(onValue));
+          cardNumber = memberModels.data.cardNumb;
+          birthDate = memberModels.data.birthDate.substring(0, 10);
+          _attemptPlan(cardNumber, birthDate);
+        });
+      } else {
+        final dependentModel = ChooseDependent.fromJson(json.decode(dependent));
+        cardNumber = dependentModel.cardNo;
+        birthDate =
+            '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+        _attemptPlan(cardNumber, birthDate);
+      }
+    });
+  }
+
+  _attemptPlan(String cardNumber, String birthDate) {
+    ReqGetPlan request =
+        ReqGetPlan(cardNumber: cardNumber, birthDate: birthDate);
+    bloc.fetchGetPlans(request.toMap(), (status, message) {
+      SharedPreferencesHelper.getPlans().then((onValue) {
+        plansModel = GetPlansModel.fromJson(json.decode(onValue));
+        setState(() {
+          for (var item in plansModel.data) {
+            listManfaat.add(item.planType);
+          }
+          polishPeriod =
+              plansModel.data[0].policyStartDate.replaceAll("-", "/") +
+                  ' - ' +
+                  plansModel.data[0].policyEndDate.replaceAll("-", "/");
         });
       });
     });

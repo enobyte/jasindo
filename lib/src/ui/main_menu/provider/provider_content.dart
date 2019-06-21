@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getprovider_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
+import 'package:jasindo_app/src/models/choose_dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_provider.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -251,7 +253,9 @@ class ProviderContentState extends State<ProviderContent> {
                       int.parse(a.distance).compareTo(int.parse(b.distance)));
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) =>
-                      _contentProvider(snapshot, index),
+                      snapshot.data.data[index].responseCode != "405"
+                          ? _contentProvider(snapshot, index)
+                          : Container(),
                   itemCount: snapshot.data.data == null
                       ? 0
                       : snapshot.data.data.length,
@@ -296,9 +300,9 @@ class ProviderContentState extends State<ProviderContent> {
                         align: TextAlign.left,
                         maxLine: 2,
                       ),
-                      TextWidget(
-                          txt: snapshot.data.data[index].providerId.trim(),
-                          align: TextAlign.left),
+//                      TextWidget(
+//                          txt: snapshot.data.data[index].providerId.trim(),
+//                          align: TextAlign.left),
                     ],
                   ),
                 ),
@@ -324,22 +328,36 @@ class ProviderContentState extends State<ProviderContent> {
     setState(() {
       isLoading = true;
     });
-    SharedPreferencesHelper.getDoLogin().then((user) {
-      final member = MemberModels.fromJson(json.decode(user));
-      ReqGetProvider request = ReqGetProvider(
-          cardNumber: member.data.cardNumb,
-          birthDate: member.data.birthDate.substring(0, 10),
-          planId: planId,
-          city: city,
-          latitude: latitude,
-          longitude: longitude);
-      bloc.fetchProvider(
-          request.toMap(),
-          (providerModel, status, message) => {
-                this.providerModel = providerModel,
-                _renderView(status, message)
-              });
+    SharedPreferencesHelper.getDependent().then((dependent) {
+      if (dependent.isEmpty) {
+        SharedPreferencesHelper.getDoLogin().then((user) {
+          final member = MemberModels.fromJson(json.decode(user));
+          _attempGetProvider(member.data.cardNumb,
+              member.data.birthDate.substring(0, 10), city, planId);
+        });
+      } else {
+        final dependentModel = ChooseDependent.fromJson(json.decode(dependent));
+        String cardNumber = dependentModel.cardNo;
+        String birthDate =
+            '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+        _attempGetProvider(cardNumber, birthDate, city, planId);
+      }
     });
+  }
+
+  _attempGetProvider(
+      String cardNum, String birthDate, String city, String planId) {
+    ReqGetProvider request = ReqGetProvider(
+        cardNumber: cardNum,
+        birthDate: birthDate,
+        planId: planId,
+        city: city,
+        latitude: latitude,
+        longitude: longitude);
+    bloc.fetchProvider(
+        request.toMap(),
+        (providerModel, status, message) =>
+            {this.providerModel = providerModel, _renderView(status, message)});
   }
 
   _renderView(bool status, String message) {
@@ -398,7 +416,11 @@ class ProviderContentState extends State<ProviderContent> {
                         align: TextAlign.center,
                         txtSize: 12),
                     SizedBox(height: 8),
-                    _showPhone(snapshot.data.data[index].providerPhoneNum),
+                    Container(
+                        padding: EdgeInsets.all(8),
+                        color: Colors.grey,
+                        child: _showPhone(
+                            snapshot.data.data[index].providerPhoneNum)),
                     SizedBox(height: 8),
                     Container(
                       height: 200,

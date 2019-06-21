@@ -6,6 +6,7 @@ import 'package:jasindo_app/src/blocs/adcps_blocs/gethistoryclaim_bloc.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
+import 'package:jasindo_app/src/models/choose_dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_histclaim.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
@@ -492,22 +493,35 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     setState(() {
       isLoadingClaim = false;
     });
-    SharedPreferencesHelper.getDoLogin().then((onValue) {
-      final memberModels = MemberModels.fromJson(json.decode(onValue));
-      _cardNumber = memberModels.data.cardNumb;
-      _birthDate = memberModels.data.birthDate.substring(0, 10);
-      ReqGetPlan request =
-          ReqGetPlan(cardNumber: _cardNumber, birthDate: _birthDate);
-      planbloc.fetchGetPlans(request.toMap(), (status, message) {
-        SharedPreferencesHelper.getPlans().then((onValue) {
-          plansModel = GetPlansModel.fromJson(json.decode(onValue));
-          setState(() {});
+    SharedPreferencesHelper.getDependent().then((dependent) {
+      if (dependent.isEmpty) {
+        SharedPreferencesHelper.getDoLogin().then((onValue) {
+          final memberModels = MemberModels.fromJson(json.decode(onValue));
+          _cardNumber = memberModels.data.cardNumb;
+          _birthDate = memberModels.data.birthDate.substring(0, 10);
         });
-        if (!status) {
-          _scaffoldKey.currentState
-              .showSnackBar(SnackBar(content: Text(message)));
-        }
+      } else {
+        final dependentModel = ChooseDependent.fromJson(json.decode(dependent));
+        _cardNumber = dependentModel.cardNo;
+        _birthDate =
+            '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+      }
+      _attemptGetPlan(_cardNumber, _birthDate);
+    });
+  }
+
+  _attemptGetPlan(String cardNumber, String birthDate) {
+    ReqGetPlan request =
+        ReqGetPlan(cardNumber: cardNumber, birthDate: birthDate);
+    planbloc.fetchGetPlans(request.toMap(), (status, message) {
+      SharedPreferencesHelper.getPlans().then((onValue) {
+        plansModel = GetPlansModel.fromJson(json.decode(onValue));
+        setState(() {});
       });
+      if (!status) {
+        _scaffoldKey.currentState
+            .showSnackBar(SnackBar(content: Text(message)));
+      }
     });
   }
 

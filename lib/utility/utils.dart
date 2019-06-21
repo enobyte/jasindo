@@ -41,24 +41,67 @@ bool validateEmail(String value) {
     return true;
 }
 
-String formatDateFormStandart(String value, String format){
+String formatDateFormStandart(String value, String format) {
   var datetime = DateTime.parse(value);
   return DateFormat(format).format(datetime);
 }
 
 //Use yyyymmdd
-String formatDate(String value, String format){
+String formatDate(String value, String format) {
   print(value);
-  value = value+'T132700';
+  value = value + 'T132700';
   var datetime = DateTime.parse(value);
   return DateFormat(format).format(datetime);
 }
 
-double calculateDistance(lat1, lon1, lat2, lon2){
+double calculateDistance(lat1, lon1, lat2, lon2) {
   var p = 0.017453292519943295;
   var c = cos;
-  var a = 0.5 - c((lat2 - lat1) * p)/2 +
-      c(lat1 * p) * c(lat2 * p) *
-          (1 - c((lon2 - lon1) * p))/2;
+  var a = 0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
   return 12742 * asin(sqrt(a));
+}
+
+String mmmTomm(String mmm) {
+  String mm;
+  switch (mmm) {
+    case "JAN":
+      mm = "01";
+      break;
+    case "FEB":
+      mm = "02";
+      break;
+    case "MAR":
+      mm = "03";
+      break;
+    case "APR":
+      mm = "04";
+      break;
+    case "MAY":
+      mm = "05";
+      break;
+    case "JUN":
+      mm = "06";
+      break;
+    case "JUL":
+      mm = "07";
+      break;
+    case "AUG":
+      mm = "08";
+      break;
+    case "SEP":
+      mm = "01";
+      break;
+    case "OCT":
+      mm = "10";
+      break;
+    case "NOV":
+      mm = "11";
+      break;
+    case "DEC":
+      mm = "12";
+      break;
+  }
+  return mm;
 }

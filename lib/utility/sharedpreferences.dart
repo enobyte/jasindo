@@ -11,6 +11,7 @@ class SharedPreferencesHelper {
   static final String _month = 'month';
   static final String _day = 'day';
   static final String _login = 'login';
+  static final String _dependent = 'dependent';
 
   static Future<bool> clearPreference(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,6 +31,7 @@ class SharedPreferencesHelper {
     preferences.getString(_day);
     preferences.getString(_login);
     preferences.getString(_plans);
+    preferences.getString(_dependent);
     return preferences.clear();
   }
 
@@ -39,7 +41,7 @@ class SharedPreferencesHelper {
 
   static Future<bool> setToken(String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return preferences.setString(_token, "Bearer "+value);
+    return preferences.setString(_token, "Bearer " + value);
   }
 
   static Future<String> getToken() async {
@@ -74,8 +76,22 @@ class SharedPreferencesHelper {
   }
 
   /// ------------------------------------------------------------
+  /// Set Get Dependent Preference
+  /// ------------------------------------------------------------
+  static Future<bool> setDependent(String value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setString(_dependent, value);
+  }
+
+  static Future<String> getDependent() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(_dependent) ?? '';
+  }
+
+  /// ------------------------------------------------------------
   /// Set Get Login Json Data Preference
   /// ------------------------------------------------------------
+
   static Future<bool> setDoLogin(String value) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.setString(_login, value);
