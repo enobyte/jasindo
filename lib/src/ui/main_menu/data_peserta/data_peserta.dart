@@ -61,6 +61,7 @@ class DataPesertaState extends State<DataPeserta>
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Data Peserta", color: Colors.black),
         backgroundColor: Colors.white,
+        elevation: 0,
         bottom: TabBar(
           isScrollable: true,
           unselectedLabelColor: Colors.grey,
@@ -150,15 +151,13 @@ class DataPesertaState extends State<DataPeserta>
     });
   }
 
-  _tabListener() {
+  _tabListener() async {
     if (_tabController.index == 1) {
       SharedPreferencesHelper.getDependent().then((dependent) {
         if (dependent.isNotEmpty) {
           final dependentModel =
               ChooseDependent.fromJson(json.decode(dependent));
           SharedPreferencesHelper.getPlans().then((plan) {
-            print("=========+> Dependent : " +
-                '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}');
             setState(() {
               plansModel = GetPlansModel.fromJson(json.decode(plan));
               cardNumber = dependentModel.cardNo;

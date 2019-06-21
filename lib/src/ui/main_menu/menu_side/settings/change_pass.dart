@@ -44,78 +44,80 @@ class ChangePasswordState extends State<ChangePassword> {
             color: Colors.black,
           )),
       body: ProgressDialog(
-        child: Container(
-          margin: EdgeInsets.all(20),
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                controller: _oldPassword,
-                obscureText: _isHidePassword,
-                decoration: InputDecoration(
-                    labelText: "Masukkan Kata Sandi Lama",
-                    suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            if (_isHidePassword) {
-                              _isHidePassword = false;
-                            } else {
-                              _isHidePassword = true;
-                            }
-                          });
-                        })),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _newPassword,
-                obscureText: _isHidePassword,
-                decoration: InputDecoration(
-                    labelText: "Masukkan Kata Sandi Baru",
-                    suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            if (_isHidePassword) {
-                              _isHidePassword = false;
-                            } else {
-                              _isHidePassword = true;
-                            }
-                          });
-                        })),
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: _renewPassword,
-                obscureText: _isHidePassword,
-                decoration: InputDecoration(
-                    labelText: "Ulangi Kata Sandi Baru",
-                    suffixIcon: IconButton(
-                        icon: Icon(Icons.remove_red_eye),
-                        onPressed: () {
-                          setState(() {
-                            if (_isHidePassword) {
-                              _isHidePassword = false;
-                            } else {
-                              _isHidePassword = true;
-                            }
-                          });
-                        })),
-              ),
-              SizedBox(height: 50),
-              Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(left: 20, right: 20),
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(3))),
-                  color: blueStandart,
-                  onPressed: () => {_changePassword()},
-                  child: Container(
-                      padding: EdgeInsets.only(top: 15, bottom: 15),
-                      child: TextWidget(txt: 'SIMPAN', color: Colors.white)),
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                TextFormField(
+                  controller: _oldPassword,
+                  obscureText: _isHidePassword,
+                  decoration: InputDecoration(
+                      labelText: "Masukkan Kata Sandi Lama",
+                      suffixIcon: IconButton(
+                          icon: Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              if (_isHidePassword) {
+                                _isHidePassword = false;
+                              } else {
+                                _isHidePassword = true;
+                              }
+                            });
+                          })),
                 ),
-              )
-            ],
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _newPassword,
+                  obscureText: _isHidePassword,
+                  decoration: InputDecoration(
+                      labelText: "Masukkan Kata Sandi Baru",
+                      suffixIcon: IconButton(
+                          icon: Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              if (_isHidePassword) {
+                                _isHidePassword = false;
+                              } else {
+                                _isHidePassword = true;
+                              }
+                            });
+                          })),
+                ),
+                SizedBox(height: 20),
+                TextFormField(
+                  controller: _renewPassword,
+                  obscureText: _isHidePassword,
+                  decoration: InputDecoration(
+                      labelText: "Ulangi Kata Sandi Baru",
+                      suffixIcon: IconButton(
+                          icon: Icon(Icons.remove_red_eye),
+                          onPressed: () {
+                            setState(() {
+                              if (_isHidePassword) {
+                                _isHidePassword = false;
+                              } else {
+                                _isHidePassword = true;
+                              }
+                            });
+                          })),
+                ),
+                SizedBox(height: 50),
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(left: 20, right: 20),
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(3))),
+                    color: blueStandart,
+                    onPressed: () => {_changePassword()},
+                    child: Container(
+                        padding: EdgeInsets.only(top: 15, bottom: 15),
+                        child: TextWidget(txt: 'SIMPAN', color: Colors.white)),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         inAsyncCall: _isLoading,

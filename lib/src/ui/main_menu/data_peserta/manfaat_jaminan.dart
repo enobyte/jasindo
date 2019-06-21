@@ -25,6 +25,7 @@ class BenefitGuarantyState extends State<BenefitGuaranty> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.white,
         body: ListView.builder(
           itemBuilder: (BuildContext context, int index) => widget.plans != null
               ? EntryItem(
