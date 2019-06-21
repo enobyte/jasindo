@@ -41,6 +41,7 @@ class DataPesertaState extends State<DataPeserta>
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: tabs.length);
+    _tabController.addListener(_tabListener);
     _fetchPlan();
   }
 
@@ -144,5 +145,24 @@ class DataPesertaState extends State<DataPeserta>
         });
       });
     });
+  }
+
+  _tabListener() {
+    if (_tabController.index == 1) {
+      SharedPreferencesHelper.getDependent().then((dependent) {
+        if (dependent.isNotEmpty) {
+          final dependentModel =
+              ChooseDependent.fromJson(json.decode(dependent));
+          SharedPreferencesHelper.getPlans().then((plan) {
+            setState(() {
+              plansModel = GetPlansModel.fromJson(json.decode(plan));
+              cardNumber = dependentModel.cardNo;
+              birthDate =
+                  '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+            });
+          });
+        }
+      });
+    }
   }
 }

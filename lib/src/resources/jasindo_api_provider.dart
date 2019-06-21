@@ -248,8 +248,8 @@ class JasindoApiProvider {
 
   Future<DependentModels> getDependent(Map<String, dynamic> body) async {
     try {
-      final response =
-      await _dio.post("$_baseUrl/member/adcps_dependent", data: json.encode(body));
+      final response = await _dio.post("$_baseUrl/member/adcps_dependent",
+          data: json.encode(body));
       return DependentModels.fromJson(response.data);
     } catch (error, stack) {
       print(stack.toString());
