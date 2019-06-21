@@ -13,6 +13,8 @@ import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/BubbleTabIndicator.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
+import 'kartu_saya.dart';
+
 class DataPeserta extends StatefulWidget {
   DataPeserta({Key key}) : super(key: key);
 
@@ -105,7 +107,7 @@ class DataPesertaState extends State<DataPeserta>
         );
         break;
       case 2:
-        return Container();
+        return CardMember();
         break;
     }
   }
