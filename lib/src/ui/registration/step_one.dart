@@ -6,6 +6,7 @@ import 'package:jasindo_app/src/models/requests/do_req_register.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as utils;
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
@@ -195,6 +196,37 @@ class StepOneState extends State<StepOne> {
               _insertCard(),
               _insertDate(),
               _btnSubmit(),
+              Container(
+                  margin: EdgeInsets.only(bottom: 10, top: 20),
+                  alignment: Alignment.center,
+                  child: TextWidget(
+                    txt: "Kesulitan Daftar?",
+                    align: TextAlign.center,
+                    txtSize: 12,
+                  )),
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                height: 30,
+                alignment: Alignment.center,
+                child: ButtonTheme(
+                  child: new RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    child: TextWidget(
+                      color: Colors.white,
+                      txt: 'Hubungi Call Center',
+                      txtSize: 12.0,
+                    ),
+                    elevation: 0.0,
+                    color: orangeColor1,
+                    splashColor: orangeColor1,
+                    onPressed: () {
+                      MakeCall(context, '021-29647522');
+                    },
+                  ),
+                  height: 50.0,
+                ),
+              ),
             ],
           ),
         ),
@@ -213,7 +245,9 @@ class StepOneState extends State<StepOne> {
             labelText: titleInsertCard,
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(5.0))),
-            errorText: _validateCard ? "Pastikan No. kartu terisi dengan benar" : null),
+            errorText: _validateCard
+                ? "Pastikan No. kartu terisi dengan benar"
+                : null),
         controller: _cardNumbController,
       ),
     );

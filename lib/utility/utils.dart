@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/bloc-provider.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 Future<String> randomString() async {
   const chars = "abcdefghijklmnopqrstuvwxyz";
@@ -147,4 +148,40 @@ String mmmmTomm(String mmm) {
       break;
   }
   return mm;
+}
+
+Future<void> MakeCall(BuildContext context, String phoneNumb) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Text(phoneNumb),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          FlatButton(
+            child: Text('Call'),
+            onPressed: () {
+              UrlLauncher.launch("tel://" + phoneNumb);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

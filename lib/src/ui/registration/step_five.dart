@@ -4,6 +4,7 @@ import 'package:jasindo_app/src/blocs/activeuser_bloc.dart';
 import 'package:jasindo_app/src/models/requests/do_req_activeuser.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
@@ -92,11 +93,15 @@ class StepFiveState extends State<StepFive> {
                 ),
               ),
               _btnAktifasi(),
-              TextWidget(
-                txt: attentionCodeNotSend,
-                txtSize: 15,
-              ),
-              _btnResendCode()
+              Row(
+                children: <Widget>[
+                  Expanded(child: _btnResendCode()),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(child: _btnCallCenter())
+                ],
+              )
             ],
           ),
         ),
@@ -120,18 +125,46 @@ class StepFiveState extends State<StepFive> {
   }
 
   Widget _btnResendCode() {
-    return Container(
-      margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 6, 2.0,
-          MediaQuery.of(context).size.width / 6, 0.0),
-      child: ButtonWidget(
-          height: 30,
+    return Column(
+      children: <Widget>[
+        TextWidget(
+          txt: attentionCodeNotSend,
           txtSize: 12,
-          txtColor: Colors.white,
-          txt: 'KIRIM ULANG',
-          btnColor: orangeColor1,
-          borderRedius: 5,
-          onClick: () => {debugPrint('btn success')}),
+        ),
+        Container(
+          child: ButtonWidget(
+              height: 30,
+              txtSize: 12,
+              txtColor: Colors.white,
+              txt: 'KIRIM ULANG',
+              btnColor: orangeColor1,
+              borderRedius: 5,
+              onClick: () => {debugPrint('btn success')}),
+        ),
+      ],
     );
+  }
+
+  Widget _btnCallCenter() {
+    return Column(children: <Widget>[
+      Container(
+          alignment: Alignment.center,
+          child: TextWidget(
+            txtSize: 12,
+            txt: "Kesulitan Daftar?",
+            align: TextAlign.center,
+          )),
+      Container(
+        child: ButtonWidget(
+            height: 30,
+            txtSize: 12,
+            txtColor: Colors.white,
+            txt: 'Hubungi Call Center',
+            btnColor: orangeColor1,
+            borderRedius: 5,
+            onClick: () => {MakeCall(context, '021-29647522')}),
+      ),
+    ]);
   }
 
   _onSubmit() {
