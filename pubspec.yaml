@@ -11,7 +11,8 @@ description: Jasindo Health Application
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+
+version: 2.0.0+7 #2.0.0 -> VersionName. +7 -> VersionCode
 
 environment:
   sdk: ">=2.2.0 <3.0.0"
@@ -102,6 +103,7 @@ flutter:
     - lib/assets/images/ri_show.png
     - lib/assets/images/ri_swipe.png
     - lib/assets/images/rj_swipe.png
+    - lib/assets/images/rj_show.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

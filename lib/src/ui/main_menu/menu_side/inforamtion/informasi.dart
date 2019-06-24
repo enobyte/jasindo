@@ -80,7 +80,10 @@ class InformationState extends State<Information> {
 
   Widget _listTwo() {
     return InkWell(
-      onTap: () => {},
+      onTap: () => {
+        routeToWidget(context,
+            ContentInformation(imageUrl: 'lib/assets/images/rj_show.png'))
+      },
       child: Container(
         padding: EdgeInsets.only(top: 25, bottom: 25, left: 20),
         margin: EdgeInsets.only(bottom: 1),

@@ -1,4 +1,4 @@
-package id.co.jasindo_app
+package id.jasindo.io
 
 import android.os.Bundle
 
