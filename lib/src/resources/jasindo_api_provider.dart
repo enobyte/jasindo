@@ -12,6 +12,7 @@ import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/messages_model.dart';
+import 'package:jasindo_app/src/models/news_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 
@@ -254,6 +255,16 @@ class JasindoApiProvider {
     } catch (error, stack) {
       print(stack.toString());
       return DependentModels.withError(_handleError(error));
+    }
+  }
+
+  Future<NewsModel> fetchNewsJasindo() async {
+    try {
+      final response = await _dio.get("$_baseUrl/news");
+      return NewsModel.fromJson(response.data);
+    } catch (error, stack) {
+      print(stack.toString());
+      return NewsModel.withError(_handleError(error));
     }
   }
 }

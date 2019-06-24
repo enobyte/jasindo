@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:jasindo_app/assets/Strings.dart';
+import 'package:jasindo_app/src/blocs/about_bloc.dart';
+import 'package:jasindo_app/src/models/abouts_model.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class TermCondition extends StatefulWidget {
+  AboutBloc blocAbout;
+
   @override
   State<StatefulWidget> createState() {
     return TermConditionState();
   }
+
+  TermCondition(this.blocAbout);
 }
 
 class TermConditionState extends State<TermCondition> {
+  AboutsModels models;
+
+  @override
+  void initState() {
+    _fetchData();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,13 +67,39 @@ class TermConditionState extends State<TermCondition> {
   }
 
   Widget _content() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: TextWidget(
-        align: TextAlign.justify,
-        txt:
-            'Selamat datang di www.tokopedia.com.Syarat & ketentuan yang ditetapkan di bawah ini mengatur pemakaian jasa yang ditawarkan oleh PT. Tokopedia terkait penggunaan situs www.tokopedia.com. Pengguna disarankan membaca dengan seksama karena dapat berdampak kepada hak dan kewajiban Pengguna di bawah hukum.Dengan mendaftar dan/atau menggunakan situs www.tokopedia.com, maka pengguna dianggap telah membaca, mengerti, memahami dan menyutujui semua isi dalam Syarat & ketentuan. Syarat & ketentuan ini merupakan bentuk kesepakatan yang dituangkan dalam sebuah perjanjian yang sah antara Pengguna dengan PT.Tokopedia. Jika pengguna tidak menyetujui salah satu, sebagian, atau seluruh isi Syarat & ketentuan, maka pengguna tidak diperkenankan menggunakan layanan di www.tokopedia.com.',
-      ),
-    );
+    return Container(child: Html(data: _getTerm()));
+  }
+
+  String _getTerm() {
+    String description = "";
+    if (models != null && models.data != null) {
+      models.data.forEach((data) {
+        if (data != null) {
+          if (data.name == "termcondition") {
+            setState(() {
+              description = data.descriptions;
+            });
+          }
+        } else {
+          setState(() {
+            description = "";
+          });
+        }
+      });
+    } else {
+      description = "";
+    }
+    return description;
+  }
+
+  _fetchData() {
+    widget.blocAbout
+        .aboutBloc((status, message, models) => {_renderView(models)});
+  }
+
+  _renderView(AboutsModels aboutModel) async {
+    setState(() {
+      this.models = aboutModel;
+    });
   }
 }

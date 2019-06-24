@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/src/ui/registration/step_five.dart';
 import 'package:jasindo_app/src/ui/registration/step_four.dart';
 import 'package:jasindo_app/src/ui/registration/step_one.dart';
@@ -21,6 +22,7 @@ class RegisterFormState extends State<RegisterForm> {
   Color _indexColors = Colors.blue;
   bool _visibleNext = true;
   bool _visibleBack = true;
+  final _blocAbout = AboutBloc();
 
   @override
   void dispose() {
@@ -128,6 +130,7 @@ class RegisterFormState extends State<RegisterForm> {
           _visibleNavigation(false, true);
         });
         _widget = StepFour(
+          blocAbout: _blocAbout,
           onClickRegister: () => {_increaseTab()},
         );
         break;

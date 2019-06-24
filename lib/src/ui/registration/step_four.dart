@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
+import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/src/blocs/register_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/do_registration.dart';
 import 'package:jasindo_app/src/models/requests/do_req_registerinternal.dart';
@@ -16,13 +17,14 @@ import '../term_condition.dart';
 
 class StepFour extends StatefulWidget {
   Function onClickRegister;
+  AboutBloc blocAbout;
 
   @override
   State<StatefulWidget> createState() {
     return StepFourState();
   }
 
-  StepFour({Key key, this.onClickRegister}) : super(key: key);
+  StepFour({Key key, this.onClickRegister, this.blocAbout}) : super(key: key);
 }
 
 class StepFourState extends State<StepFour> {
@@ -146,8 +148,8 @@ class StepFourState extends State<StepFour> {
                                 TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        u.routeToWidget(
-                                            context, TermCondition());
+                                        u.routeToWidget(context,
+                                            TermCondition(widget.blocAbout));
                                       },
                                     text: 'Syarat & Ketentuan ',
                                     style: TextStyle(

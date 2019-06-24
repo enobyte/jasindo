@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/src/models/abouts_model.dart';
-import 'package:jasindo_app/widgets/ImageCover.dart';
-import 'package:jasindo_app/widgets/TextWidget.dart';
-import 'package:flutter_html/flutter_html.dart';
 
 class About extends StatefulWidget {
+  AboutBloc blocAbout;
+
   @override
   State<StatefulWidget> createState() {
     return AboutState();
   }
+
+  About(this.blocAbout);
 }
 
 class AboutState extends State<About> {
@@ -19,6 +21,11 @@ class AboutState extends State<About> {
   void initState() {
     super.initState();
     _fetchData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -51,12 +58,16 @@ class AboutState extends State<About> {
       onTap: () => {},
       child: models == null
           ? Center(child: CircularProgressIndicator())
-          : Image.network(_getImage()),
+          : Image.network(
+              _getImage(),
+              fit: BoxFit.fill,
+            ),
     );
   }
 
   _fetchData() {
-    bloc.aboutBloc((status, message, models) => {_renderView(models)});
+    widget.blocAbout
+        .aboutBloc((status, message, models) => {_renderView(models)});
   }
 
   _renderView(AboutsModels aboutModel) async {

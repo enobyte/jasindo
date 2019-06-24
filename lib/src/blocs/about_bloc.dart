@@ -8,8 +8,11 @@ class AboutBloc {
 
   Observable<AboutsModels> get getaboutBloc => _aboutBloc.stream;
 
-  aboutBloc(Function(bool status, String message, AboutsModels model) callback) async {
+  aboutBloc(
+      Function(bool status, String message, AboutsModels model)
+          callback) async {
     AboutsModels model = await _repository.fetchAbout();
+    _aboutBloc.sink.add(model);
     callback(model.status, model.message, model);
   }
 

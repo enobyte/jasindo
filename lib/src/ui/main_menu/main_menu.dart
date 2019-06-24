@@ -3,9 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/about_bloc.dart';
+import 'package:jasindo_app/src/blocs/news_bloc.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
+import 'package:jasindo_app/src/models/news_model.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
-import 'package:jasindo_app/src/ui/main_menu/menu_side/informasi.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/inforamtion/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
@@ -36,6 +38,11 @@ class MainMenuState extends State<MainMenu> {
   var titleAppbar = '';
   bool isFirst = true;
   String _name, _callCenter;
+  final _blocNews = NewsBloc();
+  final _blocNewsData = NewsBloc();
+  final _blocAbout = AboutBloc();
+  NewsModel modelNews;
+  int indexSlide = 0;
 
   @override
   void initState() {
@@ -44,9 +51,22 @@ class MainMenuState extends State<MainMenu> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     changeSlide.close();
+    _blocNewsData.dispose();
+    _blocNews.dispose();
     super.dispose();
+  }
+
+  getDataNews(NewsModel model) {
+    setState(() {
+      this.modelNews = model;
+    });
   }
 
   @override
@@ -78,59 +98,77 @@ class MainMenuState extends State<MainMenu> {
 
   Widget _imageSlide() {
     return Container(
-        height: MediaQuery.of(context).size.height / 2,
-        child: Stack(
-          fit: StackFit.expand,
-          children: <Widget>[
-            new Carousel(
-              overlayShadow: true,
-              overlayShadowColors: Colors.white,
-              overlayShadowSize: 0.7,
-              animationDuration: Duration(days: 1),
-              dotBgColor: Colors.transparent,
-              boxFit: BoxFit.cover,
-              images: [
-                new NetworkImage('http://103.107.103.56/bumn.png'),
-                new NetworkImage('http://103.107.103.56/bumn.png'),
-              ],
-            ),
-            Positioned.fill(
-              top: MediaQuery.of(context).size.height / 10,
-              bottom: MediaQuery.of(context).size.height / 8,
-              right: MediaQuery.of(context).size.width / 3,
-              child: Container(
-                //color: Colors.blue,
-                padding: EdgeInsets.only(left: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    TextWidget(
-                      txt: 'BUMN Hadir Untuk Negeri',
+      height: MediaQuery.of(context).size.height / 2,
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          new Carousel(
+            onImageChange: (index, data) => {
+                  _setImageSlide(index),
+                },
+            overlayShadow: true,
+            overlayShadowColors: Colors.white,
+            overlayShadowSize: 0.7,
+            animationDuration: Duration(days: 1),
+            dotBgColor: Colors.transparent,
+            boxFit: BoxFit.cover,
+            images: [
+              new NetworkImage(
+                  modelNews != null ? modelNews.data[0].images : "http://"),
+              new NetworkImage(
+                  modelNews != null ? modelNews.data[1].images : "http://"),
+            ],
+          ),
+          Positioned.fill(
+            top: MediaQuery.of(context).size.height / 10,
+            bottom: MediaQuery.of(context).size.height / 8,
+            right: MediaQuery.of(context).size.width / 3,
+            child: Container(
+              padding: EdgeInsets.only(left: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  TextWidget(
+                    txt: modelNews != null
+                        ? modelNews.data[indexSlide].title
+                        : "",
+                    color: Colors.white,
+                    txtSize: 30,
+                    align: TextAlign.start,
+                  ),
+                  TextWidget(
+                    txt: modelNews != null
+                        ? modelNews.data[indexSlide].title
+                        : "",
+                    color: Colors.white,
+                    txtSize: 12,
+                    align: TextAlign.start,
+                  ),
+                  RaisedButton(
+                    onPressed: () => {
+                          routeToWidget(
+                              context,
+                              DetailNews(
+                                title: modelNews.data[indexSlide].title,
+                                content: modelNews.data[indexSlide].content,
+                                image: modelNews.data[indexSlide].images,
+                                date: modelNews.data[indexSlide].createat,
+                              ))
+                        },
+                    child: TextWidget(
+                      txt: 'CARI TAHU',
                       color: Colors.white,
-                      txtSize: 30,
-                      align: TextAlign.start,
                     ),
-                    TextWidget(
-                      txt: 'BUMN Hadir Untuk Negeri',
-                      color: Colors.white,
-                      txtSize: 12,
-                      align: TextAlign.start,
-                    ),
-                    RaisedButton(
-                      onPressed: () => {routeToWidget(context, DetailNews())},
-                      child: TextWidget(
-                        txt: 'CARI TAHU',
-                        color: Colors.white,
-                      ),
-                      color: orangeColor2,
-                    )
-                  ],
-                ),
+                    color: orangeColor2,
+                  )
+                ],
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _menuBox() {
@@ -195,10 +233,7 @@ class MainMenuState extends State<MainMenu> {
                     child: Card(
                       elevation: 4,
                       child: InkWell(
-                        onTap: () => {
-                              //_phoneCusto()
-                              _makeCall()
-                            },
+                        onTap: () => {_makeCall()},
                         child: Container(
                             child: menuItems('Hubungi Call Center',
                                 'lib/assets/images/ic_callcenter.png')),
@@ -229,20 +264,19 @@ class MainMenuState extends State<MainMenu> {
         break;
       case 2:
         _setTitle('Berita');
-        _contentPage = News();
+        _contentPage = News(_blocNews);
         break;
       case 3:
         _setTitle('Informasi');
         _contentPage = Information();
         break;
       case 4:
-        AboutBloc();
         _setTitle('Tentang Kami');
-        _contentPage = About();
+        _contentPage = About(_blocAbout);
         break;
       case 5:
         _setTitle('Pengaturan');
-        _contentPage = Setting();
+        _contentPage = Setting(_blocAbout);
         break;
       default:
         _setTitle('');
@@ -280,8 +314,11 @@ class MainMenuState extends State<MainMenu> {
       final memberModels = MemberModels.fromJson(json.decode(onValue));
       setState(() {
         _name = memberModels.data.name;
-        _callCenter =memberModels.adcps.helpLine;
+        _callCenter = memberModels.adcps.helpLine;
       });
+      _blocNewsData.newsBloc((model) => {
+            getDataNews(model),
+          });
     });
   }
 
@@ -327,5 +364,16 @@ class MainMenuState extends State<MainMenu> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  _setImageSlide(int index) {
+    if (index == 0) {
+      index = 1;
+    } else if (index == 1) {
+      index = 0;
+    }
+    setState(() {
+      indexSlide = index;
+    });
   }
 }

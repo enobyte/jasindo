@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as u;
@@ -10,10 +11,14 @@ import '../../../term_condition.dart';
 import 'contact_jasindo.dart';
 
 class Setting extends StatefulWidget {
+  AboutBloc blocAbout;
+
   @override
   State<StatefulWidget> createState() {
     return SettingState();
   }
+
+  Setting(this.blocAbout);
 }
 
 class SettingState extends State<Setting> {
@@ -82,7 +87,7 @@ class SettingState extends State<Setting> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(3))),
             color: blueStandart,
-            onPressed: () => {u.routeToWidget(context, TermCondition())},
+            onPressed: () => {u.routeToWidget(context, TermCondition(widget.blocAbout))},
             child: TextWidget(
               txt: 'Syarat & Ketentuan',
               color: Colors.white,

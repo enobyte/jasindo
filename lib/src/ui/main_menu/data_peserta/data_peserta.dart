@@ -157,22 +157,28 @@ class DataPesertaState extends State<DataPeserta>
         if (dependent.isNotEmpty) {
           final dependentModel =
               ChooseDependent.fromJson(json.decode(dependent));
+          setState(() {
+            cardNumber = dependentModel.cardNo;
+            birthDate =
+                '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
+          });
+
           SharedPreferencesHelper.getPlans().then((plan) {
             setState(() {
               plansModel = GetPlansModel.fromJson(json.decode(plan));
-              cardNumber = dependentModel.cardNo;
-              birthDate =
-                  '${dependentModel.bateOfBirth.split("-")[2]}-${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}-${dependentModel.bateOfBirth.split("-")[1]}';
             });
           });
         } else {
           SharedPreferencesHelper.getDoLogin().then((onValue) {
             final memberModels = MemberModels.fromJson(json.decode(onValue));
+            setState(() {
+              cardNumber = memberModels.data.cardNumb;
+              birthDate = birthDate.substring(0, 10);
+            });
+
             SharedPreferencesHelper.getPlans().then((plan) {
               setState(() {
                 plansModel = GetPlansModel.fromJson(json.decode(plan));
-                cardNumber = memberModels.data.cardNumb;
-                birthDate = birthDate.substring(0, 10);
               });
             });
           });

@@ -8,6 +8,7 @@ import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/messages_model.dart';
+import 'package:jasindo_app/src/models/news_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/resources/jasindo_api_provider.dart';
@@ -56,4 +57,7 @@ class Repository {
 
   Future<StandartModels> actChangePassUser({Map<String, dynamic> body}) =>
       jasindoApiProvider.changePass(body: body);
+
+  Future<NewsModel> fetchNews() =>
+      jasindoApiProvider.fetchNewsJasindo();
 }

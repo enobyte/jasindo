@@ -180,25 +180,24 @@ class CardMemberState extends State<CardMember> {
   _initView() {
     SharedPreferencesHelper.getDoLogin().then((member) {
       final memberModels = MemberModels.fromJson(json.decode(member));
+      _level = memberModels.adcps.vip;
+      setState(() {
+        _name = memberModels.data.name;
+        _noCard = memberModels.data.cardNumb;
+        _birthDate = formatDate(
+            memberModels.data.birthDate.substring(0, 10), 'dd MMMM yyyy');
+        _corporate = memberModels.adcps.corporateInfo;
+        _email = memberModels.data.email;
+        _memberType = memberModels.adcps.memberType;
+        _policy = memberModels.adcps.policyNumber;
+      });
       SharedPreferencesHelper.getPlans().then((plan) {
         final plansModel = GetPlansModel.fromJson(json.decode(plan));
         SharedPreferencesHelper.getDependent().then((dependent) {
           for (var item in plansModel.data) {
             _benefit.add(item.planType);
           }
-          _level = memberModels.adcps.vip;
-          if (dependent.isEmpty) {
-            setState(() {
-              _name = memberModels.data.name;
-              _noCard = memberModels.data.cardNumb;
-              _birthDate = formatDate(
-                  memberModels.data.birthDate.substring(0, 10), 'dd MMMM yyyy');
-              _corporate = memberModels.adcps.corporateInfo;
-              _email = memberModels.data.email;
-              _memberType = memberModels.adcps.memberType;
-              _policy = memberModels.adcps.policyNumber;
-            });
-          } else {
+          if (dependent.isNotEmpty) {
             final dependentModel =
                 ChooseDependent.fromJson(json.decode(dependent));
             setState(() {
