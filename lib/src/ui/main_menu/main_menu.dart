@@ -3,9 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/about_bloc.dart';
+import 'package:jasindo_app/src/blocs/guidebook_bloc.dart';
 import 'package:jasindo_app/src/blocs/news_bloc.dart';
+import 'package:jasindo_app/utility/utils.dart' as utils;
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/news_model.dart';
+import 'package:jasindo_app/src/models/requests/do_req_guidebook.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/inforamtion/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
@@ -41,6 +44,7 @@ class MainMenuState extends State<MainMenu> {
   final _blocNews = NewsBloc();
   final _blocNewsData = NewsBloc();
   final _blocAbout = AboutBloc();
+  final _blocGuideBook = GuideBookBloc();
   NewsModel modelNews;
   int indexSlide = 0;
 
@@ -60,6 +64,7 @@ class MainMenuState extends State<MainMenu> {
     changeSlide.close();
     _blocNewsData.dispose();
     _blocNews.dispose();
+    _blocGuideBook.dispose();
     super.dispose();
   }
 
@@ -359,10 +364,28 @@ class MainMenuState extends State<MainMenu> {
   }
 
   _launchBukuPanduan(String url) async {
-    if (await UrlLauncher.canLaunch(url)) {
-      await UrlLauncher.launch(url);
+    SharedPreferencesHelper.getDoLogin().then((onValue) {
+      MemberModels user = MemberModels.fromJson(json.decode(onValue));
+      ReqGetGuideBook request = ReqGetGuideBook(
+          cardNumber: user.data.cardNumb,
+          birthDate: user.data.birthDate.substring(0, 10),
+          corporate: user.adcps.corporateInfo.trim(),
+          isPlan:
+              user.adcps.corporateInfo.trim() == 'TRAVELOKA' ? true : false);
+      _blocGuideBook.guideBook(request.toMap(),
+          (status, message, url) => {_launch(status, message, url)});
+    });
+  }
+
+  _launch(bool status, String message, String url) async {
+    if (status) {
+      if (await UrlLauncher.canLaunch(url) != null) {
+        await UrlLauncher.launch(url);
+      } else {
+        throw 'Could not launch $url';
+      }
     } else {
-      throw 'Could not launch $url';
+      utils.showToast(context, message);
     }
   }
 

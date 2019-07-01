@@ -9,12 +9,9 @@ import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_dependent.dart';
 import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
-import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
-import 'package:jasindo_app/widgets/ImageCircle.dart';
 import 'package:jasindo_app/widgets/ImageCover.dart';
-import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class DetailInfoPeserta extends StatefulWidget {

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
-import 'package:jasindo_app/widgets/ImageCover.dart';
 import 'package:jasindo_app/widgets/ImageSvg.dart';
 
 class SplashScreen extends StatefulWidget {
