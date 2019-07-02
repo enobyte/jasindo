@@ -32,7 +32,6 @@ class RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
-    print(_indexStep);
     return Scaffold(
       appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.black),
@@ -138,7 +137,7 @@ class RegisterFormState extends State<RegisterForm> {
         setState(() {
           _visibleNavigation(false, false);
         });
-        _widget = StepFive();
+        _widget = StepFive(isActive: true,);
         break;
     }
     return _widget;

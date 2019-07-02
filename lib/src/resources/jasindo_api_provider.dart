@@ -279,4 +279,15 @@ class JasindoApiProvider {
       return GuideBookModels.withError(_handleError(error));
     }
   }
+
+  Future<StandartModels> resendCode({Map<String, dynamic> body}) async {
+    try {
+      final response = await _dio.post("$_baseUrl/member/resend_code",
+          data: json.encode(body));
+      return StandartModels.fromJson(response.data);
+    } catch (error, stack) {
+      print(stack.toString());
+      return StandartModels.withError(_handleError(error));
+    }
+  }
 }

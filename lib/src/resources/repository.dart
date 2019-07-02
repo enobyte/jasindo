@@ -63,4 +63,7 @@ class Repository {
 
   Future<GuideBookModels> fetchGuideBook({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGuideBook(body: body);
+
+  Future<StandartModels> resendCode({Map<String, dynamic> body}) =>
+      jasindoApiProvider.resendCode(body: body);
 }

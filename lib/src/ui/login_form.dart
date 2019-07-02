@@ -5,9 +5,12 @@ import 'package:jasindo_app/src/models/requests/do_req_login.dart';
 import 'package:jasindo_app/src/ui/forgot_password.dart';
 import 'package:jasindo_app/src/ui/registration/register_form.dart';
 import 'package:jasindo_app/utility/colors.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
+
+import 'registration/step_five.dart';
 
 class LoginForm extends StatefulWidget {
   @override
@@ -191,6 +194,7 @@ class LoginFormState extends State<LoginForm> {
     setState(() {
       _isLoading = true;
     });
+    SharedPreferencesHelper.setEmail(_emailController.text);
     ReqDoLogin request = ReqDoLogin(
         email: _emailController.text, password: _passController.text);
     bloc.fetchDoLogin(
@@ -206,6 +210,12 @@ class LoginFormState extends State<LoginForm> {
     });
     if (status) {
       Navigator.pushNamedAndRemoveUntil(context, "/main_menu", (_) => false);
+    } else if (message == 'User Not Active') {
+      routeToWidget(
+          context,
+          StepFive(
+            isActive: false,
+          ));
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
     }

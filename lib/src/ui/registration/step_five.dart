@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
 import 'package:jasindo_app/src/blocs/activeuser_bloc.dart';
+import 'package:jasindo_app/src/blocs/resendcode_bloc.dart';
 import 'package:jasindo_app/src/models/requests/do_req_activeuser.dart';
+import 'package:jasindo_app/src/models/requests/do_req_resendcode.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
@@ -11,10 +13,14 @@ import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/pin_input/pin_put.dart';
 
 class StepFive extends StatefulWidget {
+  bool isActive;
+
   @override
   State<StatefulWidget> createState() {
     return StepFiveState();
   }
+
+  StepFive({this.isActive});
 }
 
 class StepFiveState extends State<StepFive> {
@@ -22,6 +28,8 @@ class StepFiveState extends State<StepFive> {
   String _code = "";
   String _email = "";
   ActiveUserBloc bloc = ActiveUserBloc();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final resendCode = ResendCodeBloc();
 
   @override
   void initState() {
@@ -42,71 +50,80 @@ class StepFiveState extends State<StepFive> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressDialog(
-      child: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
-          child: Column(
-            children: <Widget>[
-              Image.asset(
-                'lib/assets/images/ic_mail.png',
-                height: 60,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: TextWidget(
-                  txt: attentionVerifyMail,
-                  txtSize: 12,
+    return Scaffold(
+      appBar: AppBar(
+          automaticallyImplyLeading: widget.isActive ? false : true,
+          iconTheme: IconThemeData(color: Colors.black),
+          elevation: 0,
+          centerTitle: true,
+          backgroundColor: Colors.transparent),
+      key: _scaffoldKey,
+      body: ProgressDialog(
+        child: SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(left: 40.0, top: 30.0, right: 40),
+            child: Column(
+              children: <Widget>[
+                Image.asset(
+                  'lib/assets/images/ic_mail.png',
+                  height: 60,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: TextWidget(
-                  txt: _email,
-                  color: orangeColor1,
-                  txtSize: 14,
+                SizedBox(
+                  height: 15,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: TextWidget(
-                  txt: attentionActiveAccount,
-                  txtSize: 12,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: TextWidget(
-                  txt: attentionCheckMail,
-                  txtSize: 8,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: PinPut(
-                  fieldsCount: 4,
-                  actionButtonsEnabled: false,
-                  onSubmit: (code) => {this._code = code},
-                ),
-              ),
-              _btnAktifasi(),
-              Row(
-                children: <Widget>[
-                  Expanded(child: _btnResendCode()),
-                  SizedBox(
-                    width: 20,
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: TextWidget(
+                    txt: attentionVerifyMail,
+                    txtSize: 12,
                   ),
-                  Expanded(child: _btnCallCenter())
-                ],
-              )
-            ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: TextWidget(
+                    txt: _email,
+                    color: orangeColor1,
+                    txtSize: 14,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: TextWidget(
+                    txt: attentionActiveAccount,
+                    txtSize: 12,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: TextWidget(
+                    txt: attentionCheckMail,
+                    txtSize: 8,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: PinPut(
+                    fieldsCount: 4,
+                    actionButtonsEnabled: false,
+                    onSubmit: (code) => {this._code = code},
+                  ),
+                ),
+                _btnAktifasi(),
+                Row(
+                  children: <Widget>[
+                    Expanded(child: _btnResendCode()),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(child: _btnCallCenter())
+                  ],
+                )
+              ],
+            ),
           ),
         ),
+        inAsyncCall: _isLoading,
       ),
-      inAsyncCall: _isLoading,
     );
   }
 
@@ -139,7 +156,7 @@ class StepFiveState extends State<StepFive> {
               txt: 'KIRIM ULANG',
               btnColor: orangeColor1,
               borderRedius: 5,
-              onClick: () => {debugPrint('btn success')}),
+              onClick: () => {_resendCode()}),
         ),
       ],
     );
@@ -186,7 +203,17 @@ class StepFiveState extends State<StepFive> {
     if (status) {
       Navigator.pushNamedAndRemoveUntil(context, "/login_menu", (_) => false);
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+      _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
     }
+  }
+
+  _resendCode() {
+    ReqDoResendCode request = ReqDoResendCode(email: _email);
+    resendCode.actResendCode(
+        request.toMap(),
+        (status, message) => {
+              _scaffoldKey.currentState
+                  .showSnackBar(SnackBar(content: Text(message)))
+            });
   }
 }
