@@ -185,12 +185,11 @@ class StepFourState extends State<StepFour> {
           txt: 'DAFTAR',
           btnColor: blueStandart,
           borderRedius: 5,
-          onClick:
-              _checkPolicy && _verifyCode ? () => {_onSubmit()} : () => {}),
+          onClick: _checkPolicy && _verifyCode ? () => {_getCode()} : () => {}),
     );
   }
 
-  _onSubmit() {
+  _onSubmit(String code) {
     if (_passwordController.text != _rePasswordController.text) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Password tidak sama")));
@@ -212,6 +211,12 @@ class StepFourState extends State<StepFour> {
         }
       });
     }
+  }
+
+  _getCode() {
+    generateCode().then((onValue) {
+      _onSubmit(onValue);
+    });
   }
 
   _populateData() {

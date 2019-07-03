@@ -98,25 +98,26 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                   Divider(
                     color: Colors.grey,
                   ),
-                  Container(
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, top: 10, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        TextWidget(txt: 'Level', color: Colors.blue),
-                        TextWidget(
-                            txt: _level == 'Y' ||
-                                    _corporate == 'JAMKESTAMA (VVIP)' ||
-                                    _corporate == 'JAMKESMEN (VVIP)'
-                                ? 'VVIP'
-                                : 'NON VVIP')
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    color: Colors.grey,
-                  ),
+                  _corporate == 'JAMKESTAMA (VVIP)' ||
+                          _corporate == 'JAMKESMEN (VVIP)'
+                      ? Container(
+                          padding: EdgeInsets.only(
+                              left: 20, right: 20, top: 10, bottom: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              TextWidget(txt: 'Level', color: Colors.blue),
+                              TextWidget(txt: 'VVIP')
+                            ],
+                          ),
+                        )
+                      : Container(),
+                  _corporate == 'JAMKESTAMA (VVIP)' ||
+                          _corporate == 'JAMKESMEN (VVIP)'
+                      ? Divider(
+                          color: Colors.grey,
+                        )
+                      : Container(),
                   Container(
                     padding: EdgeInsets.only(
                         left: 20, right: 20, top: 10, bottom: 10),
@@ -263,7 +264,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
                   child: TextWidget(
-                    txt: _name,
+                    txt: _name != null ? _name.trim() : "",
                     color: Colors.white,
                   ),
                 ),
@@ -465,12 +466,16 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         widget.plans.clear();
         setState(() {
           for (var item in plansModel.data) {
-            widget.plans.add(item.planType);
+            widget.plans.add(item.planId.trim());
           }
-          widget.polisPeriod =
-              plansModel.data[0].policyStartDate.replaceAll("-", "/") +
-                  ' - ' +
-                  plansModel.data[0].policyEndDate.replaceAll("-", "/");
+          if (plansModel.data.length > 0) {
+            widget.polisPeriod =
+                plansModel.data[0].policyStartDate.replaceAll("-", "/") +
+                    ' - ' +
+                    plansModel.data[0].policyEndDate.replaceAll("-", "/");
+          } else {
+            widget.polisPeriod = "";
+          }
           isLoadingSwitch = false;
         });
       });

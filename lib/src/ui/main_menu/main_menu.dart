@@ -116,7 +116,7 @@ class MainMenuState extends State<MainMenu> {
             overlayShadowSize: 0.7,
             animationDuration: Duration(days: 1),
             dotBgColor: Colors.transparent,
-            boxFit: BoxFit.cover,
+            boxFit: BoxFit.fill,
             images: [
               new NetworkImage(
                   modelNews != null ? modelNews.data[0].images : "http://"),

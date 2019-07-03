@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -29,23 +30,20 @@ class CardMemberState extends State<CardMember> {
 
   @override
   void initState() {
+    new Timer(const Duration(milliseconds: 150), (){
+      _setLanscape().then((_) {
+        _initView();
+      });
+    });
     super.initState();
-    _initView();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
   }
 
   @override
   void dispose() {
+    _setPotrait().then((_) {
+      print("dispose");
+    });
     super.dispose();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
   }
 
   @override
@@ -175,6 +173,20 @@ class CardMemberState extends State<CardMember> {
         ),
       ],
     );
+  }
+
+  Future _setLanscape() async {
+    await SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  }
+
+  Future _setPotrait() async {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
   }
 
   _initView() {

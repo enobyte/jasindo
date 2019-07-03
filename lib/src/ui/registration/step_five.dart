@@ -188,7 +188,7 @@ class StepFiveState extends State<StepFive> {
     setState(() {
       _isLoading = true;
     });
-    ReqActiveUser request = ReqActiveUser(email: _email, code: _code);
+    ReqActiveUser request = ReqActiveUser(email: _email, code: _code.toUpperCase());
     bloc.activeUser(
         request.toMap(),
         (status, data) => {

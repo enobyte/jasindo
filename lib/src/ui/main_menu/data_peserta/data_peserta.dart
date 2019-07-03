@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jasindo_app/src/blocs/adcps_blocs/getplans_bloc.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/choose_dependent_model.dart';
@@ -140,7 +141,7 @@ class DataPesertaState extends State<DataPeserta>
         plansModel = GetPlansModel.fromJson(json.decode(onValue));
         setState(() {
           for (var item in plansModel.data) {
-            listManfaat.add(item.planType);
+            listManfaat.add(item.planId.trim());
           }
           polishPeriod =
               plansModel.data[0].policyStartDate.replaceAll("-", "/") +

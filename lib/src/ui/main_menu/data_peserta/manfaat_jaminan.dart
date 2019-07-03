@@ -92,7 +92,9 @@ class EntryItem extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 8, top: 8),
             child: TextWidget(
-              txt: plans.data[index].planType,
+              txt: plans.data[index].planType +
+                  " / " +
+                  plans.data[index].planId.trim(),
               txtSize: 16,
               color: Colors.blue,
             ),
@@ -110,10 +112,10 @@ class EntryItem extends StatelessWidget {
                     txt: 'Max',
                     txtSize: 14,
                   ),
-                  TextWidget(
-                    txt: 'Current Limit',
-                    txtSize: 14,
-                  ),
+//                  TextWidget(
+//                    txt: 'Current Limit',
+//                    txtSize: 14,
+//                  ),
                 ],
               ),
               Spacer(flex: 5),
@@ -132,14 +134,14 @@ class EntryItem extends StatelessWidget {
                         : "${currancy.format(int.parse(plans.data[index].maxIdr))} ${plans.data[index].frequencyDesc}",
                     txtSize: 14,
                   ),
-                  TextWidget(
-                    txt: plans.data[index].currentLimit.contains('9') &&
-                            plans.data[index].currentLimit.length >= 8
-                        ? "As Charged"
-                        : currancy
-                            .format(int.parse(plans.data[index].currentLimit)),
-                    txtSize: 14,
-                  ),
+//                  TextWidget(
+//                    txt: plans.data[index].currentLimit.contains('9') &&
+//                            plans.data[index].currentLimit.length >= 8
+//                        ? "As Charged"
+//                        : currancy
+//                            .format(int.parse(plans.data[index].currentLimit)),
+//                    txtSize: 14,
+//                  ),
                 ],
               ),
               Spacer(flex: 5),
@@ -189,10 +191,10 @@ class EntryItem extends StatelessWidget {
                           txt: 'Max',
                           txtSize: 12,
                         ),
-                        TextWidget(
-                          txt: 'Available Limit',
-                          txtSize: 12,
-                        ),
+//                        TextWidget(
+//                          txt: 'Available Limit',
+//                          txtSize: 12,
+//                        ),
                       ],
                     ),
                     SizedBox(
@@ -202,23 +204,27 @@ class EntryItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextWidget(
-                          txt: snapshot.data.data[index].maxIdr.contains('9') &&
-                                  snapshot.data.data[index].maxIdr.length >= 8
+                          txt: (snapshot.data.data[index].maxIdr
+                                          .contains('9') &&
+                                      snapshot.data.data[index].maxIdr.length >=
+                                          8) ||
+                                  (snapshot.data.data[index].maxIdr.trim() ==
+                                      '0')
                               ? "As Charged"
                               : "${currancy.format(int.parse(snapshot.data.data[index].maxIdr))} "
                                   "${snapshot.data.data[index].frequencyDesc}",
                           txtSize: 10,
                         ),
-                        TextWidget(
-                          txt: snapshot.data.data[index].available
-                                      .contains('9') &&
-                                  snapshot.data.data[index].available.length >=
-                                      8
-                              ? "As Charged"
-                              : currancy.format(int.parse(
-                                  snapshot.data.data[index].available)),
-                          txtSize: 10,
-                        ),
+//                        TextWidget(
+//                          txt: snapshot.data.data[index].available
+//                                      .contains('9') &&
+//                                  snapshot.data.data[index].available.length >=
+//                                      8
+//                              ? "As Charged"
+//                              : currancy.format(int.parse(
+//                                  snapshot.data.data[index].available)),
+//                          txtSize: 10,
+//                        ),
                       ],
                     ),
                   ],
