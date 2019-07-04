@@ -30,15 +30,15 @@ class ProviderContent extends StatefulWidget {
 }
 
 class ProviderContentState extends State<ProviderContent> {
-  String changeCity = "", changePlan = "";
+  var location = new Location();
+  String changeCity = "", changePlan = "", filter;
   GetProviderModel providerModel;
+  bool isLoading = true;
+  double latitude = 0.0, longitude = 0.0;
+  final Set<Marker> _markers = Set();
   final _searchController = TextEditingController();
   final bloc = GetProviderBloc();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool isLoading = true;
-  var location = new Location();
-  double latitude = 0.0, longitude = 0.0;
-  final Set<Marker> _markers = Set();
 
   Completer<GoogleMapController> _controller = Completer();
 
@@ -47,6 +47,11 @@ class ProviderContentState extends State<ProviderContent> {
     super.initState();
     _getLocationData(changeCity == "" ? widget.cityValue : changeCity,
         changePlan == "" ? widget.planId : changePlan);
+    _searchController.addListener(() {
+      setState(() {
+        filter = _searchController.text;
+      });
+    });
   }
 
   @override
@@ -254,7 +259,13 @@ class ProviderContentState extends State<ProviderContent> {
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) =>
                       snapshot.data.data[index].responseCode != "405"
-                          ? _contentProvider(snapshot, index)
+                          ? filter == null || filter == ""
+                              ? _contentProvider(snapshot, index)
+                              : snapshot.data.data[index].providerName
+                                      .toLowerCase()
+                                      .contains(filter.toLowerCase())
+                                  ? _contentProvider(snapshot, index)
+                                  : Container()
                           : Container(),
                   itemCount: snapshot.data.data == null
                       ? 0
