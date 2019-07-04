@@ -427,11 +427,17 @@ class ProviderContentState extends State<ProviderContent> {
                         align: TextAlign.center,
                         txtSize: 12),
                     SizedBox(height: 8),
-                    Container(
-                        padding: EdgeInsets.all(8),
-                        color: Colors.grey,
-                        child: _showPhone(
-                            snapshot.data.data[index].providerPhoneNum)),
+                    InkWell(
+                      onTap: () => {
+                            MakeCall(context,
+                                snapshot.data.data[index].providerPhoneNum)
+                          },
+                      child: Container(
+                          padding: EdgeInsets.all(8),
+                          color: Colors.grey,
+                          child: _showPhone(
+                              snapshot.data.data[index].providerPhoneNum)),
+                    ),
                     SizedBox(height: 8),
                     Container(
                       height: 200,
