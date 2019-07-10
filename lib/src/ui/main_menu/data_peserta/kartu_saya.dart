@@ -30,12 +30,12 @@ class CardMemberState extends State<CardMember> {
 
   @override
   void initState() {
-    new Timer(const Duration(milliseconds: 150), (){
+    super.initState();
+    new Timer(const Duration(milliseconds: 150), () {
       _setLanscape().then((_) {
         _initView();
       });
     });
-    super.initState();
   }
 
   @override
@@ -82,6 +82,7 @@ class CardMemberState extends State<CardMember> {
                     TextWidget(
                       txtSize: 18,
                       txt: _name != null ? _name.toUpperCase().trim() : "",
+                      align: TextAlign.left,
                     ),
                     TextWidget(
                       txtSize: 12,
@@ -176,14 +177,14 @@ class CardMemberState extends State<CardMember> {
   }
 
   Future _setLanscape() async {
-    await SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
   }
 
   Future _setPotrait() async {
     await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);

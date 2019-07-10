@@ -26,6 +26,7 @@ import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/pengaturan.dart';
 import 'menu_side/news/detail_berita.dart';
 import 'menu_side/tentang.dart';
+import 'package:flutter_appavailability/flutter_appavailability.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -78,7 +79,7 @@ class MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ZoomScaffold(
-        menuScreen: SideMenu(
+        menuScreen: SideMenu (
           onClick: (index) => {
                 attachContent(index),
                 changeSlide.sink.add(titleAppbar),
@@ -263,8 +264,7 @@ class MainMenuState extends State<MainMenu> {
         break;
       case 1:
         _setTitle('Buku Panduan');
-        _launchBukuPanduan(
-            'https://jasindo.co.id/uploads/cms_laporan_tahunan/Annual%20Report%20Jasindo%202016_Latest.pdf');
+        _launchBukuPanduan();
         _contentPage = Container();
         break;
       case 2:
@@ -290,6 +290,12 @@ class MainMenuState extends State<MainMenu> {
     }
     return _contentPage;
   }
+
+//  _intentData(){
+//    AppAvailability.launchApp('com.admedika.qr.medika').then((_) => {
+//       debugPrint("launch")
+//    });
+//  }
 
   Widget menuItems(String title, String image) {
     return Column(
@@ -363,7 +369,7 @@ class MainMenuState extends State<MainMenu> {
     );
   }
 
-  _launchBukuPanduan(String url) async {
+  _launchBukuPanduan() async {
     SharedPreferencesHelper.getDoLogin().then((onValue) {
       MemberModels user = MemberModels.fromJson(json.decode(onValue));
       ReqGetGuideBook request = ReqGetGuideBook(

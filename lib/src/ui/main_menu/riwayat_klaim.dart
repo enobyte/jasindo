@@ -247,7 +247,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _listHistoryClaimContent(
       AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
-    return snapshot.data.data[0].responseCode == "200"
+    return snapshot.data.data[0].responseCode == "200" &&
+            snapshot.data.data.length > 0
         ? Card(
             margin: EdgeInsets.all(5),
             elevation: 4,
@@ -515,9 +516,20 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   _attemptGetPlan(String cardNumber, String birthDate) {
     ReqGetPlan request =
         ReqGetPlan(cardNumber: cardNumber, birthDate: birthDate);
+    ReqGetHistClaim requestClaim = ReqGetHistClaim(
+        cardNumber: _cardNumber,
+        birthDate: _birthDate,
+        planId: _planId,
+        limit: "ALL");
     planbloc.fetchGetPlans(request.toMap(), (status, message) {
       SharedPreferencesHelper.getPlans().then((onValue) {
         plansModel = GetPlansModel.fromJson(json.decode(onValue));
+        isLoadingClaim = true;
+        bloc.fetchHistClaim(
+            requestClaim.toMap(),
+            (callback, status, message) => {
+                  _collectHistoryClaim(callback, status, message),
+                });
         setState(() {});
       });
       if (!status) {
