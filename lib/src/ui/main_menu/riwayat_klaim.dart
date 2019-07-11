@@ -577,13 +577,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
               ),
             ),
             InkWell(
-              onTap: () => {
-                    _selectEndDate(
-                        context,
-                        (date) => {
-                              _showDateEnd(date),
-                            })
-                  },
+              onTap: () => {_selectEndDate(context)},
               child: TextFormField(
                 enabled: false,
                 decoration: InputDecoration(labelText: 'End'),
@@ -603,8 +597,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
         ]).show();
   }
 
-  Future<Null> _selectEndDate(
-      BuildContext context, Function(DateTime selectedDate) callback) async {
+  Future<Null> _selectEndDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDateEnd,
@@ -613,7 +606,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     if (picked != null && picked != selectedDateEnd)
       setState(() {
         selectedDateEnd = picked;
-        callback(selectedDateEnd);
+        _showDateEnd(selectedDateEnd);
       });
   }
 
