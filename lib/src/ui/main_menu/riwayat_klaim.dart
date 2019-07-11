@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:jasindo_app/src/models/requests/do_req_plans.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class RiwayatKlaim extends StatefulWidget {
   @override
@@ -26,10 +28,18 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   final planbloc = GetPlansBloc();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final currancy = new NumberFormat("#,##0.00", "en_US");
-  String _planId, _cardNumber, _birthDate, _claimId, _planType;
+  String _planId,
+      _cardNumber,
+      _birthDate,
+      _claimId,
+      _planType,
+      valueDateStart,
+      valueDateEnd;
   GetPlansModel plansModel = GetPlansModel();
   GetHistClaimModel claimModel = GetHistClaimModel();
   bool isLoadingClaim = false;
+  DateTime selectedDateEnd = DateTime.now();
+  DateTime selectedDateStart = DateTime.now();
 
   @override
   void initState() {
@@ -130,7 +140,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _klaimList() {
     return Expanded(
-      child: claimModel.data != null && claimModel.data[0].responseCode == "200"
+      child: claimModel.data != null && claimModel.data.length > 0
           ? Container(
               margin: EdgeInsets.all(10),
               height: 40,
@@ -200,7 +210,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       child: Column(
         children: <Widget>[
           InkWell(
-            onTap: () => {debugPrint('klik rentang waktu')},
+            onTap: () => {showTime()},
             child: Row(
               children: <Widget>[
                 SizedBox(
@@ -247,8 +257,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _listHistoryClaimContent(
       AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
-    return snapshot.data.data[0].responseCode == "200" &&
-            snapshot.data.data.length > 0
+    return snapshot.data.data.length > 0 &&
+            snapshot.data.data[0].responseCode == "200"
         ? Card(
             margin: EdgeInsets.all(5),
             elevation: 4,
@@ -524,13 +534,14 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     planbloc.fetchGetPlans(request.toMap(), (status, message) {
       SharedPreferencesHelper.getPlans().then((onValue) {
         plansModel = GetPlansModel.fromJson(json.decode(onValue));
-        isLoadingClaim = true;
+        setState(() {
+          isLoadingClaim = true;
+        });
         bloc.fetchHistClaim(
             requestClaim.toMap(),
             (callback, status, message) => {
                   _collectHistoryClaim(callback, status, message),
                 });
-        setState(() {});
       });
       if (!status) {
         _scaffoldKey.currentState
@@ -549,5 +560,85 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     setState(() {
       isLoadingClaim = false;
     });
+  }
+
+  showTime() {
+    Alert(
+        context: context,
+        title: "Rentang Waktu",
+        content: Column(
+          children: <Widget>[
+            InkWell(
+              onTap: () => {_selectStartDate(context)},
+              child: TextFormField(
+                enabled: false,
+                decoration: InputDecoration(labelText: 'Start'),
+                initialValue: valueDateStart,
+              ),
+            ),
+            InkWell(
+              onTap: () => {
+                    _selectEndDate(
+                        context,
+                        (date) => {
+                              _showDateEnd(date),
+                            })
+                  },
+              child: TextFormField(
+                enabled: false,
+                decoration: InputDecoration(labelText: 'End'),
+                initialValue: valueDateEnd,
+              ),
+            ),
+          ],
+        ),
+        buttons: [
+          DialogButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "SUBMIT",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ]).show();
+  }
+
+  Future<Null> _selectEndDate(
+      BuildContext context, Function(DateTime selectedDate) callback) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateEnd,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDateEnd)
+      setState(() {
+        selectedDateEnd = picked;
+        callback(selectedDateEnd);
+      });
+  }
+
+  Future<Null> _selectStartDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDateStart,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDateStart)
+      setState(() {
+        selectedDateStart = picked;
+        _showDateStart(selectedDateStart);
+      });
+  }
+
+  _showDateEnd(DateTime date) {
+    valueDateEnd = "${date.day}-${date.month}-${date.year}";
+    Navigator.of(context).pop();
+    showTime();
+  }
+
+  _showDateStart(DateTime date) {
+    valueDateStart = "${date.day}-${date.month}-${date.year}";
+    Navigator.of(context).pop();
+    showTime();
   }
 }

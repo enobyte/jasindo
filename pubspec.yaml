@@ -38,6 +38,7 @@ dependencies:
   flutter_html: ^0.8.2
   google_maps_flutter: ^0.5.17
   flutter_appavailability: ^0.0.21
+  rflutter_alert: ^1.0.2
 
 
 dev_dependencies:
