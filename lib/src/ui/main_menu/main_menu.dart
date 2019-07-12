@@ -5,28 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/src/blocs/guidebook_bloc.dart';
 import 'package:jasindo_app/src/blocs/news_bloc.dart';
-import 'package:jasindo_app/utility/utils.dart' as utils;
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/news_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_guidebook.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/inforamtion/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
+import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/pengaturan.dart';
 import 'package:jasindo_app/src/ui/main_menu/provider/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
+import 'package:jasindo_app/utility/utils.dart' as utils;
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/ZoomScaffold.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
-import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/pengaturan.dart';
 import 'menu_side/news/detail_berita.dart';
 import 'menu_side/tentang.dart';
-import 'package:flutter_appavailability/flutter_appavailability.dart';
 
 class MainMenu extends StatefulWidget {
   @override
@@ -79,11 +78,11 @@ class MainMenuState extends State<MainMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ZoomScaffold(
-        menuScreen: SideMenu (
+        menuScreen: SideMenu(
           onClick: (index) => {
-                attachContent(index),
-                changeSlide.sink.add(titleAppbar),
-              },
+            attachContent(index),
+            changeSlide.sink.add(titleAppbar),
+          },
           name: _name,
         ),
         contentScreen: Layout(
@@ -110,8 +109,8 @@ class MainMenuState extends State<MainMenu> {
         children: <Widget>[
           new Carousel(
             onImageChange: (index, data) => {
-                  _setImageSlide(index),
-                },
+              _setImageSlide(index),
+            },
             overlayShadow: true,
             overlayShadowColors: Colors.white,
             overlayShadowSize: 0.7,
@@ -153,15 +152,15 @@ class MainMenuState extends State<MainMenu> {
                   ),
                   RaisedButton(
                     onPressed: () => {
-                          routeToWidget(
-                              context,
-                              DetailNews(
-                                title: modelNews.data[indexSlide].title,
-                                content: modelNews.data[indexSlide].content,
-                                image: modelNews.data[indexSlide].images,
-                                date: modelNews.data[indexSlide].createat,
-                              ))
-                        },
+                      routeToWidget(
+                          context,
+                          DetailNews(
+                            title: modelNews.data[indexSlide].title,
+                            content: modelNews.data[indexSlide].content,
+                            image: modelNews.data[indexSlide].images,
+                            date: modelNews.data[indexSlide].createat,
+                          ))
+                    },
                     child: TextWidget(
                       txt: 'CARI TAHU',
                       color: Colors.white,
@@ -192,11 +191,11 @@ class MainMenuState extends State<MainMenu> {
                       elevation: 4,
                       child: InkWell(
                         onTap: () => {
-                              routeToWidget(
-                                context,
-                                new DataPeserta(),
-                              )
-                            },
+                          routeToWidget(
+                            context,
+                            new DataPeserta(),
+                          )
+                        },
                         child: Container(
                             child: menuItems('Data Peserta',
                                 'lib/assets/images/ic_peserta.png')),
@@ -376,8 +375,13 @@ class MainMenuState extends State<MainMenu> {
           cardNumber: user.data.cardNumb,
           birthDate: user.data.birthDate.substring(0, 10),
           corporate: user.adcps.corporateInfo.trim(),
-          isPlan:
-              user.adcps.corporateInfo.trim() == 'TRAVELOKA' ? true : false);
+          isPlan: user.adcps.corporateInfo.trim() == 'TRAVELOKA' ||
+                  user.adcps.corporateInfo.trim() == 'CEC RI' ||
+                  user.adcps.corporateInfo.trim() == 'AIRY' ||
+                  user.adcps.corporateInfo.trim() ==
+                      'PT. CATURNUSA SEJAHTERA FINANCE'
+              ? true
+              : false);
       _blocGuideBook.guideBook(request.toMap(),
           (status, message, url) => {_launch(status, message, url)});
     });

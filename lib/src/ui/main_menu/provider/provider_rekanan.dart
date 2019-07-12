@@ -27,6 +27,7 @@ class ProviderRekananState extends State<ProviderRekanan> {
   final planbloc = GetPlansBloc();
 
   List<String> _listCity = [
+    'SEMUA KOTA',
     'AMBON',
     'BALIK PAPAN',
     'BANDA ACEH',
@@ -252,18 +253,18 @@ class ProviderRekananState extends State<ProviderRekanan> {
     return RaisedButton(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       onPressed: () => {
-            _planId != null
-                ? routeToWidget(
-                    context,
-                    ProviderContent(
-                      listCity: _listCity,
-                      plansModel: plansModel,
-                      cityValue: cityValue,
-                      planId: _planId,
-                    ))
-                : _scaffoldKey.currentState.showSnackBar(
-                    SnackBar(content: Text('Jaminan harus dipilih')))
-          },
+        _planId != null
+            ? routeToWidget(
+                context,
+                ProviderContent(
+                  listCity: _listCity,
+                  plansModel: plansModel,
+                  cityValue: cityValue,
+                  planId: _planId,
+                ))
+            : _scaffoldKey.currentState
+                .showSnackBar(SnackBar(content: Text('Jaminan harus dipilih')))
+      },
       textColor: Colors.white,
       color: Color.fromRGBO(0, 96, 153, 1.0),
       splashColor: Colors.blueGrey,
@@ -278,18 +279,18 @@ class ProviderRekananState extends State<ProviderRekanan> {
     return RaisedButton(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       onPressed: () => {
-            _planId != null
-                ? routeToWidget(
-                    context,
-                    ProviderContent(
-                      listCity: _listCity,
-                      plansModel: plansModel,
-                      cityValue: cityValue,
-                      planId: _planId,
-                    ))
-                : _scaffoldKey.currentState.showSnackBar(
-                    SnackBar(content: Text('Jaminan harus dipilih')))
-          },
+        _planId != null
+            ? routeToWidget(
+                context,
+                ProviderContent(
+                  listCity: _listCity,
+                  plansModel: plansModel,
+                  cityValue: cityValue,
+                  planId: _planId,
+                ))
+            : _scaffoldKey.currentState
+                .showSnackBar(SnackBar(content: Text('Jaminan harus dipilih')))
+      },
       textColor: Colors.white,
       color: orangeColor1,
       splashColor: Colors.blueGrey,
@@ -317,9 +318,6 @@ class ProviderRekananState extends State<ProviderRekanan> {
         _attemptPlan(_cardNumber, _birthDate);
       }
     });
-
-
-
   }
 
   _attemptPlan(String cardNumber, String birthDate) {

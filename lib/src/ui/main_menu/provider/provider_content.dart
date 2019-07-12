@@ -292,8 +292,8 @@ class ProviderContentState extends State<ProviderContent> {
       margin: EdgeInsets.all(4),
       child: GestureDetector(
         onTap: () => {
-              _detailProvider(snapshot, index),
-            },
+          _detailProvider(snapshot, index),
+        },
         child: Card(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -385,7 +385,7 @@ class ProviderContentState extends State<ProviderContent> {
     await location.getLocation().then((LocationData currentLocation) {
       latitude = currentLocation.latitude;
       longitude = currentLocation.longitude;
-      _fetchProvidder(city, planId);
+      _fetchProvidder(city == 'SEMUA KOTA' ? "" : city, planId);
     });
   }
 
@@ -429,9 +429,9 @@ class ProviderContentState extends State<ProviderContent> {
                     SizedBox(height: 8),
                     InkWell(
                       onTap: () => {
-                            MakeCall(context,
-                                snapshot.data.data[index].providerPhoneNum)
-                          },
+                        MakeCall(
+                            context, snapshot.data.data[index].providerPhoneNum)
+                      },
                       child: Container(
                           padding: EdgeInsets.all(8),
                           color: Colors.grey,

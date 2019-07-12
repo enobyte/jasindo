@@ -37,7 +37,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       valueDateEnd;
   GetPlansModel plansModel = GetPlansModel();
   GetHistClaimModel claimModel = GetHistClaimModel();
-  bool isLoadingClaim = false;
+  bool isLoadingClaim = false, isRangeDate = false;
   DateTime selectedDateEnd = DateTime.now();
   DateTime selectedDateStart = DateTime.now();
 
@@ -184,20 +184,23 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       width: MediaQuery.of(context).size.width / 4,
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 60,
-                child: Text(
-                  'Sortir Tanggal',
-                  maxLines: 2,
+          InkWell(
+            onTap: () => {_setSorting(claimModel)},
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 60,
+                  child: Text(
+                    'Sortir Tanggal',
+                    maxLines: 2,
+                  ),
                 ),
-              ),
-              Image.asset(
-                'lib/assets/images/ic_sorting.png',
-                height: 20,
-              )
-            ],
+                Image.asset(
+                  'lib/assets/images/ic_sorting.png',
+                  height: 20,
+                )
+              ],
+            ),
           ),
         ],
       ),
@@ -257,30 +260,67 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   Widget _listHistoryClaimContent(
       AsyncSnapshot<GetHistClaimModel> snapshot, int index) {
-    return snapshot.data.data.length > 0 &&
-            snapshot.data.data[0].responseCode == "200"
-        ? Card(
-            margin: EdgeInsets.all(5),
-            elevation: 4,
-            shape: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.green)),
-            child: Column(
-              children: <Widget>[
-                _claimContentTop(snapshot, index),
-                _claimContentMiddle(snapshot, index),
-                _claimContentBottom(snapshot, index)
-              ],
-            ))
-        : Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height / 10),
-            child: Container(
-              child: Image.asset(
-                'lib/assets/images/not_found.png',
-                height: MediaQuery.of(context).size.height / 3,
-              ),
-            ),
-          );
+    try {
+      if (isRangeDate && snapshot.data.data[index].admissionDate.isNotEmpty) {
+        final filter = snapshot;
+        filter.data.data = filter.data.data
+            .where((i) =>
+                DateTime.parse(i.admissionDate).isAfter(selectedDateStart) &&
+                DateTime.parse(i.admissionDate).isBefore(selectedDateEnd))
+            .toList();
+        return filter.data.data.length > 0 &&
+                filter.data.data[0].responseCode == "200"
+            ? Card(
+                margin: EdgeInsets.all(5),
+                elevation: 4,
+                shape: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green)),
+                child: Column(
+                  children: <Widget>[
+                    _claimContentTop(filter, index),
+                    _claimContentMiddle(filter, index),
+                    _claimContentBottom(filter, index),
+                  ],
+                ))
+            : Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 10),
+                child: Container(
+                  child: Image.asset(
+                    'lib/assets/images/not_found.png',
+                    height: MediaQuery.of(context).size.height / 3,
+                  ),
+                ),
+              );
+      } else {
+        return snapshot.data.data.length > 0 &&
+                snapshot.data.data[0].responseCode == "200"
+            ? Card(
+                margin: EdgeInsets.all(5),
+                elevation: 4,
+                shape: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.green)),
+                child: Column(
+                  children: <Widget>[
+                    _claimContentTop(snapshot, index),
+                    _claimContentMiddle(snapshot, index),
+                    _claimContentBottom(snapshot, index),
+                  ],
+                ))
+            : Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height / 10),
+                child: Container(
+                  child: Image.asset(
+                    'lib/assets/images/not_found.png',
+                    height: MediaQuery.of(context).size.height / 3,
+                  ),
+                ),
+              );
+      }
+    } catch (e, stack) {
+      print(stack.toString());
+    }
   }
 
   Widget _claimContentTop(
@@ -558,6 +598,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
     }
     setState(() {
+      isRangeDate = false;
       isLoadingClaim = false;
     });
   }
@@ -588,7 +629,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
         ),
         buttons: [
           DialogButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () =>
+                {_findBetweenDate(claimModel), Navigator.pop(context)},
             child: Text(
               "SUBMIT",
               style: TextStyle(color: Colors.white, fontSize: 20),
@@ -603,11 +645,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
         initialDate: selectedDateEnd,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDateEnd)
-      setState(() {
-        selectedDateEnd = picked;
-        _showDateEnd(selectedDateEnd);
-      });
+    if (picked != null && picked != selectedDateEnd) selectedDateEnd = picked;
+    _showDateEnd(selectedDateEnd);
   }
 
   Future<Null> _selectStartDate(BuildContext context) async {
@@ -617,10 +656,8 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDateStart)
-      setState(() {
-        selectedDateStart = picked;
-        _showDateStart(selectedDateStart);
-      });
+      selectedDateStart = picked;
+    _showDateStart(selectedDateStart);
   }
 
   _showDateEnd(DateTime date) {
@@ -633,5 +670,37 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     valueDateStart = "${date.day}-${date.month}-${date.year}";
     Navigator.of(context).pop();
     showTime();
+  }
+
+  _findBetweenDate(GetHistClaimModel snapshot) {
+    ReqGetHistClaim request;
+    if (_planId == null) {
+      request = ReqGetHistClaim(
+          cardNumber: _cardNumber,
+          birthDate: _birthDate,
+          planId: _planId,
+          limit: "ALL");
+    } else {
+      request = ReqGetHistClaim(
+          cardNumber: _cardNumber, birthDate: _birthDate, planId: _planId);
+    }
+    bloc.fetchHistClaim(
+        request.toMap(),
+        (callback, status, message) =>
+            {claimModel = callback, isLoadingClaim = false});
+    setState(() {
+      isRangeDate = true;
+      isLoadingClaim = true;
+    });
+  }
+
+  _setSorting(GetHistClaimModel snapshot) {
+    setState(() {
+      claimModel.data = snapshot.data
+        ..sort((a, b) =>
+            int.parse(formatDateFormStandart(a.admissionDate, 'yyyyMMdd'))
+                .compareTo(int.parse(
+                    formatDateFormStandart(b.admissionDate, 'yyyyMMdd'))));
+    });
   }
 }
