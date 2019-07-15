@@ -34,6 +34,7 @@ class RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          brightness: Brightness.light,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text("DAFTAR", style: TextStyle(color: blueStandart)),
           centerTitle: true,

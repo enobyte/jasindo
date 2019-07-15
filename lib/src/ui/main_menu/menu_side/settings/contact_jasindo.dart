@@ -34,6 +34,7 @@ class JasindoContactState extends State<JasindoContact> {
     return Scaffold(
       key: _scaffolKey,
       appBar: AppBar(
+        brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Kontak Jasindo", color: blueStandart),
         backgroundColor: Colors.white,

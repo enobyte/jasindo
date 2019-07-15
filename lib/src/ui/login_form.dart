@@ -39,6 +39,7 @@ class LoginFormState extends State<LoginForm> {
       key: _scaffoldKey,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0,
         backgroundColor: Colors.transparent,

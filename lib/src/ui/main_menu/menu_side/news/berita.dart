@@ -14,7 +14,6 @@ class News extends StatefulWidget {
   State<StatefulWidget> createState() {
     return NewsState();
   }
-
   News(this.bloc);
 }
 
@@ -22,9 +21,7 @@ class NewsState extends State<News> {
   @override
   void initState() {
     super.initState();
-    widget.bloc.newsBloc((model) => {
-
-    });
+    widget.bloc.newsBloc((model) => {});
   }
 
   @override
@@ -52,15 +49,15 @@ class NewsState extends State<News> {
   Widget _pageNews(AsyncSnapshot<NewsModel> snapshot, int index) {
     return InkWell(
       onTap: () => {
-            routeToWidget(
-                context,
-                DetailNews(
-                  content: snapshot.data.data[index].content,
-                  title: snapshot.data.data[index].title,
-                  image: snapshot.data.data[index].images,
-                  date: snapshot.data.data[index].createat,
-                ))
-          },
+        routeToWidget(
+            context,
+            DetailNews(
+              content: snapshot.data.data[index].content,
+              title: snapshot.data.data[index].title,
+              image: snapshot.data.data[index].images,
+              date: snapshot.data.data[index].createat,
+            ))
+      },
       child: Container(
         height: MediaQuery.of(context).size.height / 3,
         child: Card(

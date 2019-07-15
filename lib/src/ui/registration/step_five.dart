@@ -52,6 +52,7 @@ class StepFiveState extends State<StepFive> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          brightness: Brightness.light,
           automaticallyImplyLeading: widget.isActive ? false : true,
           iconTheme: IconThemeData(color: Colors.black),
           elevation: 0,

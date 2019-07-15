@@ -66,6 +66,7 @@ class ProviderContentState extends State<ProviderContent> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Provider Rekanan", color: Colors.black),
         backgroundColor: Colors.white,

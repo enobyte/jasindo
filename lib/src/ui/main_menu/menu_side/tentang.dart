@@ -32,6 +32,7 @@ class AboutState extends State<About> {
   Widget build(BuildContext context) {
     return CustomScrollView(slivers: <Widget>[
       SliverAppBar(
+        brightness: Brightness.light,
         automaticallyImplyLeading: false, //disable back button
         backgroundColor: Colors.transparent,
         expandedHeight: MediaQuery.of(context).size.height / 2,

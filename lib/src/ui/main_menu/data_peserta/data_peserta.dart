@@ -59,6 +59,7 @@ class DataPesertaState extends State<DataPeserta>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Data Peserta", color: Colors.black),
         backgroundColor: Colors.white,

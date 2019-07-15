@@ -40,6 +40,7 @@ class TermConditionState extends State<TermCondition> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          brightness: Brightness.light,
           iconTheme: IconThemeData(color: Colors.black),
           title:
               Text("Syarat & Ketentuan", style: TextStyle(color: Colors.black)),

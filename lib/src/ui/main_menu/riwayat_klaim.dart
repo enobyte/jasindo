@@ -59,6 +59,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Riwayat Klaim", color: Colors.black),
         backgroundColor: Colors.white,

@@ -73,6 +73,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
+              brightness: Brightness.light,
               automaticallyImplyLeading: false, //disable back button
               backgroundColor: Colors.transparent,
               expandedHeight: MediaQuery.of(context).size.height / 3,

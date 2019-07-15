@@ -33,6 +33,7 @@ class ForgotPasswordState extends State<ForgotPassword> {
       key: _scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
+          brightness: Brightness.light,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Colors.white),

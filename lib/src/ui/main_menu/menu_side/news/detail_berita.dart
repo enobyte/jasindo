@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:jasindo_app/utility/utils.dart';
-import 'package:jasindo_app/widgets/ImageCover.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 
 class DetailNews extends StatefulWidget {
@@ -20,6 +19,7 @@ class DetailNewsState extends State<DetailNews> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        brightness: Brightness.light,
         iconTheme: IconThemeData(color: Colors.black),
         title: TextWidget(txt: "Berita", color: Colors.black),
         backgroundColor: Colors.white,
@@ -27,6 +27,7 @@ class DetailNewsState extends State<DetailNews> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            brightness: Brightness.light,
             automaticallyImplyLeading: false, //disable back button
             backgroundColor: Colors.transparent,
             expandedHeight: MediaQuery.of(context).size.height / 2,

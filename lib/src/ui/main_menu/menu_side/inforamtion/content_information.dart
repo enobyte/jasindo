@@ -16,6 +16,7 @@ class ContentInformationState extends State<ContentInformation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          brightness: Brightness.light,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text("Informasi", style: TextStyle(color: Colors.black)),
           centerTitle: true,

@@ -59,6 +59,7 @@ class _ZoomScaffoldState extends State<ZoomScaffold>
       child: new Scaffold(
         backgroundColor: Colors.white,
         appBar: new AppBar(
+          brightness: Brightness.light,
           title: TextWidget(
             txt: title,
             color: Colors.black,
