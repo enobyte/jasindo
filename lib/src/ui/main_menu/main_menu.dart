@@ -55,11 +55,6 @@ class MainMenuState extends State<MainMenu> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   void dispose() {
     changeSlide.close();
     _blocNewsData.dispose();

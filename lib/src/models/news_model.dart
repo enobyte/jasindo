@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'news_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(nullable: true)
 class NewsModel {
   String message;
   bool status;
   int code;
-  List<_Data> data;
+  List<_Data> data = [];
 
   NewsModel({this.message, this.status, this.data, this.code});
 
@@ -20,7 +20,7 @@ class NewsModel {
         status = false;
 }
 
-@JsonSerializable()
+@JsonSerializable(nullable: true)
 class _Data {
   _Data({this.id, this.content, this.images, this.createat});
 
