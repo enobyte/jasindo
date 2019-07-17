@@ -34,6 +34,8 @@ class StepFourState extends State<StepFour> {
   DoRegisterBloc bloc = DoRegisterBloc();
   bool _checkPolicy = false;
   bool _verifyCode = false;
+  bool _isNewHidePass = true;
+  bool _isReNewPass = true;
   String code = "";
   String _email;
   String _day;
@@ -73,23 +75,51 @@ class StepFourState extends State<StepFour> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: TextFormField(
-                obscureText: true,
+                obscureText: _isNewHidePass,
                 controller: _passwordController,
                 decoration: InputDecoration(
-                    labelText: titlePassword,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)))),
+                  labelText: titlePassword,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  suffixIcon: IconButton(
+                      icon: _isNewHidePass
+                          ? Icon(Icons.vpn_key)
+                          : Icon(Icons.remove_red_eye),
+                      onPressed: () {
+                        setState(() {
+                          if (_isNewHidePass) {
+                            _isNewHidePass = false;
+                          } else {
+                            _isNewHidePass = true;
+                          }
+                        });
+                      }),
+                ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: TextFormField(
                 controller: _rePasswordController,
-                obscureText: true,
+                obscureText: _isReNewPass,
                 decoration: InputDecoration(
-                    labelText: titleRepassword,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(5.0)))),
+                  labelText: titleRepassword,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  suffixIcon: IconButton(
+                      icon: _isReNewPass
+                          ? Icon(Icons.vpn_key)
+                          : Icon(Icons.remove_red_eye),
+                      onPressed: () {
+                        setState(() {
+                          if (_isReNewPass) {
+                            _isReNewPass = false;
+                          } else {
+                            _isReNewPass = true;
+                          }
+                        });
+                      }),
+                ),
               ),
             ),
             Container(

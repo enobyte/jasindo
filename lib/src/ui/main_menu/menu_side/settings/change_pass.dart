@@ -18,6 +18,8 @@ class ChangePassword extends StatefulWidget {
 
 class ChangePasswordState extends State<ChangePassword> {
   bool _isHidePassword = true;
+  bool _isNewHidePass = true;
+  bool _isReNewPass = true;
   final _oldPassword = TextEditingController();
   final _newPassword = TextEditingController();
   final _renewPassword = TextEditingController();
@@ -56,7 +58,7 @@ class ChangePasswordState extends State<ChangePassword> {
                   decoration: InputDecoration(
                       labelText: "Masukkan Kata Sandi Lama",
                       suffixIcon: IconButton(
-                          icon: Icon(Icons.remove_red_eye),
+                          icon: _isHidePassword ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
                               if (_isHidePassword) {
@@ -70,17 +72,17 @@ class ChangePasswordState extends State<ChangePassword> {
                 SizedBox(height: 20),
                 TextFormField(
                   controller: _newPassword,
-                  obscureText: _isHidePassword,
+                  obscureText: _isNewHidePass,
                   decoration: InputDecoration(
                       labelText: "Masukkan Kata Sandi Baru",
                       suffixIcon: IconButton(
-                          icon: Icon(Icons.remove_red_eye),
+                          icon: _isNewHidePass ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
-                              if (_isHidePassword) {
-                                _isHidePassword = false;
+                              if (_isNewHidePass) {
+                                _isNewHidePass = false;
                               } else {
-                                _isHidePassword = true;
+                                _isNewHidePass  = true;
                               }
                             });
                           })),
@@ -88,17 +90,17 @@ class ChangePasswordState extends State<ChangePassword> {
                 SizedBox(height: 20),
                 TextFormField(
                   controller: _renewPassword,
-                  obscureText: _isHidePassword,
+                  obscureText: _isReNewPass,
                   decoration: InputDecoration(
                       labelText: "Ulangi Kata Sandi Baru",
                       suffixIcon: IconButton(
-                          icon: Icon(Icons.remove_red_eye),
+                          icon: _isReNewPass ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
-                              if (_isHidePassword) {
-                                _isHidePassword = false;
+                              if (_isReNewPass) {
+                                _isReNewPass = false;
                               } else {
-                                _isHidePassword = true;
+                                _isReNewPass = true;
                               }
                             });
                           })),
