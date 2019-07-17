@@ -73,7 +73,7 @@ class LoginFormState extends State<LoginForm> {
                     decoration: InputDecoration(
                         labelText: "Kata Sandi",
                         suffixIcon: IconButton(
-                            icon: Icon(Icons.remove_red_eye),
+                            icon: _isHidePassword ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
                             onPressed: () {
                               setState(() {
                                 if (_isHidePassword) {

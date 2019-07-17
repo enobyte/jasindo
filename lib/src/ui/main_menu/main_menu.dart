@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/about_bloc.dart';
 import 'package:jasindo_app/src/blocs/guidebook_bloc.dart';
+import 'package:jasindo_app/src/blocs/information_bloc.dart';
 import 'package:jasindo_app/src/blocs/news_bloc.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/news_model.dart';
@@ -45,6 +46,7 @@ class MainMenuState extends State<MainMenu> {
   final _blocNewsData = NewsBloc();
   final _blocAbout = AboutBloc();
   final _blocGuideBook = GuideBookBloc();
+  final _blocInfo = InformationBloc();
   NewsModel modelNews;
   int indexSlide = 0;
 
@@ -60,6 +62,7 @@ class MainMenuState extends State<MainMenu> {
     _blocNewsData.dispose();
     _blocNews.dispose();
     _blocGuideBook.dispose();
+    _blocInfo.dispose();
     super.dispose();
   }
 
@@ -113,10 +116,12 @@ class MainMenuState extends State<MainMenu> {
             dotBgColor: Colors.transparent,
             boxFit: BoxFit.fill,
             images: [
-              new NetworkImage(
-                  modelNews != null ? modelNews.data[0].images : "http://"),
-              new NetworkImage(
-                  modelNews != null ? modelNews.data[1].images : "http://"),
+              new NetworkImage(modelNews.toString() != "null"
+                  ? modelNews.data[0].images
+                  : "http://"),
+              new NetworkImage(modelNews.toString() != "null"
+                  ? modelNews.data[1].images
+                  : "http://"),
             ],
           ),
           Positioned.fill(
@@ -267,7 +272,7 @@ class MainMenuState extends State<MainMenu> {
         break;
       case 3:
         _setTitle('Informasi');
-        _contentPage = Information();
+        _contentPage = Information(_blocInfo);
         break;
       case 4:
         _setTitle('Tentang Kami');

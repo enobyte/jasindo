@@ -11,6 +11,7 @@ import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/guidebook_model.dart';
+import 'package:jasindo_app/src/models/information_model.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/messages_model.dart';
 import 'package:jasindo_app/src/models/news_model.dart';
@@ -288,6 +289,16 @@ class JasindoApiProvider {
     } catch (error, stack) {
       print(stack.toString());
       return StandartModels.withError(_handleError(error));
+    }
+  }
+
+  Future<InformationModels> information() async {
+    try {
+      final response = await _dio.get("$_baseUrl/member/information");
+      return InformationModels.fromJson(response.data);
+    } catch (error, stack) {
+      print(stack.toString());
+      return InformationModels.withError(_handleError(error));
     }
   }
 }

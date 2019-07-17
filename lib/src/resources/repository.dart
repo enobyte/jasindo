@@ -8,6 +8,7 @@ import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/guidebook_model.dart';
+import 'package:jasindo_app/src/models/information_model.dart';
 import 'package:jasindo_app/src/models/messages_model.dart';
 import 'package:jasindo_app/src/models/news_model.dart';
 import 'package:jasindo_app/src/models/standart_model.dart';
@@ -66,4 +67,7 @@ class Repository {
 
   Future<StandartModels> resendCode({Map<String, dynamic> body}) =>
       jasindoApiProvider.resendCode(body: body);
+
+  Future<InformationModels> fetchInformation() =>
+      jasindoApiProvider.information();
 }

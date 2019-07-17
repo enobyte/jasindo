@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class ContentInformation extends StatefulWidget {
   String imageUrl;
+  bool isNetWork;
 
   @override
   State<StatefulWidget> createState() {
     return ContentInformationState();
   }
 
-  ContentInformation({this.imageUrl});
+  ContentInformation({this.imageUrl, this.isNetWork});
 }
 
 class ContentInformationState extends State<ContentInformation> {
@@ -22,7 +23,9 @@ class ContentInformationState extends State<ContentInformation> {
           centerTitle: true,
           backgroundColor: Colors.white),
       body: SingleChildScrollView(
-        child: Image.asset(widget.imageUrl),
+        child: widget.isNetWork
+            ? Image.network(widget.imageUrl)
+            : Image.asset(widget.imageUrl),
       ),
     );
   }

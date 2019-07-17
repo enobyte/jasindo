@@ -144,10 +144,13 @@ class DataPesertaState extends State<DataPeserta>
           for (var item in plansModel.data) {
             listManfaat.add(item.planId.trim());
           }
-          polishPeriod =
-              plansModel.data[0].policyStartDate.replaceAll("-", "/") +
-                  ' - ' +
-                  plansModel.data[0].policyEndDate.replaceAll("-", "/");
+          polishPeriod = formatDate(
+                  '${plansModel.data[0].policyStartDate.split("-")[2]}${mmmTomm(plansModel.data[0].policyStartDate.split("-")[0])}${plansModel.data[0].policyStartDate.split("-")[1]}',
+                  'dd-MM-yyyy') +
+              ' - ' +
+              formatDate(
+                  '${plansModel.data[0].policyEndDate.split("-")[2]}${mmmTomm(plansModel.data[0].policyEndDate.split("-")[0])}${plansModel.data[0].policyEndDate.split("-")[1]}',
+                  'dd-MM-yyyy');
         });
       });
     });

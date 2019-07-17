@@ -37,7 +37,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
       _dateBirtRequest,
       _noCardRequest,
       _namePrinciple,
-      _employId;
+      _employId,
+      _dependentId;
   final bloc = GetDependentBloc();
   final blocPlan = GetPlansBloc();
 
@@ -74,7 +75,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           slivers: <Widget>[
             SliverAppBar(
               brightness: Brightness.light,
-              automaticallyImplyLeading: false, //disable back button
+              automaticallyImplyLeading: false,
+              //disable back button
               backgroundColor: Colors.transparent,
               expandedHeight: MediaQuery.of(context).size.height / 3,
               flexibleSpace: FlexibleSpaceBar(background: _header()),
@@ -153,8 +155,11 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        TextWidget(txt: 'Policy', color: Colors.blue),
-                        TextWidget(txt: _policy)
+                        TextWidget(txt: 'No Peserta', color: Colors.blue),
+                        TextWidget(
+                            txt: _typeMember == "Principal"
+                                ? _employId.trim()
+                                : _dependentId.trim())
                       ],
                     ),
                   ),
@@ -285,8 +290,8 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             FlatButton.icon(
               color: Colors.white,
               onPressed: () => {
-                    _fetchDependent(),
-                  },
+                _fetchDependent(),
+              },
               icon: Image.asset(
                 'lib/assets/images/ic_family.png',
                 height: 15,
@@ -317,6 +322,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         _dateBirtRequest =
             formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
         _employId = memberModels.adcps.employeeId;
+        _dependentId = memberModels.adcps.dependentId;
         _dateBirth =
             formatDateFormStandart(memberModels.data.birthDate, "dd MMMM yyyy");
       });
@@ -416,6 +422,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                       _policy = dependentModel.policyNumber
                           .toString()
                           .replaceAll(" ", "");
+                      _dependentId = dependentModel.dependentId;
                       _dateBirth = formatDate(
                           '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
                           "dd MMMM yyyy");
@@ -496,6 +503,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             _dateBirtRequest = formatDateFormStandart(
                 memberModels.data.birthDate, "yyyy-MM-dd");
             _employId = memberModels.adcps.employeeId;
+            _dependentId = memberModels.adcps.dependentId;
             _namePrinciple = memberModels.data.name;
             _level = memberModels.adcps.vip;
 
@@ -538,6 +546,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           _dateBirtRequest =
               formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
           _employId = memberModels.adcps.employeeId;
+          _dependentId = memberModels.adcps.dependentId;
           _dateBirth = formatDateFormStandart(
               memberModels.data.birthDate, "dd MMMM yyyy");
           _fetchPlan(_noCard,
