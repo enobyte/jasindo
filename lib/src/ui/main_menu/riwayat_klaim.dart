@@ -614,7 +614,9 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
 
   _collectClaimType(GetHistClaimModel callback) {
     listTypeClaim.clear();
-    callback.data.forEach((data) => {listTypeClaim.add(data.claimType)});
+    callback.data != null
+        ? callback.data.forEach((data) => {listTypeClaim.add(data.claimType)})
+        : listTypeClaim.toList();
     listTypeClaim = listTypeClaim.toSet().toList();
   }
 
