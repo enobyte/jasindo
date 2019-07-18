@@ -31,12 +31,13 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
   String _planId,
       _cardNumber,
       _birthDate,
-      _claimId,
+      _claimType,
       _planType,
       valueDateStart,
       valueDateEnd;
   GetPlansModel plansModel = GetPlansModel();
   GetHistClaimModel claimModel = GetHistClaimModel();
+  List<String> listTypeClaim = new List();
   bool isLoadingClaim = false, isRangeDate = false;
   DateTime selectedDateEnd = DateTime.now();
   DateTime selectedDateStart = DateTime.now();
@@ -110,6 +111,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
               setState(() {
                 setState(() {
                   _planId = newValue;
+                  _claimType = null;
                   isLoadingClaim = true;
                 });
                 ReqGetHistClaim request = ReqGetHistClaim(
@@ -159,19 +161,18 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
                   isExpanded: true,
                   onChanged: (newValue) {
                     setState(() {
-                      _claimId = newValue;
+                      _claimType = newValue;
                     });
                   },
-                  value: _claimId,
+                  value: _claimType,
                   items: claimModel.data[0].responseCode != "200"
                       ? List<String>().map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem(
                               value: value, child: Text(value));
                         }).toList()
-                      : claimModel.data.map<DropdownMenuItem<String>>((value) {
+                      : listTypeClaim.map<DropdownMenuItem<String>>((value) {
                           return DropdownMenuItem(
-                              value: value.claimId,
-                              child: Text(value.claimType));
+                              value: value, child: Text(value));
                         }).toList(),
                 ),
               ),
@@ -595,6 +596,7 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       GetHistClaimModel callback, bool status, String message) {
     if (status) {
       claimModel = callback;
+      _collectClaimType(callback);
     } else {
       _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
     }
@@ -602,6 +604,12 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
       isRangeDate = false;
       isLoadingClaim = false;
     });
+  }
+
+  _collectClaimType(GetHistClaimModel callback) {
+    listTypeClaim.clear();
+    callback.data.forEach((data) => {listTypeClaim.add(data.claimType)});
+    listTypeClaim = listTypeClaim.toSet().toList();
   }
 
   showTime() {

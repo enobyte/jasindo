@@ -82,6 +82,7 @@ class _Adcps {
       this.policyNumber,
       this.bateOfBirth,
       this.memberType,
+      this.memberId,
       this.employeeId,
       this.dependentId,
       this.activeFlag,
@@ -102,6 +103,8 @@ class _Adcps {
   String bateOfBirth;
   @JsonKey(name: 'MemberType')
   String memberType;
+  @JsonKey(name: 'PayorMemberId')
+  String memberId;
   @JsonKey(name: 'EmployeeId')
   String employeeId;
   @JsonKey(name: 'DependentId')

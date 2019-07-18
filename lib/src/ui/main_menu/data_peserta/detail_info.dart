@@ -32,6 +32,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
       _level,
       _typeMember,
       _policy,
+      _memberId,
       _dateBirth,
       _name,
       _dateBirtRequest,
@@ -156,10 +157,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         TextWidget(txt: 'No Peserta', color: Colors.blue),
-                        TextWidget(
-                            txt: _typeMember == "Principal"
-                                ? _employId.trim()
-                                : _dependentId.trim())
+                        TextWidget(txt: _memberId)
                       ],
                     ),
                   ),
@@ -319,6 +317,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
         _level = memberModels.adcps.vip;
         _typeMember = memberModels.adcps.memberType;
         _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
+        _memberId = memberModels.adcps.memberId.trim();
         _dateBirtRequest =
             formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
         _employId = memberModels.adcps.employeeId;
@@ -422,6 +421,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                       _policy = dependentModel.policyNumber
                           .toString()
                           .replaceAll(" ", "");
+
                       _dependentId = dependentModel.dependentId;
                       _dateBirth = formatDate(
                           '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
@@ -543,6 +543,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           _level = memberModels.adcps.vip;
           _typeMember = memberModels.adcps.memberType;
           _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
+          _memberId = memberModels.adcps.memberId..trim();
           _dateBirtRequest =
               formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
           _employId = memberModels.adcps.employeeId;
