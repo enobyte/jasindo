@@ -448,7 +448,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
     ReqGetDependent request = ReqGetDependent(
         cardNumber: _noCardRequest,
         birthDate: _dateBirtRequest,
-        employeeId: _employId.replaceAll(" ", ""));
+        employeeId: _employId.trim());
     bloc.fetchDependent(request.toMap(),
         (model, status, message) => {_renderView(model, status, message)});
   }

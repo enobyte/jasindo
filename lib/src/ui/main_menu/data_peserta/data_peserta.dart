@@ -178,7 +178,7 @@ class DataPesertaState extends State<DataPeserta>
             final memberModels = MemberModels.fromJson(json.decode(onValue));
             setState(() {
               cardNumber = memberModels.data.cardNumb;
-              birthDate = birthDate.substring(0, 10);
+              birthDate = memberModels.data.birthDate.substring(0, 10);
             });
 
             SharedPreferencesHelper.getPlans().then((plan) {

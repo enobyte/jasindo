@@ -247,7 +247,13 @@ class RiwayatKlaimState extends State<RiwayatKlaim> {
             return Expanded(
               child: ListView.builder(
                 itemBuilder: (BuildContext context, int index) =>
-                    _listHistoryClaimContent(snapshot, index),
+                    _claimType == null
+                        ? _listHistoryClaimContent(snapshot, index)
+                        : snapshot.data.data[index].claimType
+                                .toLowerCase()
+                                .contains(_claimType.toLowerCase())
+                            ? _listHistoryClaimContent(snapshot, index)
+                            : Container(),
                 itemCount: snapshot.data.data.length,
               ),
             );
