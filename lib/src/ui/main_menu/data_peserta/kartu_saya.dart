@@ -24,7 +24,7 @@ class CardMemberState extends State<CardMember> {
       _corporate,
       _birthDate,
       _memberType,
-      _policy,
+      _memberId,
       _level;
   List<String> _benefit = List();
 
@@ -124,7 +124,7 @@ class CardMemberState extends State<CardMember> {
         ),
         TextWidget(
           txtSize: 12,
-          txt: 'Policy',
+          txt: 'No. Peserta',
         ),
         TextWidget(
           txtSize: 12,
@@ -132,7 +132,7 @@ class CardMemberState extends State<CardMember> {
         ),
         TextWidget(
           txtSize: 12,
-          txt: 'Member Type',
+          txt: 'Tipe Member',
         ),
         TextWidget(
           txtSize: 12,
@@ -156,7 +156,7 @@ class CardMemberState extends State<CardMember> {
         ),
         TextWidget(
           txtSize: 12,
-          txt: _policy != null ? _policy.trim() : "",
+          txt: _memberId != null ? _memberId.trim() : "",
         ),
         TextWidget(
           txtSize: 12,
@@ -202,7 +202,7 @@ class CardMemberState extends State<CardMember> {
         _corporate = memberModels.adcps.corporateInfo;
         _email = memberModels.data.email;
         _memberType = memberModels.adcps.memberType;
-        _policy = memberModels.adcps.policyNumber;
+        _memberId = memberModels.adcps.memberId;
       });
       SharedPreferencesHelper.getPlans().then((plan) {
         final plansModel = GetPlansModel.fromJson(json.decode(plan));
@@ -222,7 +222,7 @@ class CardMemberState extends State<CardMember> {
               _corporate = dependentModel.corporateInfo;
               _email = memberModels.data.email;
               _memberType = dependentModel.memberType;
-              _policy = dependentModel.policyNumber;
+              _memberId = dependentModel.payorMemberId;
             });
           }
         });

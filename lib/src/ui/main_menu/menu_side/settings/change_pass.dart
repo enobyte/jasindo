@@ -58,7 +58,9 @@ class ChangePasswordState extends State<ChangePassword> {
                   decoration: InputDecoration(
                       labelText: "Masukkan Kata Sandi Lama",
                       suffixIcon: IconButton(
-                          icon: _isHidePassword ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
+                          icon: _isHidePassword
+                              ? Icon(Icons.vpn_key)
+                              : Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
                               if (_isHidePassword) {
@@ -76,13 +78,15 @@ class ChangePasswordState extends State<ChangePassword> {
                   decoration: InputDecoration(
                       labelText: "Masukkan Kata Sandi Baru",
                       suffixIcon: IconButton(
-                          icon: _isNewHidePass ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
+                          icon: _isNewHidePass
+                              ? Icon(Icons.vpn_key)
+                              : Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
                               if (_isNewHidePass) {
                                 _isNewHidePass = false;
                               } else {
-                                _isNewHidePass  = true;
+                                _isNewHidePass = true;
                               }
                             });
                           })),
@@ -94,7 +98,9 @@ class ChangePasswordState extends State<ChangePassword> {
                   decoration: InputDecoration(
                       labelText: "Ulangi Kata Sandi Baru",
                       suffixIcon: IconButton(
-                          icon: _isReNewPass ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
+                          icon: _isReNewPass
+                              ? Icon(Icons.vpn_key)
+                              : Icon(Icons.remove_red_eye),
                           onPressed: () {
                             setState(() {
                               if (_isReNewPass) {
@@ -132,15 +138,19 @@ class ChangePasswordState extends State<ChangePassword> {
     setState(() {
       _isLoading = true;
     });
-    SharedPreferencesHelper.getDoLogin().then((onValue) {
-      final memberModels = MemberModels.fromJson(json.decode(onValue));
-      ReqChangePass request = ReqChangePass(
-          email: memberModels.data.email,
-          oldPass: _oldPassword.text,
-          newPass: _newPassword.text);
-      bloc.actForgotPass(request.toMap(),
-              (status, message) => {_verifyChangePassword(status, message)});
-    });
+    if (_renewPassword.text.trim() == _newPassword.text.trim()) {
+      SharedPreferencesHelper.getDoLogin().then((onValue) {
+        final memberModels = MemberModels.fromJson(json.decode(onValue));
+        ReqChangePass request = ReqChangePass(
+            email: memberModels.data.email,
+            oldPass: _oldPassword.text,
+            newPass: _newPassword.text);
+        bloc.actForgotPass(request.toMap(),
+            (status, message) => {_verifyChangePassword(status, message)});
+      });
+    } else {
+      _verifyChangePassword(false, "Password tidak sama");
+    }
   }
 
   _verifyChangePassword(bool status, String message) {

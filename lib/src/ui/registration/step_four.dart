@@ -215,7 +215,7 @@ class StepFourState extends State<StepFour> {
           txt: 'DAFTAR',
           btnColor: blueStandart,
           borderRedius: 5,
-          onClick: _checkPolicy && _verifyCode ? () => {_getCode()} : () => {}),
+          onClick: () => {_getCode()}),
     );
   }
 
@@ -223,6 +223,12 @@ class StepFourState extends State<StepFour> {
     if (_passwordController.text != _rePasswordController.text) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("Password tidak sama")));
+    } else if (!_verifyCode) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("Kode verifikasi salah")));
+    } else if (!_checkPolicy) {
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text("Checklist syarat dan ketentuan")));
     } else {
       ReqRegistrationInternal request = ReqRegistrationInternal(
           name: _name,
