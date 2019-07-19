@@ -250,9 +250,13 @@ class StepFourState extends State<StepFour> {
   }
 
   _getCode() {
-    generateCode().then((onValue) {
-      _onSubmit(onValue);
-    });
+    if (_checkPolicy && _verifyCode) {
+      generateCode().then((onValue) {
+        _onSubmit(onValue);
+      });
+    } else {
+      _onSubmit("");
+    }
   }
 
   _populateData() {
