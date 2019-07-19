@@ -421,7 +421,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                       _policy = dependentModel.policyNumber
                           .toString()
                           .replaceAll(" ", "");
-
+                      _memberId = dependentModel.payorMemberId;
                       _dependentId = dependentModel.dependentId;
                       _dateBirth = formatDate(
                           '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
@@ -477,10 +477,13 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             widget.plans.add(item.planId.trim());
           }
           if (plansModel.data.length > 0) {
-            widget.polisPeriod =
-                plansModel.data[0].policyStartDate.replaceAll("-", "/") +
-                    ' - ' +
-                    plansModel.data[0].policyEndDate.replaceAll("-", "/");
+            widget.polisPeriod = formatDate(
+                    '${plansModel.data[0].policyStartDate.split("-")[2]}${mmmTomm(plansModel.data[0].policyStartDate.split("-")[0])}${plansModel.data[0].policyStartDate.split("-")[1]}',
+                    'dd-MM-yyyy') +
+                ' - ' +
+                formatDate(
+                    '${plansModel.data[0].policyEndDate.split("-")[2]}${mmmTomm(plansModel.data[0].policyEndDate.split("-")[0])}${plansModel.data[0].policyEndDate.split("-")[1]}',
+                    'dd-MM-yyyy');
           } else {
             widget.polisPeriod = "";
           }
@@ -543,7 +546,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
           _level = memberModels.adcps.vip;
           _typeMember = memberModels.adcps.memberType;
           _policy = memberModels.adcps.policyNumber.replaceAll(" ", "");
-          _memberId = memberModels.adcps.memberId..trim();
+          _memberId = memberModels.adcps.memberId.trim();
           _dateBirtRequest =
               formatDateFormStandart(memberModels.data.birthDate, "yyyy-MM-dd");
           _employId = memberModels.adcps.employeeId;

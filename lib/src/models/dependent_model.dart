@@ -37,6 +37,8 @@ class _Data {
   String memberId;
   @JsonKey(name: 'MemberType')
   String memberType;
+  @JsonKey(name: 'PayorMemberId')
+  String payorMemberId;
   @JsonKey(name: 'EmployeeId')
   String employeeId;
   @JsonKey(name: 'DependentId')
@@ -56,6 +58,7 @@ class _Data {
       this.bateOfBirth,
       this.memberId,
       this.memberType,
+      this.payorMemberId,
       this.employeeId,
       this.dependentId,
       this.cardNo,

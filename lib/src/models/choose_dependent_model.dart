@@ -16,6 +16,8 @@ class ChooseDependent {
   String bateOfBirth;
   @JsonKey(name: 'MemberId')
   String memberId;
+  @JsonKey(name: 'PayorMemberId')
+  String payorMemberId;
   @JsonKey(name: 'MemberType')
   String memberType;
   @JsonKey(name: 'EmployeeId')
@@ -37,6 +39,7 @@ class ChooseDependent {
       this.bateOfBirth,
       this.memberId,
       this.memberType,
+      this.payorMemberId,
       this.employeeId,
       this.dependentId,
       this.cardNo,
