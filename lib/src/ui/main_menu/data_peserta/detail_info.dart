@@ -421,7 +421,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
                       _policy = dependentModel.policyNumber
                           .toString()
                           .replaceAll(" ", "");
-                      _memberId = dependentModel.payorMemberId;
+                      _memberId = dependentModel.payorMemberId.trim();
                       _dependentId = dependentModel.dependentId;
                       _dateBirth = formatDate(
                           '${dependentModel.bateOfBirth.split("-")[2]}${mmmTomm(dependentModel.bateOfBirth.split("-")[0])}${dependentModel.bateOfBirth.split("-")[1]}',
@@ -509,7 +509,7 @@ class DetailInfoPesertaState extends State<DetailInfoPeserta> {
             _dependentId = memberModels.adcps.dependentId;
             _namePrinciple = memberModels.data.name;
             _level = memberModels.adcps.vip;
-
+            _memberId = dependentModel.payorMemberId.trim();
             _name = dependentModel.name;
             _noCard = dependentModel.cardNo;
             _corporate = dependentModel.corporateInfo;
