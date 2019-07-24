@@ -9,6 +9,7 @@ import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ProgressDialog.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
+import 'dart:io';
 
 import 'registration/step_five.dart';
 
@@ -73,7 +74,9 @@ class LoginFormState extends State<LoginForm> {
                     decoration: InputDecoration(
                         labelText: "Kata Sandi",
                         suffixIcon: IconButton(
-                            icon: _isHidePassword ? Icon(Icons.vpn_key) : Icon(Icons.remove_red_eye),
+                            icon: _isHidePassword
+                                ? Icon(Icons.vpn_key)
+                                : Icon(Icons.remove_red_eye),
                             onPressed: () {
                               setState(() {
                                 if (_isHidePassword) {
@@ -196,8 +199,13 @@ class LoginFormState extends State<LoginForm> {
       _isLoading = true;
     });
     SharedPreferencesHelper.setEmail(_emailController.text);
+    var _packageName =
+        Platform.isAndroid ? "id.jasindo.io" : "com.jasindonet.jasindohealth";
+
     ReqDoLogin request = ReqDoLogin(
-        email: _emailController.text, password: _passController.text);
+        email: _emailController.text,
+        password: _passController.text,
+        app: _packageName);
     bloc.fetchDoLogin(
         request.toMap(),
         (status, message) => {

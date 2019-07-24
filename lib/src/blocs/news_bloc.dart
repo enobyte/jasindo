@@ -9,8 +9,8 @@ class NewsBloc {
 
   Observable<NewsModel> get getNewsBloc => _newsBloc.stream;
 
-  newsBloc(Function(NewsModel model) callback) async {
-    NewsModel model = await _repository.fetchNews();
+  newsBloc(Function(NewsModel model) callback, String package_name) async {
+    NewsModel model = await _repository.fetchNews(package_name: package_name);
     _newsBloc.sink.add(model);
     callback(model);
   }

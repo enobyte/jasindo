@@ -21,7 +21,7 @@ class NewsState extends State<News> {
   @override
   void initState() {
     super.initState();
-    widget.bloc.newsBloc((model) => {});
+    widget.bloc.newsBloc((model) => {}, "");
   }
 
   @override

@@ -60,7 +60,8 @@ class Repository {
   Future<StandartModels> actChangePassUser({Map<String, dynamic> body}) =>
       jasindoApiProvider.changePass(body: body);
 
-  Future<NewsModel> fetchNews() => jasindoApiProvider.fetchNewsJasindo();
+  Future<NewsModel> fetchNews({String package_name}) =>
+      jasindoApiProvider.fetchNewsJasindo(package_name: package_name);
 
   Future<GuideBookModels> fetchGuideBook({Map<String, dynamic> body}) =>
       jasindoApiProvider.fetchGuideBook(body: body);

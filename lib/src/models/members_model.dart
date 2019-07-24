@@ -8,8 +8,10 @@ class MemberModels {
   bool status;
   _Data data;
   _Adcps adcps;
+  _Version version;
 
-  MemberModels({this.message, this.status, this.data, this.adcps});
+  MemberModels(
+      {this.message, this.status, this.data, this.adcps, this.version});
 
   factory MemberModels.fromJson(Map<String, dynamic> json) =>
       _$MemberModelsFromJson(json);
@@ -123,4 +125,26 @@ class _Adcps {
   factory _Adcps.fromJson(Map<String, dynamic> json) => _$_AdcpsFromJson(json);
 
   Map<String, dynamic> toJson() => _$_AdcpsToJson(this);
+}
+
+@JsonSerializable()
+class _Version {
+  @JsonKey(name: 'id')
+  int id;
+  @JsonKey(name: 'app')
+  String app;
+  @JsonKey(name: 'version_code')
+  String version_code;
+  @JsonKey(name: 'platform')
+  String platform;
+  @JsonKey(name: 'version_name')
+  String version_name;
+
+  _Version(
+      this.id, this.app, this.version_code, this.platform, this.version_name);
+
+  factory _Version.fromJson(Map<String, dynamic> json) =>
+      _$_VersionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$_VersionToJson(this);
 }

@@ -15,7 +15,10 @@ MemberModels _$MemberModelsFromJson(Map<String, dynamic> json) {
           : _Data.fromJson(json['data'] as Map<String, dynamic>),
       adcps: json['adcps'] == null
           ? null
-          : _Adcps.fromJson(json['adcps'] as Map<String, dynamic>));
+          : _Adcps.fromJson(json['adcps'] as Map<String, dynamic>),
+      version: json['version'] == null
+          ? null
+          : _Version.fromJson(json['version'] as Map<String, dynamic>));
 }
 
 Map<String, dynamic> _$MemberModelsToJson(MemberModels instance) =>
@@ -23,7 +26,8 @@ Map<String, dynamic> _$MemberModelsToJson(MemberModels instance) =>
       'message': instance.message,
       'status': instance.status,
       'data': instance.data,
-      'adcps': instance.adcps
+      'adcps': instance.adcps,
+      'version': instance.version
     };
 
 _Data _$_DataFromJson(Map<String, dynamic> json) {
@@ -94,4 +98,21 @@ Map<String, dynamic> _$_AdcpsToJson(_Adcps instance) => <String, dynamic>{
       'VIP': instance.vip,
       'ResponseCode': instance.responseCode,
       'ResponseDescription': instance.responseDescription
+    };
+
+_Version _$_VersionFromJson(Map<String, dynamic> json) {
+  return _Version(
+      json['id'] as int,
+      json['app'] as String,
+      json['version_code'] as String,
+      json['platform'] as String,
+      json['version_name'] as String);
+}
+
+Map<String, dynamic> _$_VersionToJson(_Version instance) => <String, dynamic>{
+      'id': instance.id,
+      'app': instance.app,
+      'version_code': instance.version_code,
+      'platform': instance.platform,
+      'version_name': instance.version_name
     };

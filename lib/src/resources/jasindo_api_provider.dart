@@ -260,9 +260,9 @@ class JasindoApiProvider {
     }
   }
 
-  Future<NewsModel> fetchNewsJasindo() async {
+  Future<NewsModel> fetchNewsJasindo({String package_name}) async {
     try {
-      final response = await _dio.get("$_baseUrl/news");
+      final response = await _dio.get("$_baseUrl/news/"+package_name);
       return NewsModel.fromJson(response.data);
     } catch (error, stack) {
       print(stack.toString());

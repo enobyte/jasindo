@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/about_bloc.dart';
@@ -23,6 +24,7 @@ import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ImageSlider/Carousel.dart';
 import 'package:jasindo_app/widgets/TextWidget.dart';
 import 'package:jasindo_app/widgets/ZoomScaffold.dart';
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 
 import 'menu_side/news/detail_berita.dart';
@@ -69,6 +71,7 @@ class MainMenuState extends State<MainMenu> {
   getDataNews(NewsModel model) {
     setState(() {
       this.modelNews = model;
+      checkUpdate(int.parse(this.modelNews.version.version_code));
     });
   }
 
@@ -326,10 +329,64 @@ class MainMenuState extends State<MainMenu> {
         _name = memberModels.data.name;
         _callCenter = memberModels.adcps.helpLine;
       });
-      _blocNewsData.newsBloc((model) => {
-            getDataNews(model),
-          });
+      var _packageName =
+          Platform.isAndroid ? "id.jasindo.io" : "com.jasindonet.jasindohealth";
+
+      _blocNewsData.newsBloc(
+          (model) => {
+                getDataNews(model),
+              },
+          _packageName);
     });
+  }
+
+  checkUpdate(int ver_code) async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String buildNumber = packageInfo.buildNumber;
+
+    if (int.parse(buildNumber.replaceAll(".", "")) < ver_code) {
+      _makeUpdate();
+    }
+  }
+
+  Future<void> _makeUpdate() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text('Versi ' +
+                        this.modelNews.version.version_name +
+                        ' telah tersedia'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Update'),
+              onPressed: () {
+                UrlLauncher.launch(Platform.isAndroid
+                    ? 'https://play.google.com/store/apps/details?id=id.jasindo.io'
+                    : 'https://apps.apple.com/us/app/jasindo-health/id1443477084');
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _makeCall() async {
