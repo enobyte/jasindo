@@ -41,6 +41,11 @@ dependencies:
   rflutter_alert: ^1.0.2
   package_info: ^0.4.0+5
 
+  #Percobaan
+  firebase_ml_vision: ^0.9.2
+  image_picker: ^0.6.1
+  pin_view: ^1.0.1
+  qrcode_reader: ^0.4.4
 
 dev_dependencies:
   flutter_test:

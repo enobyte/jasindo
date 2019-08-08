@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "825870327",
+    "firebase_url": "https://scanner-94e35.firebaseio.com",
+    "project_id": "scanner-94e35",
+    "storage_bucket": "scanner-94e35.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825870327:android:6d3c2c29c41f181e",
+        "android_client_info": {
+          "package_name": "com.networkhealth.networkhealth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825870327-fbi0t3ac6fhsrlb5c2b3e06lmobie798.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqCnX_M_6FogDLbfWJ2nhjIL5lPoU7yu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825870327-fbi0t3ac6fhsrlb5c2b3e06lmobie798.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825870327:android:5d078d56a8751acf",
+        "android_client_info": {
+          "package_name": "id.jasindo.io"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825870327-fbi0t3ac6fhsrlb5c2b3e06lmobie798.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqCnX_M_6FogDLbfWJ2nhjIL5lPoU7yu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825870327-fbi0t3ac6fhsrlb5c2b3e06lmobie798.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

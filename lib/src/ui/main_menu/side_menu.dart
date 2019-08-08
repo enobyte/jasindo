@@ -13,6 +13,7 @@ class SideMenu extends StatelessWidget {
     MenuItem(Icons.info, 'Informasi'),
     MenuItem(Icons.error, 'Tentang Kami'),
     MenuItem(Icons.settings, 'Pengaturan'),
+    MenuItem(Icons.scanner, 'QR'),
   ];
 
   @override

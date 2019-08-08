@@ -17,6 +17,7 @@ import 'package:jasindo_app/src/ui/main_menu/menu_side/settings/pengaturan.dart'
 import 'package:jasindo_app/src/ui/main_menu/provider/provider_rekanan.dart';
 import 'package:jasindo_app/src/ui/main_menu/riwayat_klaim.dart';
 import 'package:jasindo_app/src/ui/main_menu/side_menu.dart';
+import 'package:jasindo_app/src/ui/qr/register_qr.dart';
 import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart' as utils;
@@ -284,6 +285,10 @@ class MainMenuState extends State<MainMenu> {
       case 5:
         _setTitle('Pengaturan');
         _contentPage = Setting(_blocAbout);
+        break;
+      case 6:
+        _setTitle('QR');
+        _contentPage = RegisterQR();
         break;
       default:
         _setTitle('');
