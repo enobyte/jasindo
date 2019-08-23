@@ -46,6 +46,7 @@ dependencies:
   image_picker: ^0.6.1
   pin_view: ^1.0.1
   qrcode_reader: ^0.4.4
+  flutter_image_compress: ^0.6.3
 
 dev_dependencies:
   flutter_test:

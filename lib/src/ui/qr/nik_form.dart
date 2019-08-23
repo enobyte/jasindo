@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jasindo_app/src/ui/qr/pin_qr.dart';
 import 'package:jasindo_app/utility/colors.dart';
@@ -10,19 +13,33 @@ import 'package:jasindo_app/widgets/ButtonWidget.dart';
 
 class NikForm extends StatefulWidget {
   final String nik;
+  final String name;
+  final String cardNo;
 
   @override
   State<StatefulWidget> createState() {
     return NikFormState();
   }
 
-  NikForm(this.nik);
+  NikForm(this.nik, this.name, this.cardNo);
 }
 
 class NikFormState extends State<NikForm> {
   File _image;
   bool mergeDataNik = false;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  Dio _dio;
+
+  @override
+  void initState() {
+    super.initState();
+    Options options = Options(
+        receiveTimeout: 5000,
+        connectTimeout: 5000,
+        contentType: ContentType.parse("application/x-www-form-urlencoded"));
+    _dio = Dio(options);
+    _setupLoggingInterceptor();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +100,7 @@ class NikFormState extends State<NikForm> {
       for (TextLine line in block.lines) {
         for (TextElement element in line.elements) {
           print(element.text);
-          if (element.text.contains(widget.nik.substring(0,9))) {
+          if (element.text.contains(widget.nik.substring(0, 9))) {
             setState(() {
               mergeDataNik = true;
             });
@@ -97,7 +114,7 @@ class NikFormState extends State<NikForm> {
     !mergeDataNik
         ? _scaffoldKey.currentState
             .showSnackBar(SnackBar(content: Text('KTP Not Valid')))
-        : routeToWidget(context, PinQR());
+        : compressImage(_image);
   }
 
   Future<void> getImage() async {
@@ -165,5 +182,76 @@ class NikFormState extends State<NikForm> {
     } else {
       print(response.exception.code);
     }
+  }
+
+  Future<void> compressImage(File file) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path,
+      quality: 50,
+      rotate: 0,
+    );
+    postData(result);
+  }
+
+  Future<void> postData(File image) async {
+    var response = await _dio.post(
+        "https://mobile.admedika.co.id/admedgateway/services/adpas/registerAdpasQR.php",
+        onUploadProgress: (int sent, int total) {
+      print("$sent $total");
+    },
+        data: FormData.from({
+          "uploadedFile": UploadFileInfo(
+            new File(_image.path),
+            "KTP",
+          ),
+          "cardNo": widget.cardNo,
+          "mediaName": "NIK",
+          "mediaNo": widget.nik,
+          "userCode": widget.name,
+          //new UploadFileInfo(new File(_image.path), "uploadedFile.jpg"),
+        }));
+
+    Map<String, dynamic> map = jsonDecode(response.toString());
+    if (map['admedika']['status'].toString().contains("Successfully")) {
+      routeToWidget(context, PinQR(cardNo: widget.cardNo));
+    } else {
+      _scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text(map['admedika']['status'].toString())));
+    }
+  }
+
+  void _setupLoggingInterceptor() {
+    int maxCharactersPerLine = 200;
+
+    _dio.interceptor.request.onSend = (Options options) {
+      print("--> ${options.method} ${options.path}");
+      print("Header: ${options.headers}");
+      print("Content type: ${options.contentType}");
+      print("Body: ${options.data}");
+      print("<-- END HTTP");
+      return options;
+    };
+
+    _dio.interceptor.response.onSuccess = (Response response) {
+      print(
+          "<-- ${response.statusCode} ${response.request.method} ${response.request.path}");
+      String responseAsString = response.data.toString();
+      if (responseAsString.length > maxCharactersPerLine) {
+        int iterations =
+            (responseAsString.length / maxCharactersPerLine).floor();
+        for (int i = 0; i <= iterations; i++) {
+          int endingIndex = i * maxCharactersPerLine + maxCharactersPerLine;
+          if (endingIndex > responseAsString.length) {
+            endingIndex = responseAsString.length;
+          }
+          print(responseAsString.substring(
+              i * maxCharactersPerLine, endingIndex));
+        }
+      } else {
+        print(response.data);
+      }
+      print("<-- END HTTP");
+    };
   }
 }

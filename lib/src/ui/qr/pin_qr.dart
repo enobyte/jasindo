@@ -5,16 +5,17 @@ import 'package:pin_view/pin_view.dart';
 import 'barcode_qr.dart';
 
 class PinQR extends StatefulWidget {
+  final String cardNo;
+
   @override
   State<StatefulWidget> createState() {
     return PinQRState();
   }
 
-  PinQR({Key key}) : super(key: key);
+  PinQR({Key key, this.cardNo}) : super(key: key);
 }
 
 class PinQRState extends State<PinQR> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +49,7 @@ class PinQRState extends State<PinQR> {
                               fontSize: 25.0,
                               color: Colors.grey),
                           submit: (String pin) {
-                            routeToWidget(context, MyQr());
+                            routeToWidget(context, MyQr(widget.cardNo));
                           })
                     ]))));
   }

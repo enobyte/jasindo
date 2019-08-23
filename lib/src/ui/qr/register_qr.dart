@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/utility/colors.dart';
+import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
 
+import 'barcode_qr.dart';
 import 'nik_form.dart';
 
 class RegisterQR extends StatefulWidget {
@@ -15,6 +21,22 @@ class RegisterQR extends StatefulWidget {
 class RegisterQRState extends State<RegisterQR> {
   final _nikController = TextEditingController();
   bool _validateNIk = false;
+  String cardNO, name;
+  Dio _dio;
+
+  @override
+  void initState() {
+    super.initState();
+    _dio = Dio();
+    SharedPreferencesHelper.getDoLogin().then((onValue) {
+      final memberModels = MemberModels.fromJson(json.decode(onValue));
+      setState(() {
+        cardNO = memberModels.data.cardNumb;
+        name = memberModels.data.name;
+        checkData();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +84,7 @@ class RegisterQRState extends State<RegisterQR> {
         return;
       } else {
         _validateNIk = false;
-        routeToWidget(context, NikForm(_nikController.text));
+        routeToWidget(context, NikForm(_nikController.text, name, cardNO));
       }
     });
   }
@@ -81,5 +103,16 @@ class RegisterQRState extends State<RegisterQR> {
                 _onSubmit(),
               }),
     );
+  }
+
+  Future<void> checkData() async {
+    var response = await _dio.get(
+        "https://mobile.admedika.co.id/admedgateway/services/adpas/api.php?method=CheckRegistrationFlag&p1=${cardNO.toString()}",
+        data: null);
+
+    Map<String, dynamic> map = jsonDecode(response.toString());
+    if (map['admedika']['status'].toString().contains("Y")) {
+      routeToWidget(context, MyQr(cardNO));
+    }
   }
 }
