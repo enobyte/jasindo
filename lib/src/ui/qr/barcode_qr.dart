@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyQr> {
 
   Future<void> postData(String data) async {
     var response = await _dio.get(
-        "https://mobile.admedika.co.id/admedgateway/services/adpas/api.php?method=AdPasTnxRequest&p1=${widget.cardNo}&p2=${data.toString()}",
+        "https://mobile.admedika.co.id/admedgateway/services/adpas/api.php?method=AdPasTnxRequest&p1=8000991200010208&p2=${data.toString()}",
         data: null);
 
     setState(() {
