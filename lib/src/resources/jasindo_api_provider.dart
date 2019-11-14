@@ -9,6 +9,7 @@ import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
+import 'package:jasindo_app/src/models/btndischarge_model.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/guidebook_model.dart';
 import 'package:jasindo_app/src/models/information_model.dart';
@@ -24,6 +25,7 @@ class JasindoApiProvider {
   Dio _dio;
   final _apiKey = '802b2c4b88ea1183e50e6b285a27696e';
   String _baseUrl = 'http://103.107.103.56:8000/api';
+  final directUrl = "http://internal.admedika.co.id:8000/api";
 
   //String _baseUrl = 'http://169.254.224.69:8000/api';
 
@@ -42,6 +44,21 @@ class JasindoApiProvider {
       _dio = Dio(options);
       _setupLoggingInterceptor();
     });
+  }
+
+  Future<Dio> _connectDirectCore() async {
+    Dio _dio;
+    Options options = Options(
+        headers: json.decode(json.encode({
+          "signature":
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxMzEzIn0.2GZkYkYFnkU_WwccLYrEV49hOWwt2Q_dNA4jo6p3Kuk",
+          "project_id": "1313"
+        })),
+        receiveTimeout: 5000,
+        connectTimeout: 5000,
+        contentType: ContentType.parse("application/json"));
+    _dio = Dio(options);
+    return _dio;
   }
 
   String _handleError(Error error) {
@@ -262,7 +279,7 @@ class JasindoApiProvider {
 
   Future<NewsModel> fetchNewsJasindo({String package_name}) async {
     try {
-      final response = await _dio.get("$_baseUrl/news/"+package_name);
+      final response = await _dio.get("$_baseUrl/news/" + package_name);
       return NewsModel.fromJson(response.data);
     } catch (error, stack) {
       print(stack.toString());
@@ -299,6 +316,17 @@ class JasindoApiProvider {
     } catch (error, stack) {
       print(stack.toString());
       return InformationModels.withError(_handleError(error));
+    }
+  }
+
+  Future<BtnDischargeModel> dischargeButton(String cardNumber) async {
+    final _dio = await _connectDirectCore();
+    try {
+      final response = await _dio.post("$directUrl/getDischarge",
+          data: json.encode({"cardno": cardNumber}));
+      return BtnDischargeModel.fromJson(response.data);
+    } on DioError catch (error, _) {
+      return null;
     }
   }
 }

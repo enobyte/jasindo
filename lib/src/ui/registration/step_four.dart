@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/assets/Strings.dart';
@@ -28,6 +29,7 @@ class StepFour extends StatefulWidget {
 }
 
 class StepFourState extends State<StepFour> {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _passwordController = TextEditingController();
   final _rePasswordController = TextEditingController();
   final _verificationCodeController = TextEditingController();
@@ -45,10 +47,14 @@ class StepFourState extends State<StepFour> {
   String _phone;
   String _cardNumber;
   String _birthDate;
+  String tokenFirebase = "";
 
   @override
   void initState() {
     super.initState();
+    _firebaseMessaging.getToken().then((token) {
+      tokenFirebase = token;
+    });
     generateCode().then((value) {
       _setCode(value);
     });
@@ -237,7 +243,8 @@ class StepFourState extends State<StepFour> {
           birthDate: _birthDate,
           cardNumber: _cardNumber,
           activeCode: code,
-          phone: _phone);
+          phone: _phone,
+          firebaseToken: tokenFirebase);
       print(json.encode(request.toMap()));
       bloc.fetchDoRegisterInternal(request.toMap(), (status, message) {
         if (status) {

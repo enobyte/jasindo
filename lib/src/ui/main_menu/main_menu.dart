@@ -10,6 +10,7 @@ import 'package:jasindo_app/src/blocs/news_bloc.dart';
 import 'package:jasindo_app/src/models/members_model.dart';
 import 'package:jasindo_app/src/models/news_model.dart';
 import 'package:jasindo_app/src/models/requests/do_req_guidebook.dart';
+import 'package:jasindo_app/src/ui/button_discharge/discharge_form.dart';
 import 'package:jasindo_app/src/ui/main_menu/data_peserta/data_peserta.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/inforamtion/informasi.dart';
 import 'package:jasindo_app/src/ui/main_menu/menu_side/news/berita.dart';
@@ -289,6 +290,10 @@ class MainMenuState extends State<MainMenu> {
       case 6:
         _setTitle('QR');
         _contentPage = RegisterQR();
+        break;
+      case 7:
+        _setTitle('Discharge');
+        _contentPage = DischargeForm();
         break;
       default:
         _setTitle('');

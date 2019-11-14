@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -184,4 +185,10 @@ Future<void> MakeCall(BuildContext context, String phoneNumb) async {
       );
     },
   );
+}
+
+dynamic jsonDecoder(jsonData) {
+  var jsonEncode = json.encode(jsonData);
+  var jsonDecode = json.decode(jsonEncode);
+  return jsonDecode;
 }

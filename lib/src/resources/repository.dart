@@ -6,6 +6,7 @@ import 'package:jasindo_app/src/models/adcps/get_benefit.dart';
 import 'package:jasindo_app/src/models/adcps/get_hist_claim.dart';
 import 'package:jasindo_app/src/models/adcps/get_plans.dart';
 import 'package:jasindo_app/src/models/adcps/get_provider.dart';
+import 'package:jasindo_app/src/models/btndischarge_model.dart';
 import 'package:jasindo_app/src/models/dependent_model.dart';
 import 'package:jasindo_app/src/models/guidebook_model.dart';
 import 'package:jasindo_app/src/models/information_model.dart';
@@ -71,4 +72,7 @@ class Repository {
 
   Future<InformationModels> fetchInformation() =>
       jasindoApiProvider.information();
+
+  Future<BtnDischargeModel> actDischarge(String cardNumber) =>
+      jasindoApiProvider.dischargeButton(cardNumber);
 }

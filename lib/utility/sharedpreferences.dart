@@ -12,6 +12,8 @@ class SharedPreferencesHelper {
   static final String _day = 'day';
   static final String _login = 'login';
   static final String dependent = 'dependent';
+  static final String _firebaseToken = 'firebase_token';
+  static final String _listDischarge = 'list_charge';
 
   static Future<bool> clearPreference(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -47,6 +49,16 @@ class SharedPreferencesHelper {
   static Future<String> getToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(_token) ?? '';
+  }
+
+  static Future<bool> setTokenFirebase(String value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setString(_firebaseToken, value);
+  }
+
+  static Future<String> getTokenFirebase() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(_firebaseToken) ?? '';
   }
 
   /// ------------------------------------------------------------
@@ -172,5 +184,15 @@ class SharedPreferencesHelper {
   static Future<String> getDay() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.getString(_day) ?? '999';
+  }
+
+  static Future<bool> setListDischarge(String value) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.setString(_listDischarge, value);
+  }
+
+  static Future<String> getListDischarge() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(_listDischarge);
   }
 }

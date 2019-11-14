@@ -196,7 +196,7 @@ class NikFormState extends State<NikForm> {
 
   Future<void> postData(File image) async {
     var response = await _dio.post(
-        "https://mobile.admedika.co.id/admedgateway/services/adpas/registerAdpasQR.php",
+        "https://mobile.admedika.com/admedgateway/services/adpas/registerAdpasQR.php",
         onUploadProgress: (int sent, int total) {
       print("$sent $total");
     },

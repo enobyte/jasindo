@@ -6,6 +6,7 @@ class ReqRegistrationInternal {
   final String password;
   final String activeCode;
   final String phone;
+  final String firebaseToken;
 
   ReqRegistrationInternal(
       {this.cardNumber,
@@ -14,7 +15,8 @@ class ReqRegistrationInternal {
       this.name,
       this.password,
       this.activeCode,
-      this.phone});
+      this.phone,
+      this.firebaseToken});
 
   factory ReqRegistrationInternal.fromJson(Map<String, dynamic> json) {
     return ReqRegistrationInternal(
@@ -25,6 +27,7 @@ class ReqRegistrationInternal {
       password: json['password'],
       activeCode: json['active_code'],
       phone: json['phone'],
+      firebaseToken: json['firebase_token'],
     );
   }
 
@@ -37,6 +40,7 @@ class ReqRegistrationInternal {
     map["password"] = password;
     map["active_code"] = activeCode;
     map["phone"] = phone;
+    map["firebase_token"] = firebaseToken;
     return map;
   }
 }

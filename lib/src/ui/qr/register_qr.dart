@@ -7,6 +7,7 @@ import 'package:jasindo_app/utility/colors.dart';
 import 'package:jasindo_app/utility/sharedpreferences.dart';
 import 'package:jasindo_app/utility/utils.dart';
 import 'package:jasindo_app/widgets/ButtonWidget.dart';
+import 'package:jasindo_app/widgets/ProgressDialog.dart';
 
 import 'barcode_qr.dart';
 import 'nik_form.dart';
@@ -23,6 +24,7 @@ class RegisterQRState extends State<RegisterQR> {
   bool _validateNIk = false;
   String cardNO, name;
   Dio _dio;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -39,23 +41,32 @@ class RegisterQRState extends State<RegisterQR> {
   }
 
   @override
+  void dispose() {
+    isLoading = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset(
-              "lib/assets/images/card.png",
-              height: 100,
-              width: MediaQuery.of(context).size.width / 3,
-            ),
-            _insertCard(),
-            _btnSubmit()
-          ],
+      body: ProgressDialog(
+        child: Container(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                "lib/assets/images/card.png",
+                height: 100,
+                width: MediaQuery.of(context).size.width / 3,
+              ),
+              _insertCard(),
+              _btnSubmit()
+            ],
+          ),
         ),
+        inAsyncCall: isLoading,
       ),
     );
   }
@@ -107,12 +118,16 @@ class RegisterQRState extends State<RegisterQR> {
 
   Future<void> checkData() async {
     var response = await _dio.get(
-        "https://mobile.admedika.co.id/admedgateway/services/adpas/api.php?method=CheckRegistrationFlag&p1=${cardNO.toString()}",
+        "https://mobile.admedika.com/admedgateway/services/adpas/api.php?method=CheckRegistrationFlag&p1=${cardNO.toString()}",
         data: null);
 
     Map<String, dynamic> map = jsonDecode(response.toString());
     if (map['admedika']['status'].toString().contains("Y")) {
       routeToWidget(context, MyQr(cardNO));
+    } else {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }

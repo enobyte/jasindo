@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:jasindo_app/src/blocs/bloc-provider.dart';
 import 'package:jasindo_app/src/blocs/login_bloc.dart';
@@ -21,17 +22,27 @@ class LoginForm extends StatefulWidget {
 }
 
 class LoginFormState extends State<LoginForm> {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool _isHidePassword = true;
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
   final DoLoginBloc bloc = DoLoginBloc();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  static String tokenFirebase = "";
   bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
     bloc.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.getToken().then((token) {
+      tokenFirebase = token;
+    });
   }
 
   @override
@@ -205,6 +216,7 @@ class LoginFormState extends State<LoginForm> {
     ReqDoLogin request = ReqDoLogin(
         email: _emailController.text,
         password: _passController.text,
+        firebaseToken: tokenFirebase,
         app: _packageName);
     bloc.fetchDoLogin(
         request.toMap(),

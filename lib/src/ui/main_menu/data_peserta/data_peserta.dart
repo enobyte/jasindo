@@ -150,6 +150,7 @@ class DataPesertaState extends State<DataPeserta>
               ' - ' +
               formatDate(
                   '${plansModel.data[0].policyEndDate.split("-")[2]}${mmmTomm(plansModel.data[0].policyEndDate.split("-")[0])}${plansModel.data[0].policyEndDate.split("-")[1]}',
+                  //'20190930',
                   'dd-MM-yyyy');
         });
       });
